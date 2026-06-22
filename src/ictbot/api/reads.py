@@ -100,14 +100,7 @@ def _fg_label(fg: int | None) -> str:
 
 def _explorer_base() -> str:
     """Block-explorer tx base for on-chain links — Snowtrace on Avalanche (Fuji / mainnet)."""
-    net = settings.agent_network
-    if net == "avax-testnet":
-        return "https://testnet.snowtrace.io/tx/"
-    if net == "avax":
-        return "https://snowtrace.io/tx/"
-    if net == "bsc-testnet":
-        return "https://testnet.bscscan.com/tx/"
-    return "https://bscscan.com/tx/"
+    return "https://snowtrace.io/tx/" if settings.agent_network == "avax" else "https://testnet.snowtrace.io/tx/"
 
 
 def _x402_server_stats() -> dict:

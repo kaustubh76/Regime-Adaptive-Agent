@@ -82,7 +82,7 @@ def test_rebalances_card_surfaces_failed_swaps():
     assert item["n_swaps_total"] == 3
     assert item["n_failed"] == 1
     assert item["failed_swaps"][0]["error"] == "slippage"
-    assert "bscscan.com/tx/0xabc" in item["tx"][0]["url"]
+    assert "snowtrace.io/tx/0xabc" in item["tx"][0]["url"]
 
 
 def test_rebalances_card_defaults_when_fields_absent():

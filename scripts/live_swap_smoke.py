@@ -73,10 +73,11 @@ def main() -> int:
     def _leg(s):
         if s is None:
             return None
+        _sub = "" if settings.agent_network == "avax" else "testnet."
         return {"from": s.from_token, "to": s.to_token, "amount_from": s.amount_from,
                 "amount_to": s.amount_to, "fee_paid": s.fee_paid, "tx": s.tx,
                 "ok": s.ok, "error": s.error,
-                "explorer": f"https://bscscan.com/tx/{s.tx}" if (s.ok and s.tx) else None}
+                "explorer": f"https://{_sub}snowtrace.io/tx/{s.tx}" if (s.ok and s.tx) else None}
 
     Path("data/compete").mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")

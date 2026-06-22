@@ -277,17 +277,15 @@ def verify_paymaster_link(network: str | None = None) -> dict:
 
 
 def _endpoint_url() -> str:
-    """A valid http(s) endpoint for the ERC-8004 profile (bnbagent requires http/https).
-    Defaults to the agent wallet's explorer page (Snowtrace on Avalanche, BscScan on BNB)."""
+    """A valid http(s) endpoint for the ERC-8004 profile. Defaults to the agent wallet's
+    Snowtrace explorer page on Avalanche (testnet subdomain unless the avax mainnet)."""
     if settings.agent_endpoint:
         return settings.agent_endpoint
     addr = display_address() or settings.agent_trading_address
     if addr:
-        if _is_avax():
-            sub = "testnet." if _avax_chain_id() == 43113 else ""
-            return f"https://{sub}snowtrace.io/address/{addr}"
-        return f"https://bscscan.com/address/{addr}"
-    return "https://www.avax.network" if _is_avax() else "https://www.bnbchain.org"
+        sub = "" if settings.agent_network == "avax" else "testnet."
+        return f"https://{sub}snowtrace.io/address/{addr}"
+    return "https://www.avax.network"
 
 
 def available() -> bool:

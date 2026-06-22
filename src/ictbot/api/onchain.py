@@ -143,12 +143,9 @@ def _cmc_price(symbol: str) -> float | None:
 
 
 def _explorer(address: str) -> str:
-    net = settings.agent_network
-    if net.startswith("avax"):
-        sub = "testnet." if net == "avax-testnet" else ""
-        return f"https://{sub}snowtrace.io/address/{address}"
-    sub = "testnet." if net == "bsc-testnet" else ""
-    return f"https://{sub}bscscan.com/address/{address}"
+    # Snowtrace on Avalanche; testnet subdomain unless the network is the avax mainnet.
+    sub = "" if settings.agent_network == "avax" else "testnet."
+    return f"https://{sub}snowtrace.io/address/{address}"
 
 
 def _avax_wallet_card() -> dict:

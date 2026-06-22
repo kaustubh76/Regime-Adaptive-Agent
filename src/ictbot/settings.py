@@ -219,7 +219,7 @@ class Settings(BaseSettings):
     agent_identity_address: str = Field(default="", alias="AGENT_IDENTITY_ADDRESS")
     agent_endpoint: str = Field(
         default="", alias="AGENT_ENDPOINT"
-    )  # https URL; default = BscScan page
+    )  # https URL; default = the agent wallet's Snowtrace page
     agent_name: str = Field(default="RegimeAdaptiveMomentumAgent", alias="AGENT_NAME")
     # Mainnet by default (BSC 56). The SDK preset key is "bsc-mainnet"; identity.py
     # maps "bsc" -> "bsc-mainnet" before calling resolve_network (which rejects "bsc").
