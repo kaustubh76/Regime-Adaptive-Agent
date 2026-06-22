@@ -1,0 +1,168 @@
+{
+  "global_metrics": {
+    "btc_dominance": 58.593553887823,
+    "eth_dominance": 9.520189714895,
+    "stablecoin_market_cap": 286692503850.4716,
+    "total_market_cap": 2221968597688.8296,
+    "total_volume_24h": 66541638276.55,
+    "altcoin_market_cap": 920038230031.5278
+  },
+  "fng_trend": [
+    {
+      "ts": 1780876800,
+      "value": 15
+    },
+    {
+      "ts": 1780963200,
+      "value": 14
+    },
+    {
+      "ts": 1781049600,
+      "value": 14
+    },
+    {
+      "ts": 1781136000,
+      "value": 16
+    },
+    {
+      "ts": 1781222400,
+      "value": 18
+    },
+    {
+      "ts": 1781308800,
+      "value": 20
+    },
+    {
+      "ts": 1781395200,
+      "value": 23
+    },
+    {
+      "ts": 1781481600,
+      "value": 25
+    },
+    {
+      "ts": 1781568000,
+      "value": 24
+    },
+    {
+      "ts": 1781654400,
+      "value": 22
+    },
+    {
+      "ts": 1781740800,
+      "value": 20
+    },
+    {
+      "ts": 1781827200,
+      "value": 20
+    },
+    {
+      "ts": 1781913600,
+      "value": 22
+    },
+    {
+      "ts": 1782000000,
+      "value": 21
+    }
+  ],
+  "movers": {
+    "gainers": [
+      {
+        "symbol": "DEXE",
+        "name": "DeXe",
+        "pct_24h": 25.62171768
+      },
+      {
+        "symbol": "TIA",
+        "name": "Celestia",
+        "pct_24h": 9.25793359
+      },
+      {
+        "symbol": "LIT",
+        "name": "Lighter",
+        "pct_24h": 6.04482342
+      },
+      {
+        "symbol": "ZRO",
+        "name": "LayerZero",
+        "pct_24h": 5.76609293
+      },
+      {
+        "symbol": "OKB",
+        "name": "OKB",
+        "pct_24h": 5.48285142
+      }
+    ],
+    "losers": [
+      {
+        "symbol": "H",
+        "name": "Humanity",
+        "pct_24h": -22.90024895
+      },
+      {
+        "symbol": "JUP",
+        "name": "Jupiter",
+        "pct_24h": -6.6469963
+      },
+      {
+        "symbol": "SKYAI",
+        "name": "SKYAI",
+        "pct_24h": -4.6341535
+      },
+      {
+        "symbol": "BEAT",
+        "name": "Audiera",
+        "pct_24h": -4.49054507
+      },
+      {
+        "symbol": "DASH",
+        "name": "Dash",
+        "pct_24h": -3.32109559
+      }
+    ]
+  },
+  "categories": [
+    {
+      "name": "Winklevoss Capital Portfolio",
+      "avg_price_change": 1.5104862056980068,
+      "market_cap": 1520362329738.9,
+      "market_cap_change": 1.442089367127,
+      "num_tokens": 6
+    },
+    {
+      "name": "Polychain Capital Portfolio",
+      "avg_price_change": 1.4543517084674578,
+      "market_cap": 1526010719098.1633,
+      "market_cap_change": 1.435913278599,
+      "num_tokens": 50
+    },
+    {
+      "name": "Doggone Doggerel",
+      "avg_price_change": 0.5813507316921658,
+      "market_cap": 18371055209.633083,
+      "market_cap_change": 8.212808295411,
+      "num_tokens": 435
+    },
+    {
+      "name": "Filesharing",
+      "avg_price_change": -0.24189659894332122,
+      "market_cap": 1457772569.7961018,
+      "market_cap_change": 0.071377512075,
+      "num_tokens": 51
+    },
+    {
+      "name": "xStocks Ecosystem",
+      "avg_price_change": -0.45809833207328304,
+      "market_cap": 5632458580.13109,
+      "market_cap_change": -0.602523215185,
+      "num_tokens": 84
+    },
+    {
+      "name": "NFTs & Collectibles",
+      "avg_price_change": -2.6145249523327743,
+      "market_cap": 6384461671.039368,
+      "market_cap_change": -0.744930626437,
+      "num_tokens": 782
+    }
+  ]
+}

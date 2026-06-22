@@ -531,9 +531,9 @@ def test_build_broker_no_active_is_legacy(ra):
 def test_build_broker_dust_and_zero_not_held(ra):
     """qty 0 / None entries are not 'held' — only genuinely positive balances pin
     a deselected token into the trading universe."""
-    state = {"balances": {"USDT": 500.0, "CAKE": 0.0, "DOGE": None}}
-    broker, _ = ra.build_broker("sim", lambda t: 1.0, state, active=["BNB", "ETH"])
-    assert list(broker.tokens) == ["BNB", "ETH"]
+    state = {"balances": {"USDT": 500.0, "LINK": 0.0, "UNI": None}}
+    broker, _ = ra.build_broker("sim", lambda t: 1.0, state, active=["AVAX", "ETH"])
+    assert list(broker.tokens) == ["AVAX", "ETH"]
 
 
 def test_build_broker_live_held_from_onchain_not_snapshot(ra, monkeypatch):
@@ -543,15 +543,15 @@ def test_build_broker_live_held_from_onchain_not_snapshot(ra, monkeypatch):
 
     class StubClient:
         def balances(self):
-            return {"USDT": 10.0, "DOGE": 50.0}  # on-chain truth: DOGE held
+            return {"USDT": 10.0, "UNI": 50.0}  # on-chain truth: UNI held
 
     monkeypatch.setattr(ra, "make_client", lambda *a, **k: StubClient())
     monkeypatch.setattr(ra.settings, "enable_live_trading", True)  # broker guard
-    # snapshot (stale) says nothing about DOGE
+    # snapshot (stale) says nothing about UNI
     state = {"balances": {"USDT": 500.0}}
-    broker, _ = ra.build_broker("live", lambda t: 1.0, state, active=["BNB", "ETH"])
-    assert "DOGE" in broker.tokens  # on-chain held wins
-    assert list(broker.tokens) == ["BNB", "ETH", "DOGE"]
+    broker, _ = ra.build_broker("live", lambda t: 1.0, state, active=["AVAX", "ETH"])
+    assert "UNI" in broker.tokens  # on-chain held wins
+    assert list(broker.tokens) == ["AVAX", "ETH", "UNI"]
 
 
 def test_build_broker_live_balance_read_failure_degrades_to_full(ra, monkeypatch):

@@ -119,7 +119,10 @@ export default function HeroRow({
   const fg = regime.fear_greed;
   const cap = regime.deploy_cap ?? 0;
   const capPct = Math.round(cap * 100);
-  const regPlain = `Market looks ${moodWord(fg)} → holding ${100 - capPct}% in stables`;
+  // When there's no Fear & Greed reading, don't fabricate a sentiment ("uncertain") — say the signal is pending.
+  const regPlain = fg == null
+    ? `Holding ${100 - capPct}% in stables — regime signal pending`
+    : `Market looks ${moodWord(fg)} → holding ${100 - capPct}% in stables`;
   const reg = regimeLabel(score);
   const capFloor = strategy?.params.cap_floor ?? 0.4;
   const capCeiling = strategy?.params.cap_ceiling ?? 0.85;
@@ -149,7 +152,7 @@ export default function HeroRow({
     : null;
 
   return (
-    <div id="sec-hero" data-section-label="Hero" className="grid scroll-mt-20 grid-cols-1 gap-4 md:grid-cols-3">
+    <div id="sec-hero" data-section-label="Hero" className="grid scroll-mt-20 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
       {/* ① NAV */}
       <Card tier="hero" accent={GOLD} right={<StatusPill tone="info" srText="paper simulation">PAPER · $1K</StatusPill>}>
         <Stat

@@ -37,7 +37,7 @@ def test_weights_respect_cap_and_topk():
     assert abs(sum(w.values()) - 0.60) < 1e-6  # deployed exactly to the cap
     # the two strongest momenta (highest-slope tokens) are the ones held
     held = {k for k, v in w.items() if v > 0}
-    assert held == {"DOT", "DOGE"}  # last two have the steepest slopes
+    assert held == {"JOE", "GMX"}  # last two have the steepest slopes
 
 
 def test_cash_filter_all_down_goes_to_usdt():
@@ -54,12 +54,12 @@ def test_inverse_vol_favours_the_calmer_token():
     calm = 100 + 0.5 * i  # smooth uptrend (low vol)
     jagged = 100 + 0.5 * i + 6.0 * np.sin(i)  # same drift, high vol
     cols = {t: ramp(n, slope=-0.3) for t in CONTEST_TOKENS}
-    cols["BNB"], cols["ETH"] = calm, jagged  # only these two trend up
+    cols["AVAX"], cols["ETH"] = calm, jagged  # only these two trend up
     df = make_matrix(cols)
     p = AllocatorParams(top_k=2, inverse_vol=True, deploy_cap=1.0)
     w = target_weights_now(df, p)
-    assert w["BNB"] > 0 and w["ETH"] > 0
-    assert w["BNB"] > w["ETH"]  # calmer token gets more weight
+    assert w["AVAX"] > 0 and w["ETH"] > 0
+    assert w["AVAX"] > w["ETH"]  # calmer token gets more weight
 
 
 def test_live_and_backtest_paths_agree_on_last_bar():

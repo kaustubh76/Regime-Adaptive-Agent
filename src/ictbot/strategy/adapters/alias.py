@@ -1,5 +1,5 @@
 """
-Branded strategy aliases — contest-facing names (BNB_STRATEGY_0X) over the arms.
+Branded strategy aliases — contest-facing names (AVAX_STRATEGY_0X) over the arms.
 
 `AliasStrategy` delegates EVERY PortfolioStrategy method to a target registered
 strategy but reports its own (branded) name. This lets a stable contest naming queue

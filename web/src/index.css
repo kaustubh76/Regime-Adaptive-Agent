@@ -219,10 +219,10 @@ body::after {
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #2c2f3a;
+  background: rgb(var(--c-edge));
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #3a3d46;
+  background: rgb(var(--c-muted));
 }
 
 /* Respect reduced-motion: neutralise the framer/CSS animations globally */

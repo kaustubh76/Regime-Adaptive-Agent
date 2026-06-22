@@ -219,12 +219,12 @@ def test_tick_arms_at_trigger(ra, tmp_path, monkeypatch):
 def test_tick_banks_at_target(ra, tmp_path, monkeypatch):
     _wire(ra, monkeypatch)
     _enable(ra, monkeypatch)
-    # NAV = 100 USDT + 9 BNB x $100 = 1000; anchor 900 -> cum +11.1% >= bank
-    _seed(ra, balances={"USDT": 100.0, "BNB": 9.0}, anchor=900.0)
+    # NAV = 100 USDT + 9 AVAX x $100 = 1000; anchor 900 -> cum +11.1% >= bank
+    _seed(ra, balances={"USDT": 100.0, "AVAX": 9.0}, anchor=900.0)
     assert ra.tick("sim", 0.10) == 1
     st = ra.load_state("sim")
     assert st["profit_locked"] is True
-    assert st["balances"].get("BNB", 0.0) == pytest.approx(0.0, abs=1e-9)  # flattened
+    assert st["balances"].get("AVAX", 0.0) == pytest.approx(0.0, abs=1e-9)  # flattened
     last = [r for r in _rows(tmp_path) if r["event"] == "PROFIT_LOCK"][-1]
     assert last["kind"] == "bank" and last["source"] == "daily_tick"
     assert last["flattened"] >= 1
@@ -317,11 +317,11 @@ def test_dd_watch_arms_intraday(ra, tmp_path, monkeypatch):
 def test_dd_watch_banks_intraday(ra, tmp_path, monkeypatch):
     _wire(ra, monkeypatch)
     _enable(ra, monkeypatch)
-    _seed(ra, balances={"USDT": 100.0, "BNB": 9.0}, anchor=900.0, hwm=1000.0)
+    _seed(ra, balances={"USDT": 100.0, "AVAX": 9.0}, anchor=900.0, hwm=1000.0)
     assert ra.dd_watch("sim", 0.10) == 1
     st = ra.load_state("sim")
     assert st["profit_locked"] is True
-    assert st["balances"].get("BNB", 0.0) == pytest.approx(0.0, abs=1e-9)
+    assert st["balances"].get("AVAX", 0.0) == pytest.approx(0.0, abs=1e-9)
     last = [r for r in _rows(tmp_path) if r["event"] == "PROFIT_LOCK"][-1]
     assert last["source"] == "dd_watch" and last["kind"] == "bank"
 

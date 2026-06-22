@@ -100,22 +100,22 @@ _BUILTINS_DONE = False
 
 # ── Contest naming queue (EDIT THIS as forward testing picks a winner) ──────────
 # Branded, stable contest-facing names mapped onto the descriptive arms. Each is a
-# selectable alias (STRATEGY_NAME=BNB_STRATEGY_02 + the dashboard SIM selector) that is
+# selectable alias (STRATEGY_NAME=AVAX_STRATEGY_02 + the dashboard SIM selector) that is
 # bit-for-bit its target arm. This is the "learning graph": reassign a number to a
 # different arm here as you forward-validate, without touching any strategy logic.
 # 01 is the incumbent (the locked contest default); 02+ are challengers under test.
 # Reassigning here does NOT change the LIVE default — that stays momentum_adaptive
 # until an operator sets STRATEGY_NAME in .env (alias-only by policy).
 CONTEST_ALIASES: dict[str, str] = {
-    "BNB_STRATEGY_01": "momentum_adaptive",  # incumbent — the current contest default
-    "BNB_STRATEGY_02": "momentum_voltarget",  # challenger: best risk-adjusted (DD ~14%)
-    "BNB_STRATEGY_03": "dual_momentum",  # challenger: lowest DD (~13%), cash-out risk-off
-    "BNB_STRATEGY_04": "rotation",  # challenger: top-3 relative-strength rotation
-    "BNB_STRATEGY_05": "breakout",  # challenger: Donchian breakout book
-    "BNB_STRATEGY_06": "momentum_fast",  # challenger: short-horizon (12h rebal)
-    "BNB_STRATEGY_07": "momentum_mafilter",  # challenger: MA trend filter
-    "BNB_STRATEGY_08": "mean_reversion",  # research: adverse prior (do not deploy blind)
-    "BNB_STRATEGY_09": "grid",  # research: net-inventory grid + hard range stop
+    "AVAX_STRATEGY_01": "momentum_adaptive",  # incumbent — the current contest default
+    "AVAX_STRATEGY_02": "momentum_voltarget",  # challenger: best risk-adjusted (DD ~14%)
+    "AVAX_STRATEGY_03": "dual_momentum",  # challenger: lowest DD (~13%), cash-out risk-off
+    "AVAX_STRATEGY_04": "rotation",  # challenger: top-3 relative-strength rotation
+    "AVAX_STRATEGY_05": "breakout",  # challenger: Donchian breakout book
+    "AVAX_STRATEGY_06": "momentum_fast",  # challenger: short-horizon (12h rebal)
+    "AVAX_STRATEGY_07": "momentum_mafilter",  # challenger: MA trend filter
+    "AVAX_STRATEGY_08": "mean_reversion",  # research: adverse prior (do not deploy blind)
+    "AVAX_STRATEGY_09": "grid",  # research: net-inventory grid + hard range stop
 }
 
 
@@ -180,7 +180,7 @@ def register_builtins() -> None:
             _m.AdaptiveMomentumStrategy(), [MaFilterOverlay()], name="momentum_mafilter"
         )
     )
-    # Branded contest naming queue (BNB_STRATEGY_0X) — thin aliases over the arms above.
+    # Branded contest naming queue (AVAX_STRATEGY_0X) — thin aliases over the arms above.
     from ictbot.strategy.adapters.alias import AliasStrategy
 
     for alias, target in CONTEST_ALIASES.items():

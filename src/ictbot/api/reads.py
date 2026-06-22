@@ -775,16 +775,38 @@ def _market_intel_net() -> dict | None:
     return snap
 
 
+def _market_intel_seed() -> dict:
+    """Committed representative market intel (infra/seed/market_intel.json, baked to
+    data/market_intel.json in the image). Served when the live CMC fetch is unavailable — e.g. the
+    zero-secret deploy has no CMC_API_KEY — so the panel shows real data, not a wall of '—'."""
+    try:
+        p = DATA_DIR / "market_intel.json"
+        if p.exists():
+            return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        pass
+    return {}
+
+
 def market_intel_card(rows: list[dict] | None = None) -> dict:
     """CMC market intelligence: live global metrics + F&G trend + movers + categories,
-    plus the regime-term breakdown from the latest journal row. Live pieces are None/[]
-    when CMC_INTEL_ENABLED is off (the panel degrades to the journal's regime terms)."""
+    plus the regime-term breakdown from the latest journal row. When the live CMC fetch is
+    unavailable (no key / cold), fall back to the committed seed so the panel still renders."""
     rows = read_journal() if rows is None else rows
     latest = _latest_rebalance(rows)
     snap = _market_intel_net() or {}
+    # Accept either the raw fetch shape ("global") or the seed/card shape ("global_metrics").
+    g = snap.get("global") or snap.get("global_metrics")
+    fng = snap.get("fng_trend") or []
+    movers = snap.get("movers") or {}
+    if not (g or fng or (movers.get("gainers") or [])):
+        seed = _market_intel_seed()
+        if seed:
+            snap = seed
+            g = snap.get("global") or snap.get("global_metrics")
     return {
         "enabled": bool(settings.cmc_intel_enabled),
-        "global_metrics": snap.get("global"),
+        "global_metrics": g,
         "fng_trend": snap.get("fng_trend") or [],
         "movers": snap.get("movers") or {"gainers": [], "losers": []},
         "categories": snap.get("categories") or [],

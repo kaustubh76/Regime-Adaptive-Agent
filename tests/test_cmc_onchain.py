@@ -104,29 +104,32 @@ def test_parse_transaction():
 
 # --- address map ----------------------------------------------------------- #
 def test_onchain_tokens_bnbchain():
+    # The on-chain DEX feed is BNB-chain-only; onchain_tokens() intersects the built-in
+    # BEP-20 map with the (now Avalanche) contest universe, so only the tokens present in
+    # BOTH survive: AVAX/ETH/LINK/UNI (SOL/AAVE/JOE/GMX have no entry in the legacy map).
     toks = cmc_onchain.onchain_tokens()
-    assert set(toks) == {"BNB", "ETH", "CAKE", "LINK", "UNI", "AVAX", "DOT", "DOGE"}
+    assert set(toks) == {"AVAX", "ETH", "LINK", "UNI"}
     assert all(t["platform_id"] == 14 for t in toks.values())  # all BNB Smart Chain (BEP-20)
-    assert toks["CAKE"]["address"] == "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"
-    assert toks["BNB"]["address"] == cmc_onchain.WBNB  # native BNB → WBNB proxy for on-chain ops
+    assert toks["AVAX"]["address"] == "0x1ce0c2827e2ef14d5c4f29a091d735a204794041"
+    assert toks["ETH"]["address"] == "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
 
 
 def test_onchain_tokens_ignores_non_bsc_cache(monkeypatch, tmp_path):
-    """The universe is BNB-chain-only: a stale/wrong cache (LINK/UNI on their Ethereum
+    """The on-chain feed is BNB-chain-only: a stale/wrong cache (LINK/UNI on their Ethereum
     `platform_id=1` contracts) must NEVER poison the address map — those tokens self-heal to the
     verified built-in BEP-20. A valid BSC override is still honored."""
     poisoned = tmp_path / "addrs.json"
     poisoned.write_text(json.dumps({"tokens": {
         "LINK": {"platform_id": 1, "address": "0x514910771af9ca656af840dff83e8264ecf986ca"},  # ETH
         "UNI": {"platform_id": 1, "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"},   # ETH
-        "CAKE": {"platform_id": 14, "address": "0xdeadbeef"},  # valid BSC override → honored
+        "AVAX": {"platform_id": 14, "address": "0xdeadbeef"},  # valid BSC override → honored
     }}))
     monkeypatch.setattr(cmc_onchain, "_ADDR_CACHE", poisoned)
     toks = cmc_onchain.onchain_tokens()
     assert all(t["platform_id"] == 14 for t in toks.values())  # no Ethereum leak
     assert toks["LINK"] == cmc_onchain.ONCHAIN_TOKENS["LINK"]   # fell back to built-in BEP-20
     assert toks["UNI"] == cmc_onchain.ONCHAIN_TOKENS["UNI"]
-    assert toks["CAKE"]["address"] == "0xdeadbeef"             # valid BSC override applied
+    assert toks["AVAX"]["address"] == "0xdeadbeef"             # valid BSC override applied
 
 
 # --- store readers (hermetic, temp files) ---------------------------------- #

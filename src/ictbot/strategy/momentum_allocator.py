@@ -31,8 +31,9 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-# Contest BEP-20 universe + BNB. Order is the canonical column order everywhere.
-CONTEST_TOKENS = ("BNB", "ETH", "CAKE", "LINK", "UNI", "AVAX", "DOT", "DOGE")
+# Avalanche-tradable universe (AVAX + liquid C-Chain DeFi majors). Order is the canonical
+# column order everywhere.
+CONTEST_TOKENS = ("AVAX", "ETH", "SOL", "LINK", "UNI", "AAVE", "JOE", "GMX")
 
 
 @dataclass(frozen=True)

@@ -92,6 +92,7 @@ export async function getSnapshot(): Promise<Snapshot> {
 export async function postSimTick(): Promise<SimTickResult> {
   const base = await resolveBase();
   const r = await fetch(`${base}/api/controls/sim-tick`, { method: "POST" });
+  if (!r.ok) throw new Error(`sim-tick failed (${r.status})`);
   return (await r.json()) as SimTickResult;
 }
 
@@ -102,6 +103,7 @@ export async function postKill(engage: boolean, reason = "ui"): Promise<KillResu
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ engage, reason }),
   });
+  if (!r.ok) throw new Error(`kill failed (${r.status})`);
   return (await r.json()) as KillResult;
 }
 

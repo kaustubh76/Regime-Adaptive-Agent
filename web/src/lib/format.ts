@@ -20,7 +20,8 @@ export function fmtPctRounded(frac: number | null | undefined, dp = 0): string {
 export function fmtSignedPct(frac: number | null | undefined, dp = 2): string {
   if (frac === null || frac === undefined || Number.isNaN(frac)) return "—";
   const s = (frac * 100).toFixed(dp);
-  return `${frac >= 0 ? "+" : ""}${s}%`;
+  // "+" only for genuinely positive moves; 0 (and values that round to 0) render unsigned.
+  return `${frac > 0 && parseFloat(s) !== 0 ? "+" : ""}${s}%`;
 }
 
 /** Friendly label for a rebalance's candle data-source. CMC-only by design: any non-CMC /
@@ -73,7 +74,7 @@ export function shortHash(h: string): string {
   return `${h.slice(0, 8)}…${h.slice(-6)}`;
 }
 
-/** Resolve an ERC-8183 deliverable URL to something a browser can open. The provider pins the
+/** Resolve an agentic-commerce deliverable URL to something a browser can open. The provider pins the
  * deliverable on IPFS, so the journal/SDK hands back an `ipfs://CID[/path]` URI — rewrite it to a
  * public gateway so the link is clickable. `http(s)://` URLs pass through unchanged; falsy → "". */
 export function ipfsUrl(u: string | null | undefined): string {

@@ -87,7 +87,7 @@ export default function Card({
           ) : (
             label && <span className="card-label">{label}</span>
           )}
-          {right}
+          {right && <span className="shrink-0">{right}</span>}
         </header>
       )}
       {open && children}

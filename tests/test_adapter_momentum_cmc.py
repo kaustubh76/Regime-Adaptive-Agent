@@ -40,7 +40,7 @@ def _seed_matrix(near_constant_token: int | None = None) -> pd.DataFrame:
     """A flat-intrabar seed matrix: per-token daily walk, each daily close forward-filled across the
     six 4h slots (exactly what seed_cmc_4h_from_daily writes). Optionally make one token dead-flat in
     the last 30 4h bars (the genuine blow-up case a quiet/seed window produces)."""
-    toks = ["BNB", "ETH", "LINK", "UNI"]
+    toks = ["AVAX", "ETH", "LINK", "UNI"]
     daily_vol = [0.02, 0.03, 0.04, 0.03]
     days = 60
     rng = np.random.default_rng(3)

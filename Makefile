@@ -415,9 +415,10 @@ refresh_dashboard: snapshot
 	done
 	@if [ -f data/journal/cmc_mcp_usage.json ]; then cp data/journal/cmc_mcp_usage.json infra/seed/ && echo "  reseeded CMC MCP telemetry -> infra/seed/cmc_mcp_usage.json (Agent Hub tools count)"; \
 	else echo "  (skip cmc_mcp_usage.json — no CMC MCP telemetry journaled yet)"; fi
+	@PYTHONPATH=src .venv/bin/python -c "import json; d=json.load(open('web/public/snapshot.json')); mi=d.get('market_intel') or {}; g=mi.get('global_metrics'); json.dump({'global_metrics':g,'fng_trend':mi.get('fng_trend') or [],'movers':mi.get('movers') or {'gainers':[],'losers':[]},'categories':mi.get('categories') or []}, open('infra/seed/market_intel.json','w'), indent=2); print('  reseeded market intel -> infra/seed/market_intel.json' + ('' if g else ' (WARN: no global_metrics — set CMC_API_KEY locally before refresh)'))"
 	@echo ""
 	@echo "  next (operator-run — outward-facing):"
-	@echo "    git add web/public/snapshot.json infra/seed/allocator_journal.jsonl infra/seed/allocator_state.json infra/seed/x402_server_jobs.jsonl infra/seed/strategy_gates.json infra/seed/strategy_stability.json infra/seed/cmc_mcp_usage.json"
+	@echo "    git add web/public/snapshot.json infra/seed/allocator_journal.jsonl infra/seed/allocator_state.json infra/seed/x402_server_jobs.jsonl infra/seed/market_intel.json infra/seed/strategy_gates.json infra/seed/strategy_stability.json infra/seed/cmc_mcp_usage.json"
 	@echo "    git commit -m 'chore(dashboard): refresh PnL data' && git push    # Render auto-redeploys"
 	@echo "    vercel --prod --yes                                               # deploy the Vercel SPA"
 	@echo "  verify: curl -s https://avax-agentic-payments-api.onrender.com/api/nav | python -c 'import sys,json;print(json.load(sys.stdin)[\"current_nav\"])'"

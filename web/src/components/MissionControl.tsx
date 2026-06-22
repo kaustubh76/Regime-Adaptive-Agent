@@ -145,7 +145,7 @@ export default function MissionControl({ allocator }: { allocator: UseAllocator 
           </Panel>
         </div>
 
-        {/* Agent Commerce — the SELL side (ERC-8183): the agent monetizes its CMC analysis.
+        {/* Agent Commerce — the SELL side (ERC-8004 agentic commerce): the agent monetizes its CMC analysis.
             With the CMC Agent Hub above (buy side) this is the two-sided agent-economy exhibit. */}
         <div className="lg:col-span-12">
           <Panel label="Agent Commerce">

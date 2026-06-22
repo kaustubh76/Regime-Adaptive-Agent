@@ -53,6 +53,9 @@ COPY infra/seed/x402_receipt[s].json ./data/x402/receipts.json
 # x402 SERVER ledger (real SETTLED jobs the agent GOT PAID for) so the dashboard's x402-server
 # panel shows served jobs + USDC revenue + the last settlement tx. Optional [s] glob like above.
 COPY infra/seed/x402_server_job[s].jsonl ./data/x402/server_jobs.jsonl
+# Market-intelligence fallback so the zero-secret deploy (no CMC_API_KEY → can't fetch live global
+# metrics/movers/F&G) still renders representative data instead of a wall of "—". Optional glob.
+COPY infra/seed/market_inte[l].json ./data/market_intel.json
 # Strategy verdicts (survival/forward/perf) + stability grades so the dashboard's Strategy
 # Lab shows real readiness + the backtest scoreboard on the cloud — `make campaign`/`make
 # stability` run LOCALLY (Render can't reach market data) and reseed these via

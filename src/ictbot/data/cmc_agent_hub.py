@@ -60,14 +60,14 @@ MCP_TOOLS: tuple[str, ...] = (
 
 # Contest universe → CMC numeric ids (verified live via the MCP get_crypto_quotes_latest).
 CMC_IDS: dict[str, int] = {
-    "BNB": 1839,
+    "AVAX": 5805,
     "ETH": 1027,
-    "CAKE": 7186,
+    "SOL": 5426,
     "LINK": 1975,
     "UNI": 7083,
-    "AVAX": 5805,
-    "DOT": 6636,
-    "DOGE": 74,
+    "AAVE": 7278,
+    "JOE": 11396,
+    "GMX": 11857,
 }
 
 _USAGE_PATH = JOURNAL_DIR / "cmc_mcp_usage.json"

@@ -135,9 +135,9 @@ export default function MarketIntelPanel({
   intel: MarketIntel | null | undefined;
   live?: boolean;
 }) {
-  // CMC-1: green "live" only when the regime is enabled AND the API is fresh — on the
-  // static snapshot fallback (!live) show a muted "snapshot" badge, not green "live".
-  const intelFresh = live && !!intel?.enabled;
+  // CMC-1: green "live" only when the API is fresh AND there is real data — on the static
+  // snapshot fallback (!live) or an empty payload (enabled but no metrics, e.g. the keyless
+  // deploy), show a muted "snapshot" badge, not a green "live" over a wall of "—".
   const attribution = (
     <a
       href="https://coinmarketcap.com/"
@@ -156,6 +156,7 @@ export default function MarketIntelPanel({
   const movers = intel?.movers ?? { gainers: [], losers: [] };
   const cats = intel?.categories ?? [];
   const hasLive = !!g || fng.length > 0 || movers.gainers.length > 0;
+  const intelFresh = live && !!intel?.enabled && hasLive;
 
   return (
     <Card

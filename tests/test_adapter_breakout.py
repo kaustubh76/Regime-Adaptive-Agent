@@ -36,7 +36,7 @@ def test_exit_channel_is_faster_than_entry():
 
 def test_registered_default_is_robust_config():
     # Re-registered to the stability-sweep ROBUST config: entry 20 / exit 5 / 12h rebalance
-    # (entry20/exit10/rb6 was UNSTABLE). The BNB_STRATEGY_05 alias inherits this.
+    # (entry20/exit10/rb6 was UNSTABLE). The AVAX_STRATEGY_05 alias inherits this.
     bo = registry.get("breakout")
     assert bo.entry_lb == 20 and bo.exit_lb == 5
     assert bo.default_params().rebal_bars == 3

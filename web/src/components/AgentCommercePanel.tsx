@@ -43,7 +43,7 @@ function uToWei(u: string): string {
 }
 
 /**
- * Agent Commerce — the agent SELLS its CMC Regime Report to other agents over ERC-8183.
+ * Agent Commerce — the agent SELLS its CMC Regime Report to other agents over on-chain job escrow.
  * The capability is REAL before the first on-chain job settles, so
  * the panel always shows the genuine offering (the advertised service + a live deliverable preview)
  * plus an on-chain job ledger that fills in honestly once a faucet-funded job settles. No fake jobs.
@@ -55,7 +55,7 @@ export default function AgentCommercePanel({
   commerce?: CommerceBlock | null;
   live?: boolean;
 }) {
-  // "Create a job" — runs the REAL ERC-8183 loop (create→fund→serve→settle) on a LOCAL operator
+  // "Create a job" — runs the REAL agentic-commerce loop (create→fund→serve→settle) on a LOCAL operator
   // run. `can_create` is false on the read-only cloud deploy (no signing key), so the button is
   // disabled there. Hooks must precede the early `if (!commerce)` return (rules of hooks).
   const canCreate = !!commerce?.can_create;
@@ -79,7 +79,7 @@ export default function AgentCommercePanel({
 
   const caption = (
     <span className="text-[10px] text-muted">
-      buys data via x402 · sells analysis via ERC-8183
+      buys data via x402 · sells its regime report on-chain
     </span>
   );
 
@@ -87,12 +87,12 @@ export default function AgentCommercePanel({
   if (!commerce) {
     return (
       <Card
-        label="Agent Commerce · ERC-8183"
+        label="Agent Commerce · ERC-8004"
         accent={COMMERCE_VIOLET}
         right={<StatusPill tone="neutral">snapshot</StatusPill>}
       >
         <div className="flex h-24 flex-col items-center justify-center gap-1 text-center text-xs text-muted">
-          <div>The agent can sell its live CMC Regime Report to other agents via ERC-8183 job escrow.</div>
+          <div>The agent can sell its live CMC Regime Report to other agents via on-chain job escrow.</div>
           {caption}
         </div>
       </Card>
@@ -108,7 +108,7 @@ export default function AgentCommercePanel({
 
   return (
     <Card
-      label="Agent Commerce · ERC-8183"
+      label="Agent Commerce · ERC-8004"
       accent={COMMERCE_VIOLET}
       right={
         <span className="flex items-center gap-1.5">
@@ -204,7 +204,7 @@ export default function AgentCommercePanel({
           </div>
         )}
 
-        {/* ON-CHAIN JOB LEDGER — fills in for real once a faucet-funded ERC-8183 job settles. */}
+        {/* ON-CHAIN JOB LEDGER — fills in for real once a faucet-funded agentic-commerce job settles. */}
         <div className="space-y-2 border-t border-edge pt-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase tracking-wider text-muted">on-chain jobs</span>
@@ -214,7 +214,7 @@ export default function AgentCommercePanel({
           </div>
           <div className="grid grid-cols-3 gap-2">
             <Tile label="Jobs Served" value={String(served)} color={served > 0 ? "#16c784" : undefined} />
-            <Tile label="Revenue" value={fmtU(commerce.revenue_u)} color={commerce.revenue_u > 0 ? "#16c784" : undefined} />
+            <Tile label="Escrow Rev" value={fmtU(commerce.revenue_u)} color={commerce.revenue_u > 0 ? "#16c784" : undefined} />
             <Tile label="Network" value={networkLabel(commerce.network)} />
           </div>
           <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-muted">
@@ -241,7 +241,7 @@ export default function AgentCommercePanel({
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <Tile label="x402 Jobs" value={String(commerce.x402_server.served_jobs)} color={commerce.x402_server.served_jobs > 0 ? "#16c784" : undefined} />
-                <Tile label="Revenue" value={`$${commerce.x402_server.revenue_usdc.toFixed(2)}`} color={commerce.x402_server.revenue_usdc > 0 ? "#16c784" : undefined} />
+                <Tile label="USDC Rev" value={`$${commerce.x402_server.revenue_usdc.toFixed(2)}`} color={commerce.x402_server.revenue_usdc > 0 ? "#16c784" : undefined} />
                 <Tile label="Price" value={`$${commerce.x402_server.price_usdc.toFixed(2)}`} />
               </div>
               {commerce.x402_server.last_settlement_tx && (
@@ -303,7 +303,7 @@ export default function AgentCommercePanel({
           )}
         </div>
 
-        {/* CREATE A JOB — buy side. Runs the genuine ERC-8183 loop (create→fund→serve→settle) on a
+        {/* CREATE A JOB — buy side. Runs the genuine agentic-commerce loop (create→fund→serve→settle) on a
             LOCAL operator run so the ledger above fills with a REAL served job. Disabled on the
             read-only cloud deploy (no signing key) — never a fake job. */}
         <div className="space-y-2 border-t border-edge pt-2">
@@ -337,7 +337,7 @@ export default function AgentCommercePanel({
             disabled={!canCreate || jobBusy || !jobQuery.trim()}
             title={
               canCreate
-                ? "Run the real ERC-8183 loop: create → fund → serve → settle"
+                ? "Run the real agentic-commerce loop: create → fund → serve → settle"
                 : "Operator-only — the cloud dashboard has no signing key"
             }
             className="w-full rounded-sm border px-2 py-1.5 text-xs font-semibold transition-opacity disabled:opacity-40"

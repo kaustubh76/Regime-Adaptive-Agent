@@ -221,11 +221,11 @@ def test_strategy_card_exposes_universe_and_active(monkeypatch):
     from ictbot.runtime import active_tokens
     from ictbot.strategy.momentum_allocator import CONTEST_TOKENS
 
-    monkeypatch.setattr(active_tokens, "load", lambda: ["BNB", "ETH", "CAKE"])
+    monkeypatch.setattr(active_tokens, "load", lambda: ["AVAX", "ETH", "SOL"])
     card = reads.strategy_card()
     assert card is not None
     assert card["tokens"] == list(CONTEST_TOKENS)
-    assert card["active"] == ["BNB", "ETH", "CAKE"]
+    assert card["active"] == ["AVAX", "ETH", "SOL"]
     assert "of 3" in card["summary"]  # summary tracks the ACTIVE count
 
 
@@ -352,8 +352,8 @@ def test_strategies_card_merges_stability_grade(monkeypatch):
     )
     by = {it["name"]: it for it in reads.strategies_card()["items"]}
     assert by["dual_momentum"]["stability"]["grade"] == "ROBUST"
-    # BNB_STRATEGY_03 → dual_momentum: the alias inherits the target's grade
-    assert by["BNB_STRATEGY_03"]["stability"]["grade"] == "ROBUST"
+    # AVAX_STRATEGY_03 → dual_momentum: the alias inherits the target's grade
+    assert by["AVAX_STRATEGY_03"]["stability"]["grade"] == "ROBUST"
     # an arm with no grade and no aliased grade → None (no badge)
     assert by["momentum"]["stability"] is None
 
@@ -367,48 +367,48 @@ def _rot(rows):
 
 def test_token_rotation_card_held_and_nudged_union():
     rows = [
-        {"event": "REBALANCE", "ts": "t1", "weights_after": {"BNB": 0.4, "CAKE": 0.3}},
+        {"event": "REBALANCE", "ts": "t1", "weights_after": {"AVAX": 0.4, "SOL": 0.3}},
         {"event": "FLOOR_NUDGE", "ts": "t2", "tokens": ["ETH", "LINK"]},
     ]
     c = _rot(rows)
     assert c["total"] == 8
     assert c["touched_count"] == 4
-    assert c["held"] == ["BNB", "CAKE"]
+    assert c["held"] == ["AVAX", "SOL"]
     assert c["nudged"] == ["ETH", "LINK"]
     by = {t["token"]: t for t in c["tokens"]}
-    assert by["BNB"]["source"] == "held" and by["BNB"]["touched"]
+    assert by["AVAX"]["source"] == "held" and by["AVAX"]["touched"]
     assert by["ETH"]["source"] == "nudged" and by["ETH"]["touched"]
     assert by["UNI"]["source"] == "none" and not by["UNI"]["touched"]
 
 
 def test_token_rotation_card_source_both_when_held_and_nudged():
     rows = [
-        {"event": "REBALANCE", "ts": "t1", "weights_after": {"BNB": 0.5}},
-        {"event": "FLOOR_NUDGE", "ts": "t2", "tokens": ["BNB"]},
+        {"event": "REBALANCE", "ts": "t1", "weights_after": {"AVAX": 0.5}},
+        {"event": "FLOOR_NUDGE", "ts": "t2", "tokens": ["AVAX"]},
     ]
     by = {t["token"]: t for t in _rot(rows)["tokens"]}
-    assert by["BNB"]["source"] == "both"
-    assert by["BNB"]["count"] == 2  # one held-tick + one nudge
+    assert by["AVAX"]["source"] == "both"
+    assert by["AVAX"]["count"] == 2  # one held-tick + one nudge
 
 
 def test_token_rotation_card_counts_and_latest_ts():
     rows = [
-        {"event": "REBALANCE", "ts": "t1", "weights_after": {"BNB": 0.4}},
-        {"event": "REBALANCE", "ts": "t2", "weights_after": {"BNB": 0.4}},
-        {"event": "FLOOR_NUDGE", "ts": "t3", "tokens": ["BNB"]},
+        {"event": "REBALANCE", "ts": "t1", "weights_after": {"AVAX": 0.4}},
+        {"event": "REBALANCE", "ts": "t2", "weights_after": {"AVAX": 0.4}},
+        {"event": "FLOOR_NUDGE", "ts": "t3", "tokens": ["AVAX"]},
     ]
     by = {t["token"]: t for t in _rot(rows)["tokens"]}
-    assert by["BNB"]["count"] == 3
-    assert by["BNB"]["last_ts"] == "t3"  # most recent across held + nudged
+    assert by["AVAX"]["count"] == 3
+    assert by["AVAX"]["last_ts"] == "t3"  # most recent across held + nudged
 
 
 def test_token_rotation_card_ignores_zero_weight_and_legacy_rows():
     rows = [
-        {"event": "REBALANCE", "ts": "t1", "weights_after": {"BNB": 0.0, "CAKE": 0.3}},
+        {"event": "REBALANCE", "ts": "t1", "weights_after": {"AVAX": 0.0, "SOL": 0.3}},
         {"event": "FLOOR_NUDGE", "ts": "t2"},  # legacy row: no "tokens" key
     ]
     c = _rot(rows)
-    assert c["held"] == ["CAKE"]  # BNB at 0 weight is not "held"
+    assert c["held"] == ["SOL"]  # AVAX at 0 weight is not "held"
     assert c["nudged"] == []  # legacy FLOOR_NUDGE w/o "tokens" contributes nothing
     assert c["touched_count"] == 1
 
@@ -420,7 +420,7 @@ def test_snapshot_token_rotation_survives_response_model(monkeypatch):
     from ictbot.api.schemas import SnapshotOut
 
     rows = [
-        {"event": "REBALANCE", "ts": "t1", "weights_after": {"BNB": 0.4}},
+        {"event": "REBALANCE", "ts": "t1", "weights_after": {"AVAX": 0.4}},
         {"event": "FLOOR_NUDGE", "ts": "t2", "tokens": ["ETH", "LINK"]},
     ]
     monkeypatch.setattr(reads, "read_journal", lambda *a, **k: rows)
@@ -430,5 +430,5 @@ def test_snapshot_token_rotation_survives_response_model(monkeypatch):
     out = SnapshotOut(**snap).model_dump()
     assert out["token_rotation"] is not None, "response_model stripped token_rotation!"
     assert out["token_rotation"]["touched_count"] == 3
-    assert out["token_rotation"]["held"] == ["BNB"]
+    assert out["token_rotation"]["held"] == ["AVAX"]
     assert out["token_rotation"]["nudged"] == ["ETH", "LINK"]

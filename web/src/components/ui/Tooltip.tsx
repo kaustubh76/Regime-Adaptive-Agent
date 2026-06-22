@@ -36,7 +36,7 @@ export default function InfoTip({ term, title, text, side = "top", className = "
       </button>
       <span
         role="tooltip"
-        className={`pointer-events-none absolute left-1/2 z-50 w-56 -translate-x-1/2 rounded-sm border-3 border-[color:var(--thick-line)] bg-panel px-2.5 py-2 text-left opacity-0 shadow-brut-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 ${
+        className={`pointer-events-none absolute left-1/2 z-50 w-56 max-w-[min(90vw,14rem)] -translate-x-1/2 rounded-sm border-3 border-[color:var(--thick-line)] bg-panel px-2.5 py-2 text-left opacity-0 shadow-brut-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 ${
           side === "top" ? "bottom-full mb-2" : "top-full mt-2"
         }`}
       >

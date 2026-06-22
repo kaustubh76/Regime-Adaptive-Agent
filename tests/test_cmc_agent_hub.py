@@ -75,7 +75,7 @@ def test_disabled_returns_none(monkeypatch):
 
 
 def test_technical_analysis_resolves_symbol(hub_on):
-    ta = hub_on.technical_analysis("BNB")
+    ta = hub_on.technical_analysis("AVAX")
     assert ta["rsi"]["rsi14"] == "38.44"
     assert hub_on.technical_analysis("doesnotexist") is None  # unknown symbol → None
 
@@ -251,7 +251,7 @@ def test_macro_events_high_impact_detection(hub_full):
 
 def test_quotes_latest_and_verify_ids(hub_full):
     q = hub_full.quotes_latest()
-    assert len(q) == 8 and q["BNB"]["symbol_cmc"] == "BNB"
+    assert len(q) == 8 and q["AVAX"]["symbol_cmc"] == "AVAX"
     ids = hub_full.verify_cmc_ids()
     assert ids["matched"] == 8 and ids["total"] == 8 and ids["mismatches"] == {}
 

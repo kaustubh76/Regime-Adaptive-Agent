@@ -29,27 +29,27 @@ def client(tmp_path, monkeypatch):
 
 
 def test_post_valid_subset_persists(client):
-    r = client.post("/api/controls/tokens", json={"active": ["DOGE", "BNB", "CAKE"]})
+    r = client.post("/api/controls/tokens", json={"active": ["JOE", "AVAX", "SOL"]})
     assert r.status_code == 200
     body = r.json()
     assert body["ok"] is True
-    assert body["active"] == ["BNB", "CAKE", "DOGE"]  # canonical order
+    assert body["active"] == ["AVAX", "SOL", "JOE"]  # canonical order
     assert "3/8" in body["message"]
-    assert active_tokens.load() == ["BNB", "CAKE", "DOGE"]
+    assert active_tokens.load() == ["AVAX", "SOL", "JOE"]
 
 
 def test_post_too_few_rejected_with_current_list(client):
-    active_tokens.save(["BNB", "ETH", "CAKE"])
-    r = client.post("/api/controls/tokens", json={"active": ["BNB"]})
+    active_tokens.save(["AVAX", "ETH", "SOL"])
+    r = client.post("/api/controls/tokens", json={"active": ["AVAX"]})
     assert r.status_code == 400
     body = r.json()
     assert body["ok"] is False
-    assert body["active"] == ["BNB", "ETH", "CAKE"]  # unchanged current state
+    assert body["active"] == ["AVAX", "ETH", "SOL"]  # unchanged current state
     assert "at least 2" in body["message"]
 
 
 def test_post_unknown_token_rejected(client):
-    r = client.post("/api/controls/tokens", json={"active": ["BNB", "XRP"]})
+    r = client.post("/api/controls/tokens", json={"active": ["AVAX", "XRP"]})
     assert r.status_code == 400
     assert "unknown token" in r.json()["message"]
 
@@ -59,15 +59,15 @@ def test_post_works_while_kill_engaged(client, monkeypatch):
     from ictbot.runtime import kill_switch
 
     monkeypatch.setattr(kill_switch, "is_engaged", lambda: True)
-    r = client.post("/api/controls/tokens", json={"active": ["BNB", "ETH"]})
+    r = client.post("/api/controls/tokens", json={"active": ["AVAX", "ETH"]})
     assert r.status_code == 200
 
 
 def test_strategy_endpoint_reflects_active(client):
-    client.post("/api/controls/tokens", json={"active": ["BNB", "ETH", "LINK"]})
+    client.post("/api/controls/tokens", json={"active": ["AVAX", "ETH", "LINK"]})
     r = client.get("/api/strategy")
     assert r.status_code == 200
     body = r.json()
     assert body["tokens"] == list(CONTEST_TOKENS)
-    assert body["active"] == ["BNB", "ETH", "LINK"]
+    assert body["active"] == ["AVAX", "ETH", "LINK"]
     assert "of 3" in body["summary"]

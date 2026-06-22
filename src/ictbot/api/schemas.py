@@ -508,7 +508,7 @@ class StrategyMenuItem(BaseModel):
     name: str
     summary: str = ""
     current: bool = False  # the strategy the SIM track is running
-    alias_of: str | None = None  # underlying arm if this is a BNB_STRATEGY_0X alias
+    alias_of: str | None = None  # underlying arm if this is a AVAX_STRATEGY_0X alias
     survival: dict | None = None  # backtest gate verdict (validate_strategy --save-verdict)
     forward: dict | None = None  # forward-promotion verdict (forward_promote --save)
     stability: dict | None = None  # stability grade {grade, ts} (make stability)

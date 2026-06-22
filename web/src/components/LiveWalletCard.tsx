@@ -87,7 +87,7 @@ export default function LiveWalletCard({
       <div className="space-y-3">
         <div>
           <div className="font-display text-3xl font-bold leading-tight tabular-nums" style={{ color: GOLD }}>
-            {total_usd != null ? <AnimatedNumber value={total_usd} format={(n) => fmtUsd(n)} flash /> : fmtUsd(total_usd)}
+            {total_usd != null ? <AnimatedNumber value={total_usd} format={(n) => fmtUsd(n)} flash /> : "—"}
           </div>
           <div className="text-[11px] text-muted">actual on-chain balance · {srcLabel(priced_source)}</div>
         </div>
@@ -124,7 +124,7 @@ export default function LiveWalletCard({
         </div>
 
         {gas_low && (
-          <div className="rounded-sm border border-[#f0b90b40] bg-[#f0b90b12] px-2 py-1 text-[10px] leading-snug text-amber">
+          <div className="rounded-sm border border-brand/25 bg-brand/10 px-2 py-1 text-[10px] leading-snug text-amber">
             ⚠ trade-gas buffer thin ({gas_bnb?.toFixed(4)} AVAX) — top up before live trading
           </div>
         )}

@@ -61,17 +61,17 @@ def test_disabled_strongest_token_is_excluded():
 def test_weights_keys_cover_full_universe_with_zeros():
     p = AllocatorParams(top_k=2)
     df = staggered_bull()
-    w, *_ = adaptive_target_weights(df, p, floor=0.40, ceiling=0.85, active=["BNB", "ETH", "CAKE"])
+    w, *_ = adaptive_target_weights(df, p, floor=0.40, ceiling=0.85, active=["AVAX", "ETH", "SOL"])
     assert set(w.keys()) == set(CONTEST_TOKENS)  # journal/dashboard shape unchanged
-    assert {k for k, v in w.items() if v > 0} <= {"BNB", "ETH", "CAKE"}
+    assert {k for k, v in w.items() if v > 0} <= {"AVAX", "ETH", "SOL"}
 
 
 def test_two_active_edge_still_deploys():
     p = AllocatorParams(top_k=2)
     df = staggered_bull()
-    w, _, cap = adaptive_target_weights(df, p, floor=0.40, ceiling=0.85, active=["BNB", "ETH"])
+    w, _, cap = adaptive_target_weights(df, p, floor=0.40, ceiling=0.85, active=["AVAX", "ETH"])
     held = {k for k, v in w.items() if v > 0}
-    assert held == {"BNB", "ETH"}
+    assert held == {"AVAX", "ETH"}
     assert abs(sum(w.values()) - cap) < 1e-9  # fully deploys to the cap
 
 
@@ -88,9 +88,9 @@ def test_ta_rank_composes_with_active_subset():
     """ta_rank tilt + active subset: ranking still confined to the active set."""
     p = AllocatorParams(top_k=2)
     df = staggered_bull()
-    active = ["BNB", "ETH", "CAKE", "LINK"]
+    active = ["AVAX", "ETH", "SOL", "LINK"]
     tilt = {t: 0.5 for t in CONTEST_TOKENS}
-    tilt["BNB"] = 1.0  # strongly confirm the weakest active
+    tilt["AVAX"] = 1.0  # strongly confirm the weakest active
     w, *_ = adaptive_target_weights(
         df, p, floor=0.40, ceiling=0.85, active=active, ta_token_scores=tilt, w_ta_rank=10.0
     )

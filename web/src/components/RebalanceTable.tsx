@@ -107,7 +107,7 @@ export default function RebalanceTable({ rebalances }: { rebalances: Rebalances 
   // Stable identity: ts + first tx hash (NOT the array index — the newest-first
   // list prepends on every tick, which would shift indexes and silently collapse
   // or mis-target an expanded row mid-read).
-  const keyOf = (r: RebalanceItem) => `${r.ts}-${r.tx[0]?.hash ?? "none"}`;
+  const keyOf = (r: RebalanceItem) => `${r.ts}-${r.nav_after ?? ""}-${r.tx[0]?.hash ?? "none"}`;
   const toggle = (k: string) => setOpen((cur) => (cur === k ? null : k));
 
   return (
