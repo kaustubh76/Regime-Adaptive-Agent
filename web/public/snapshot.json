@@ -1,7 +1,7 @@
 {
   "health": {
     "ok": true,
-    "heartbeat_age_s": 1335618.7,
+    "heartbeat_age_s": 1339177.5,
     "last_beat_iso": "2026-06-07T06:30:28.350000+00:00",
     "mode": "sim",
     "journal_mode": "sim",
@@ -30,18 +30,26 @@
   },
   "strategy": {
     "name": "momentum_cmc",
-    "summary": "CMC-driven momentum: hold top-5 of 4 by 120-bar (20d) return on CoinMarketCap's own 4h candles (inverse-vol, regime-adaptive cap), confirmed live by CMC technical-analysis + Fear&Greed. The entire decision runs on CMC data.",
+    "summary": "CMC-driven momentum: hold top-5 of 8 by 120-bar (20d) return on CoinMarketCap's own 4h candles (inverse-vol, regime-adaptive cap), confirmed live by CMC technical-analysis + Fear&Greed. The entire decision runs on CMC data.",
     "tokens": [
       "AVAX",
       "ETH",
+      "SOL",
       "LINK",
-      "UNI"
+      "UNI",
+      "AAVE",
+      "JOE",
+      "GMX"
     ],
     "active": [
       "AVAX",
       "ETH",
+      "SOL",
       "LINK",
-      "UNI"
+      "UNI",
+      "AAVE",
+      "JOE",
+      "GMX"
     ],
     "params": {
       "top_k": 5,
@@ -55,7 +63,7 @@
     "items": [
       {
         "name": "AVAX_STRATEGY_01",
-        "summary": "AVAX_STRATEGY_01 (alias of momentum_adaptive) \u2014 Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
+        "summary": "AVAX_STRATEGY_01 (alias of momentum_adaptive) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
         "current": false,
         "alias_of": "momentum_adaptive",
         "survival": {
@@ -89,7 +97,7 @@
       },
       {
         "name": "AVAX_STRATEGY_02",
-        "summary": "AVAX_STRATEGY_02 (alias of momentum_voltarget) \u2014 Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
+        "summary": "AVAX_STRATEGY_02 (alias of momentum_voltarget) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
         "current": false,
         "alias_of": "momentum_voltarget",
         "survival": {
@@ -123,7 +131,7 @@
       },
       {
         "name": "AVAX_STRATEGY_03",
-        "summary": "AVAX_STRATEGY_03 (alias of dual_momentum) \u2014 Dual momentum: hold top-2 of 4 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
+        "summary": "AVAX_STRATEGY_03 (alias of dual_momentum) \u2014 Dual momentum: hold top-2 of 8 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
         "current": false,
         "alias_of": "dual_momentum",
         "survival": {
@@ -157,7 +165,7 @@
       },
       {
         "name": "AVAX_STRATEGY_04",
-        "summary": "AVAX_STRATEGY_04 (alias of rotation) \u2014 Relative-strength rotation: hold top-3 of 4 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
+        "summary": "AVAX_STRATEGY_04 (alias of rotation) \u2014 Relative-strength rotation: hold top-3 of 8 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
         "current": false,
         "alias_of": "rotation",
         "survival": {
@@ -191,7 +199,7 @@
       },
       {
         "name": "AVAX_STRATEGY_05",
-        "summary": "AVAX_STRATEGY_05 (alias of breakout) \u2014 Volatility breakout: hold the 4-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
+        "summary": "AVAX_STRATEGY_05 (alias of breakout) \u2014 Volatility breakout: hold the 8-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
         "current": false,
         "alias_of": "breakout",
         "survival": {
@@ -225,7 +233,7 @@
       },
       {
         "name": "AVAX_STRATEGY_06",
-        "summary": "AVAX_STRATEGY_06 (alias of momentum_fast) \u2014 Short-horizon momentum: hold top-2 of 4 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
+        "summary": "AVAX_STRATEGY_06 (alias of momentum_fast) \u2014 Short-horizon momentum: hold top-2 of 8 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
         "current": false,
         "alias_of": "momentum_fast",
         "survival": {
@@ -259,7 +267,7 @@
       },
       {
         "name": "AVAX_STRATEGY_07",
-        "summary": "AVAX_STRATEGY_07 (alias of momentum_mafilter) \u2014 Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
+        "summary": "AVAX_STRATEGY_07 (alias of momentum_mafilter) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
         "current": false,
         "alias_of": "momentum_mafilter",
         "survival": {
@@ -293,7 +301,7 @@
       },
       {
         "name": "AVAX_STRATEGY_08",
-        "summary": "AVAX_STRATEGY_08 (alias of mean_reversion) \u2014 Mean-reversion: buy 4-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
+        "summary": "AVAX_STRATEGY_08 (alias of mean_reversion) \u2014 Mean-reversion: buy 8-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
         "current": false,
         "alias_of": "mean_reversion",
         "survival": {
@@ -327,7 +335,7 @@
       },
       {
         "name": "AVAX_STRATEGY_09",
-        "summary": "AVAX_STRATEGY_09 (alias of grid) \u2014 Grid / range: hold MORE of each of the 4 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
+        "summary": "AVAX_STRATEGY_09 (alias of grid) \u2014 Grid / range: hold MORE of each of the 8 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
         "current": false,
         "alias_of": "grid",
         "survival": {
@@ -361,7 +369,7 @@
       },
       {
         "name": "breakout",
-        "summary": "Volatility breakout: hold the 4-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
+        "summary": "Volatility breakout: hold the 8-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -395,7 +403,7 @@
       },
       {
         "name": "dual_momentum",
-        "summary": "Dual momentum: hold top-2 of 4 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
+        "summary": "Dual momentum: hold top-2 of 8 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -429,7 +437,7 @@
       },
       {
         "name": "grid",
-        "summary": "Grid / range: hold MORE of each of the 4 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
+        "summary": "Grid / range: hold MORE of each of the 8 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -463,7 +471,7 @@
       },
       {
         "name": "mean_reversion",
-        "summary": "Mean-reversion: buy 4-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
+        "summary": "Mean-reversion: buy 8-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -497,7 +505,7 @@
       },
       {
         "name": "momentum",
-        "summary": "Static momentum: hold top-2 of 4 by 120-bar return, inverse-vol, capped at 60%.",
+        "summary": "Static momentum: hold top-2 of 8 by 120-bar return, inverse-vol, capped at 60%.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -531,7 +539,7 @@
       },
       {
         "name": "momentum_adaptive",
-        "summary": "Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
+        "summary": "Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -565,7 +573,7 @@
       },
       {
         "name": "momentum_cmc",
-        "summary": "CMC-driven momentum: hold top-2 of 4 by 120-bar (20d) return on CoinMarketCap's own 4h candles (inverse-vol, regime-adaptive cap), confirmed live by CMC technical-analysis + Fear&Greed. The entire decision runs on CMC data.",
+        "summary": "CMC-driven momentum: hold top-2 of 8 by 120-bar (20d) return on CoinMarketCap's own 4h candles (inverse-vol, regime-adaptive cap), confirmed live by CMC technical-analysis + Fear&Greed. The entire decision runs on CMC data.",
         "current": true,
         "alias_of": null,
         "survival": {
@@ -596,7 +604,7 @@
       },
       {
         "name": "momentum_fast",
-        "summary": "Short-horizon momentum: hold top-2 of 4 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
+        "summary": "Short-horizon momentum: hold top-2 of 8 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -630,7 +638,7 @@
       },
       {
         "name": "momentum_mafilter",
-        "summary": "Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
+        "summary": "Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -664,7 +672,7 @@
       },
       {
         "name": "momentum_voltarget",
-        "summary": "Regime-adaptive momentum: hold top-2 of 4 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
+        "summary": "Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -698,7 +706,7 @@
       },
       {
         "name": "rotation",
-        "summary": "Relative-strength rotation: hold top-3 of 4 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
+        "summary": "Relative-strength rotation: hold top-3 of 8 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
         "current": false,
         "alias_of": null,
         "survival": {
@@ -738,7 +746,7 @@
     "halted": false,
     "halt_reason": null,
     "halt_ts": null,
-    "nav": 999.64,
+    "nav": 23.15,
     "balances": {
       "USDT": 492.54867123625326,
       "AVAX": 23.005391385700772,
@@ -747,18 +755,19 @@
       "UNI": 20.884520292260877
     },
     "weights": {
-      "AVAX": 0.1449,
-      "ETH": 0.1502,
-      "LINK": 0.149,
-      "UNI": 0.0632
+      "ETH": 0.0864,
+      "SOL": 0.0663,
+      "LINK": 0.1141,
+      "UNI": 0.0303,
+      "AAVE": 0.0529
     },
-    "cumulative_swaps": 4,
+    "cumulative_swaps": 490,
     "trade_floor": 7,
     "profit_lock": {
       "armed": false,
       "locked": false,
       "campaign_start_nav": 1000.0,
-      "cum_ret": -0.0004,
+      "cum_ret": -0.9768,
       "peak_since_trigger": null,
       "lock_floor": null
     }
@@ -766,58 +775,730 @@
   "nav": {
     "curve": [
       {
-        "ts": "2026-06-22T17:30:31+00:00",
-        "nav": 999.64
+        "ts": "2026-03-24T00:00:00Z",
+        "nav": 28.35
       },
       {
-        "ts": "2026-06-22T17:30:34+00:00",
-        "nav": 999.64
+        "ts": "2026-03-25T00:00:00Z",
+        "nav": 28.62
       },
       {
-        "ts": "2026-06-22T17:30:37+00:00",
-        "nav": 999.64
+        "ts": "2026-03-26T00:00:00Z",
+        "nav": 27.45
       },
       {
-        "ts": "2026-06-22T17:30:40+00:00",
-        "nav": 999.64
+        "ts": "2026-03-27T00:00:00Z",
+        "nav": 26.8
       },
       {
-        "ts": "2026-06-22T17:30:43+00:00",
-        "nav": 999.64
+        "ts": "2026-03-28T00:00:00Z",
+        "nav": 26.58
       },
       {
-        "ts": "2026-06-22T17:30:46+00:00",
-        "nav": 999.64
+        "ts": "2026-03-29T00:00:00Z",
+        "nav": 26.44
+      },
+      {
+        "ts": "2026-03-30T00:00:00Z",
+        "nav": 26.59
+      },
+      {
+        "ts": "2026-03-31T00:00:00Z",
+        "nav": 26.98
+      },
+      {
+        "ts": "2026-04-01T00:00:00Z",
+        "nav": 27.1
+      },
+      {
+        "ts": "2026-04-02T00:00:00Z",
+        "nav": 26.49
+      },
+      {
+        "ts": "2026-04-03T00:00:00Z",
+        "nav": 26.4
+      },
+      {
+        "ts": "2026-04-04T00:00:00Z",
+        "nav": 26.41
+      },
+      {
+        "ts": "2026-04-05T00:00:00Z",
+        "nav": 26.53
+      },
+      {
+        "ts": "2026-04-06T00:00:00Z",
+        "nav": 26.43
+      },
+      {
+        "ts": "2026-04-07T00:00:00Z",
+        "nav": 26.97
+      },
+      {
+        "ts": "2026-04-08T00:00:00Z",
+        "nav": 26.5
+      },
+      {
+        "ts": "2026-04-09T00:00:00Z",
+        "nav": 26.6
+      },
+      {
+        "ts": "2026-04-10T00:00:00Z",
+        "nav": 26.8
+      },
+      {
+        "ts": "2026-04-11T00:00:00Z",
+        "nav": 26.82
+      },
+      {
+        "ts": "2026-04-12T00:00:00Z",
+        "nav": 26.31
+      },
+      {
+        "ts": "2026-04-13T00:00:00Z",
+        "nav": 27.0
+      },
+      {
+        "ts": "2026-04-14T00:00:00Z",
+        "nav": 26.62
+      },
+      {
+        "ts": "2026-04-15T00:00:00Z",
+        "nav": 26.82
+      },
+      {
+        "ts": "2026-04-16T00:00:00Z",
+        "nav": 27.21
+      },
+      {
+        "ts": "2026-04-17T00:00:00Z",
+        "nav": 27.33
+      },
+      {
+        "ts": "2026-04-18T00:00:00Z",
+        "nav": 26.65
+      },
+      {
+        "ts": "2026-04-19T00:00:00Z",
+        "nav": 26.13
+      },
+      {
+        "ts": "2026-04-20T00:00:00Z",
+        "nav": 26.35
+      },
+      {
+        "ts": "2026-04-21T00:00:00Z",
+        "nav": 26.48
+      },
+      {
+        "ts": "2026-04-22T00:00:00Z",
+        "nav": 26.68
+      },
+      {
+        "ts": "2026-04-23T00:00:00Z",
+        "nav": 26.87
+      },
+      {
+        "ts": "2026-04-24T00:00:00Z",
+        "nav": 26.59
+      },
+      {
+        "ts": "2026-04-25T00:00:00Z",
+        "nav": 26.54
+      },
+      {
+        "ts": "2026-04-26T00:00:00Z",
+        "nav": 26.97
+      },
+      {
+        "ts": "2026-04-27T00:00:00Z",
+        "nav": 26.46
+      },
+      {
+        "ts": "2026-04-28T00:00:00Z",
+        "nav": 26.32
+      },
+      {
+        "ts": "2026-04-29T00:00:00Z",
+        "nav": 26.05
+      },
+      {
+        "ts": "2026-04-30T00:00:00Z",
+        "nav": 26.02
+      },
+      {
+        "ts": "2026-05-01T00:00:00Z",
+        "nav": 26.0
+      },
+      {
+        "ts": "2026-05-02T00:00:00Z",
+        "nav": 26.17
+      },
+      {
+        "ts": "2026-05-03T00:00:00Z",
+        "nav": 26.12
+      },
+      {
+        "ts": "2026-05-04T00:00:00Z",
+        "nav": 26.41
+      },
+      {
+        "ts": "2026-05-05T00:00:00Z",
+        "nav": 26.73
+      },
+      {
+        "ts": "2026-05-06T00:00:00Z",
+        "nav": 27.21
+      },
+      {
+        "ts": "2026-05-07T00:00:00Z",
+        "nav": 27.03
+      },
+      {
+        "ts": "2026-05-08T00:00:00Z",
+        "nav": 27.91
+      },
+      {
+        "ts": "2026-05-09T00:00:00Z",
+        "nav": 28.03
+      },
+      {
+        "ts": "2026-05-10T00:00:00Z",
+        "nav": 28.68
+      },
+      {
+        "ts": "2026-05-11T00:00:00Z",
+        "nav": 28.52
+      },
+      {
+        "ts": "2026-05-12T00:00:00Z",
+        "nav": 27.61
+      },
+      {
+        "ts": "2026-05-13T00:00:00Z",
+        "nav": 27.12
+      },
+      {
+        "ts": "2026-05-14T00:00:00Z",
+        "nav": 27.53
+      },
+      {
+        "ts": "2026-05-15T00:00:00Z",
+        "nav": 26.63
+      },
+      {
+        "ts": "2026-05-16T00:00:00Z",
+        "nav": 26.02
+      },
+      {
+        "ts": "2026-05-17T00:00:00Z",
+        "nav": 25.75
+      },
+      {
+        "ts": "2026-05-18T00:00:00Z",
+        "nav": 25.83
+      },
+      {
+        "ts": "2026-05-19T00:00:00Z",
+        "nav": 25.57
+      },
+      {
+        "ts": "2026-05-20T00:00:00Z",
+        "nav": 25.9
+      },
+      {
+        "ts": "2026-05-21T00:00:00Z",
+        "nav": 26.02
+      },
+      {
+        "ts": "2026-05-22T00:00:00Z",
+        "nav": 25.33
+      },
+      {
+        "ts": "2026-05-23T00:00:00Z",
+        "nav": 25.64
+      },
+      {
+        "ts": "2026-05-24T00:00:00Z",
+        "nav": 25.32
+      },
+      {
+        "ts": "2026-05-25T00:00:00Z",
+        "nav": 25.35
+      },
+      {
+        "ts": "2026-05-26T00:00:00Z",
+        "nav": 25.13
+      },
+      {
+        "ts": "2026-05-27T00:00:00Z",
+        "nav": 24.78
+      },
+      {
+        "ts": "2026-05-28T00:00:00Z",
+        "nav": 24.51
+      },
+      {
+        "ts": "2026-05-29T00:00:00Z",
+        "nav": 24.54
+      },
+      {
+        "ts": "2026-05-30T00:00:00Z",
+        "nav": 24.6
+      },
+      {
+        "ts": "2026-05-31T00:00:00Z",
+        "nav": 24.58
+      },
+      {
+        "ts": "2026-06-01T00:00:00Z",
+        "nav": 24.53
+      },
+      {
+        "ts": "2026-06-02T00:00:00Z",
+        "nav": 23.77
+      },
+      {
+        "ts": "2026-06-03T00:00:00Z",
+        "nav": 23.63
+      },
+      {
+        "ts": "2026-06-04T00:00:00Z",
+        "nav": 23.27
+      },
+      {
+        "ts": "2026-06-05T00:00:00Z",
+        "nav": 22.44
+      },
+      {
+        "ts": "2026-06-06T00:00:00Z",
+        "nav": 22.38
+      },
+      {
+        "ts": "2026-06-07T00:00:00Z",
+        "nav": 22.83
+      },
+      {
+        "ts": "2026-06-08T00:00:00Z",
+        "nav": 22.84
+      },
+      {
+        "ts": "2026-06-09T00:00:00Z",
+        "nav": 22.65
+      },
+      {
+        "ts": "2026-06-10T00:00:00Z",
+        "nav": 22.42
+      },
+      {
+        "ts": "2026-06-11T00:00:00Z",
+        "nav": 22.73
+      },
+      {
+        "ts": "2026-06-12T00:00:00Z",
+        "nav": 22.73
+      },
+      {
+        "ts": "2026-06-13T00:00:00Z",
+        "nav": 22.9
+      },
+      {
+        "ts": "2026-06-14T00:00:00Z",
+        "nav": 23.12
+      },
+      {
+        "ts": "2026-06-15T00:00:00Z",
+        "nav": 23.4
+      },
+      {
+        "ts": "2026-06-16T00:00:00Z",
+        "nav": 23.58
+      },
+      {
+        "ts": "2026-06-17T00:00:00Z",
+        "nav": 23.38
+      },
+      {
+        "ts": "2026-06-18T00:00:00Z",
+        "nav": 23.23
+      },
+      {
+        "ts": "2026-06-19T00:00:00Z",
+        "nav": 23.26
+      },
+      {
+        "ts": "2026-06-20T00:00:00Z",
+        "nav": 23.37
+      },
+      {
+        "ts": "2026-06-21T00:00:00Z",
+        "nav": 23.15
       }
     ],
-    "current_nav": 999.64,
+    "current_nav": 23.15,
     "hwm": 1000.0,
     "drawdown": {
-      "current": 0.0004,
+      "current": 0.0,
       "series": [
         {
-          "ts": "2026-06-22T17:30:31+00:00",
+          "ts": "2026-03-24T00:00:00Z",
           "dd": 0.0
         },
         {
-          "ts": "2026-06-22T17:30:34+00:00",
-          "dd": 0.0004
+          "ts": "2026-03-25T00:00:00Z",
+          "dd": 0.0
         },
         {
-          "ts": "2026-06-22T17:30:37+00:00",
-          "dd": 0.0004
+          "ts": "2026-03-26T00:00:00Z",
+          "dd": 0.0
         },
         {
-          "ts": "2026-06-22T17:30:40+00:00",
-          "dd": 0.0004
+          "ts": "2026-03-27T00:00:00Z",
+          "dd": 0.0
         },
         {
-          "ts": "2026-06-22T17:30:43+00:00",
-          "dd": 0.0004
+          "ts": "2026-03-28T00:00:00Z",
+          "dd": 0.0
         },
         {
-          "ts": "2026-06-22T17:30:46+00:00",
-          "dd": 0.0004
+          "ts": "2026-03-29T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-03-30T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-03-31T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-01T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-02T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-03T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-04T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-05T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-06T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-07T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-08T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-09T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-10T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-11T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-12T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-13T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-14T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-15T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-16T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-17T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-18T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-19T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-20T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-21T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-22T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-23T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-24T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-25T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-26T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-27T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-28T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-29T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-04-30T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-01T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-02T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-03T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-04T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-05T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-06T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-07T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-08T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-09T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-10T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-11T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-12T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-13T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-14T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-15T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-16T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-17T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-18T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-19T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-20T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-21T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-22T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-23T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-24T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-25T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-26T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-27T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-28T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-29T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-30T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-05-31T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-01T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-02T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-03T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-04T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-05T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-06T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-07T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-08T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-09T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-10T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-11T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-12T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-13T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-14T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-15T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-16T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-17T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-18T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-19T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-20T00:00:00Z",
+          "dd": 0.0
+        },
+        {
+          "ts": "2026-06-21T00:00:00Z",
+          "dd": 0.0
         }
       ]
     },
@@ -828,317 +1509,371 @@
     }
   },
   "regime": {
-    "regime_score": 0.35,
-    "fear_greed": 22,
+    "regime_score": 0.0,
+    "fear_greed": 21,
     "fear_greed_label": "extreme fear",
-    "deploy_cap": 0.507,
+    "deploy_cap": 0.35,
     "stale": false
   },
   "rebalances": {
     "items": [
       {
-        "ts": "2026-06-22T17:30:46+00:00",
+        "ts": "2026-06-21T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 999.64,
-        "nav_after": 999.64,
-        "n_swaps": 0,
-        "n_swaps_total": 0,
+        "nav_before": 23.37,
+        "nav_after": 23.15,
+        "n_swaps": 6,
+        "n_swaps_total": 6,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0,
+        "fees_usd": 0.02,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "ETH": 0.0864,
+          "SOL": 0.0663,
+          "LINK": 0.1141,
+          "UNI": 0.0303,
+          "AAVE": 0.0529
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "ETH": 0.0864,
+          "SOL": 0.0663,
+          "LINK": 0.1141,
+          "UNI": 0.0303,
+          "AAVE": 0.0529
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": "CMC daily-replay on the Avalanche universe: risk-on score 0.00 (extreme fear) \u2192 deploying 35% of book (11% LINK, 9% ETH, 7% SOL, 5% AAVE, 3% UNI, inverse-vol weighted), 65% in USDT. Long-only spot momentum; participation over a bear-dominated tape.",
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": -0.0004,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
       },
       {
-        "ts": "2026-06-22T17:30:43+00:00",
+        "ts": "2026-06-20T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 999.64,
-        "nav_after": 999.64,
-        "n_swaps": 0,
-        "n_swaps_total": 0,
+        "nav_before": 23.26,
+        "nav_after": 23.37,
+        "n_swaps": 6,
+        "n_swaps_total": 6,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0,
+        "fees_usd": 0.02,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "SOL": 0.0655,
+          "LINK": 0.1073,
+          "UNI": 0.0335,
+          "AAVE": 0.0615,
+          "GMX": 0.0822
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "SOL": 0.0655,
+          "LINK": 0.1073,
+          "UNI": 0.0335,
+          "AAVE": 0.0615,
+          "GMX": 0.0822
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": null,
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": -0.0004,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
       },
       {
-        "ts": "2026-06-22T17:30:40+00:00",
+        "ts": "2026-06-19T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 999.64,
-        "nav_after": 999.64,
-        "n_swaps": 0,
-        "n_swaps_total": 0,
+        "nav_before": 23.23,
+        "nav_after": 23.26,
+        "n_swaps": 6,
+        "n_swaps_total": 6,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0,
+        "fees_usd": 0.02,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "ETH": 0.0917,
+          "LINK": 0.0892,
+          "UNI": 0.0332,
+          "AAVE": 0.0593,
+          "GMX": 0.0766
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "ETH": 0.0917,
+          "LINK": 0.0892,
+          "UNI": 0.0332,
+          "AAVE": 0.0593,
+          "GMX": 0.0766
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": null,
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": -0.0004,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
       },
       {
-        "ts": "2026-06-22T17:30:37+00:00",
+        "ts": "2026-06-18T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 999.64,
-        "nav_after": 999.64,
-        "n_swaps": 0,
-        "n_swaps_total": 0,
+        "nav_before": 23.38,
+        "nav_after": 23.23,
+        "n_swaps": 5,
+        "n_swaps_total": 5,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0,
+        "fees_usd": 0.0,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "SOL": 0.0706,
+          "LINK": 0.0987,
+          "UNI": 0.0394,
+          "AAVE": 0.0673,
+          "GMX": 0.1021
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "SOL": 0.0706,
+          "LINK": 0.0987,
+          "UNI": 0.0394,
+          "AAVE": 0.0673,
+          "GMX": 0.1021
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": null,
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": -0.0004,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
       },
       {
-        "ts": "2026-06-22T17:30:34+00:00",
+        "ts": "2026-06-17T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 999.64,
-        "nav_after": 999.64,
-        "n_swaps": 0,
-        "n_swaps_total": 0,
+        "nav_before": 23.58,
+        "nav_after": 23.38,
+        "n_swaps": 5,
+        "n_swaps_total": 5,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0,
+        "fees_usd": 0.0,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "SOL": 0.0726,
+          "LINK": 0.0937,
+          "UNI": 0.0367,
+          "AAVE": 0.0628,
+          "GMX": 0.1122
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "SOL": 0.0726,
+          "LINK": 0.0937,
+          "UNI": 0.0367,
+          "AAVE": 0.0628,
+          "GMX": 0.1122
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": null,
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": -0.0004,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
       },
       {
-        "ts": "2026-06-22T17:30:31+00:00",
+        "ts": "2026-06-16T00:00:00Z",
         "event": "REBALANCE",
         "mode": "sim",
         "strategy": "momentum_cmc",
-        "candle_source": "cmc_4h",
-        "quote_source": "rest",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
         "onchain_signals": null,
-        "nav_before": 1000.0,
-        "nav_after": 999.64,
+        "nav_before": 23.4,
+        "nav_after": 23.58,
+        "n_swaps": 6,
+        "n_swaps_total": 6,
+        "n_failed": 0,
+        "failed_swaps": [],
+        "fees_usd": 0.02,
+        "tx": [],
+        "target": {
+          "SOL": 0.0741,
+          "LINK": 0.0843,
+          "UNI": 0.0426,
+          "AAVE": 0.0764,
+          "GMX": 0.1007
+        },
+        "weights_after": {
+          "SOL": 0.0741,
+          "LINK": 0.0843,
+          "UNI": 0.0426,
+          "AAVE": 0.0764,
+          "GMX": 0.1007
+        },
+        "rationale": null,
+        "x402_dex": null,
+        "active_tokens": null,
+        "profit_lock": null
+      },
+      {
+        "ts": "2026-06-15T00:00:00Z",
+        "event": "REBALANCE",
+        "mode": "sim",
+        "strategy": "momentum_cmc",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
+        "onchain_signals": null,
+        "nav_before": 23.12,
+        "nav_after": 23.4,
+        "n_swaps": 6,
+        "n_swaps_total": 6,
+        "n_failed": 0,
+        "failed_swaps": [],
+        "fees_usd": 0.01,
+        "tx": [],
+        "target": {
+          "ETH": 0.07,
+          "SOL": 0.062,
+          "LINK": 0.0742,
+          "UNI": 0.0562,
+          "GMX": 0.0875
+        },
+        "weights_after": {
+          "ETH": 0.07,
+          "SOL": 0.062,
+          "LINK": 0.0742,
+          "UNI": 0.0562,
+          "GMX": 0.0875
+        },
+        "rationale": null,
+        "x402_dex": null,
+        "active_tokens": null,
+        "profit_lock": null
+      },
+      {
+        "ts": "2026-06-14T00:00:00Z",
+        "event": "REBALANCE",
+        "mode": "sim",
+        "strategy": "momentum_cmc",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
+        "onchain_signals": null,
+        "nav_before": 22.9,
+        "nav_after": 23.12,
+        "n_swaps": 5,
+        "n_swaps_total": 5,
+        "n_failed": 0,
+        "failed_swaps": [],
+        "fees_usd": 0.0,
+        "tx": [],
+        "target": {
+          "ETH": 0.0616,
+          "SOL": 0.0659,
+          "LINK": 0.07,
+          "AAVE": 0.057,
+          "GMX": 0.0955
+        },
+        "weights_after": {
+          "ETH": 0.0616,
+          "SOL": 0.0659,
+          "LINK": 0.07,
+          "AAVE": 0.057,
+          "GMX": 0.0955
+        },
+        "rationale": null,
+        "x402_dex": null,
+        "active_tokens": null,
+        "profit_lock": null
+      },
+      {
+        "ts": "2026-06-13T00:00:00Z",
+        "event": "REBALANCE",
+        "mode": "sim",
+        "strategy": "momentum_cmc",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
+        "onchain_signals": null,
+        "nav_before": 22.73,
+        "nav_after": 22.9,
         "n_swaps": 4,
         "n_swaps_total": 4,
         "n_failed": 0,
         "failed_swaps": [],
-        "fees_usd": 0.3552,
+        "fees_usd": 0.0,
         "tx": [],
         "target": {
-          "AVAX": 0.1449,
-          "ETH": 0.1503,
-          "LINK": 0.1491,
-          "UNI": 0.0632
+          "ETH": 0.0669,
+          "SOL": 0.0692,
+          "LINK": 0.0726,
+          "AAVE": 0.0599,
+          "GMX": 0.0814
         },
         "weights_after": {
-          "AVAX": 0.1449,
-          "ETH": 0.1502,
-          "LINK": 0.149,
-          "UNI": 0.0632
+          "ETH": 0.0669,
+          "SOL": 0.0692,
+          "LINK": 0.0726,
+          "AAVE": 0.0599,
+          "GMX": 0.0814
         },
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT.",
+        "rationale": null,
         "x402_dex": null,
-        "active_tokens": [
-          "AVAX",
-          "ETH",
-          "LINK",
-          "UNI"
-        ],
-        "profit_lock": {
-          "enabled": true,
-          "armed": false,
-          "locked": false,
-          "campaign_start_nav": 1000.0,
-          "cum_ret": 0.0,
-          "peak_since_trigger": null,
-          "lock_floor": null
-        }
+        "active_tokens": null,
+        "profit_lock": null
+      },
+      {
+        "ts": "2026-06-12T00:00:00Z",
+        "event": "REBALANCE",
+        "mode": "sim",
+        "strategy": "momentum_cmc",
+        "candle_source": "cmc_daily",
+        "quote_source": null,
+        "onchain_signals": null,
+        "nav_before": 22.73,
+        "nav_after": 22.73,
+        "n_swaps": 5,
+        "n_swaps_total": 5,
+        "n_failed": 0,
+        "failed_swaps": [],
+        "fees_usd": 0.0,
+        "tx": [],
+        "target": {
+          "ETH": 0.0657,
+          "SOL": 0.0693,
+          "LINK": 0.0722,
+          "AAVE": 0.0622,
+          "GMX": 0.0807
+        },
+        "weights_after": {
+          "ETH": 0.0657,
+          "SOL": 0.0693,
+          "LINK": 0.0722,
+          "AAVE": 0.0622,
+          "GMX": 0.0807
+        },
+        "rationale": null,
+        "x402_dex": null,
+        "active_tokens": null,
+        "profit_lock": null
       }
     ]
   },
   "rationale": {
     "items": [
       {
-        "ts": "2026-06-22T17:30:46+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
-      },
-      {
-        "ts": "2026-06-22T17:30:43+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
-      },
-      {
-        "ts": "2026-06-22T17:30:40+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
-      },
-      {
-        "ts": "2026-06-22T17:30:37+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
-      },
-      {
-        "ts": "2026-06-22T17:30:34+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
-      },
-      {
-        "ts": "2026-06-22T17:30:31+00:00",
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contracting; sentiment cooling vs its 7d avg. I'm deploying 51% of book \u2014 15% ETH, 15% LINK, 14% AVAX, 6% UNI (inverse-vol weighted) \u2014 and keeping 49% in USDT."
+        "ts": "2026-06-21T00:00:00Z",
+        "rationale": "CMC daily-replay on the Avalanche universe: risk-on score 0.00 (extreme fear) \u2192 deploying 35% of book (11% LINK, 9% ETH, 7% SOL, 5% AAVE, 3% UNI, inverse-vol weighted), 65% in USDT. Long-only spot momentum; participation over a bear-dominated tape."
       }
     ]
   },
@@ -1148,37 +1883,69 @@
         "token": "AVAX",
         "touched": true,
         "source": "held",
-        "count": 6,
-        "last_ts": "2026-06-22T17:30:46+00:00"
+        "count": 55,
+        "last_ts": "2026-06-09T00:00:00Z"
       },
       {
         "token": "ETH",
         "touched": true,
         "source": "held",
-        "count": 6,
-        "last_ts": "2026-06-22T17:30:46+00:00"
+        "count": 65,
+        "last_ts": "2026-06-21T00:00:00Z"
+      },
+      {
+        "token": "SOL",
+        "touched": true,
+        "source": "held",
+        "count": 72,
+        "last_ts": "2026-06-21T00:00:00Z"
       },
       {
         "token": "LINK",
         "touched": true,
         "source": "held",
-        "count": 6,
-        "last_ts": "2026-06-22T17:30:46+00:00"
+        "count": 89,
+        "last_ts": "2026-06-21T00:00:00Z"
       },
       {
         "token": "UNI",
         "touched": true,
         "source": "held",
-        "count": 6,
-        "last_ts": "2026-06-22T17:30:46+00:00"
+        "count": 37,
+        "last_ts": "2026-06-21T00:00:00Z"
+      },
+      {
+        "token": "AAVE",
+        "touched": true,
+        "source": "held",
+        "count": 30,
+        "last_ts": "2026-06-21T00:00:00Z"
+      },
+      {
+        "token": "JOE",
+        "touched": true,
+        "source": "held",
+        "count": 42,
+        "last_ts": "2026-06-07T00:00:00Z"
+      },
+      {
+        "token": "GMX",
+        "touched": true,
+        "source": "held",
+        "count": 60,
+        "last_ts": "2026-06-20T00:00:00Z"
       }
     ],
-    "touched_count": 4,
-    "total": 4,
+    "touched_count": 8,
+    "total": 8,
     "held": [
+      "AAVE",
       "AVAX",
       "ETH",
+      "GMX",
+      "JOE",
       "LINK",
+      "SOL",
       "UNI"
     ],
     "nudged": []
@@ -1201,7 +1968,7 @@
       "mode": "sim",
       "gasless": false,
       "gasless_flag": "--gasless",
-      "cumulative_swaps": 4,
+      "cumulative_swaps": 490,
       "trade_floor": 7
     },
     "nodereal": {
@@ -1254,19 +2021,20 @@
         "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
       },
       "preview": {
-        "ts": "2026-06-22T17:30:46+00:00",
+        "ts": "2026-06-21T00:00:00Z",
         "strategy": "momentum_cmc",
-        "regime_score": 0.35,
-        "deploy_cap": 0.507,
-        "fear_greed": 22,
+        "regime_score": 0.0,
+        "deploy_cap": 0.35,
+        "fear_greed": 21,
         "fear_greed_label": "extreme fear",
         "momentum_ranking": [
-          "ETH",
           "LINK",
-          "AVAX",
+          "ETH",
+          "SOL",
+          "AAVE",
           "UNI"
         ],
-        "rationale": "CMC Fear & Greed is 22 (extreme fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219259%); total mktcap contr\u2026"
+        "rationale": "CMC daily-replay on the Avalanche universe: risk-on score 0.00 (extreme fear) \u2192 deploying 35% of book (11% LINK, 9% ETH, 7% SOL, 5% AAVE, 3% UNI, inverse-vol weighted), 65% in USDT\u2026"
       },
       "can_create": false,
       "x402_server": {
@@ -1283,14 +2051,14 @@
     "ok": true,
     "address": "0xA9aa558b0a8006390f01A89824832086C080904a",
     "explorer_url": "https://testnet.snowtrace.io/address/0xA9aa558b0a8006390f01A89824832086C080904a",
-    "block": 56488149,
+    "block": 56489422,
     "network": "avax-testnet",
     "assets": [
       {
         "symbol": "AVAX",
         "amount": 0.4986900839986901,
-        "usd": 3.1394649622809774,
-        "price": 6.2954228748795895,
+        "usd": 3.1481562254339255,
+        "price": 6.312851060102881,
         "source": "cmc",
         "is_gas": true
       },
@@ -1303,23 +2071,23 @@
         "is_gas": false
       }
     ],
-    "total_usd": 23.14,
+    "total_usd": 23.15,
     "priced_source": "cmc",
     "gas_bnb": 0.4986900839986901,
     "gas_low": false,
     "x402_budget_usdc": 20.0,
-    "served_at": "2026-06-22T17:30:51.640894+00:00",
+    "served_at": "2026-06-22T18:30:10.262544+00:00",
     "note": null
   },
   "market_intel": {
     "enabled": true,
     "global_metrics": {
-      "btc_dominance": 58.557948931014,
-      "eth_dominance": 9.484720338208,
-      "stablecoin_market_cap": 286601004278.06085,
-      "total_market_cap": 2208343183830.7446,
-      "total_volume_24h": 70570495627.38,
-      "altcoin_market_cap": 915182710021.6136
+      "btc_dominance": 58.532335884742,
+      "eth_dominance": 9.511100318509,
+      "stablecoin_market_cap": 286563565016.57416,
+      "total_market_cap": 2210052822784.944,
+      "total_volume_24h": 70814967949.7,
+      "altcoin_market_cap": 916457281322.2441
     },
     "fng_trend": [
       {
@@ -1384,118 +2152,109 @@
         {
           "symbol": "DEXE",
           "name": "DeXe",
-          "pct_24h": 27.82964037
+          "pct_24h": 27.08568416
         },
         {
           "symbol": "TIA",
           "name": "Celestia",
-          "pct_24h": 10.43915803
+          "pct_24h": 8.76771283
         },
         {
           "symbol": "OKB",
           "name": "OKB",
-          "pct_24h": 6.98928596
+          "pct_24h": 6.94400905
         },
         {
           "symbol": "ZRO",
           "name": "LayerZero",
-          "pct_24h": 5.8672642
+          "pct_24h": 6.0459204
         },
         {
           "symbol": "STABLE",
           "name": "Stable",
-          "pct_24h": 4.90989678
+          "pct_24h": 5.57100578
         }
       ],
       "losers": [
         {
           "symbol": "H",
           "name": "Humanity",
-          "pct_24h": -24.66149188
-        },
-        {
-          "symbol": "JUP",
-          "name": "Jupiter",
-          "pct_24h": -7.72853483
+          "pct_24h": -23.09685497
         },
         {
           "symbol": "SKYAI",
           "name": "SKYAI",
-          "pct_24h": -4.51323834
+          "pct_24h": -5.66233891
+        },
+        {
+          "symbol": "BEAT",
+          "name": "Audiera",
+          "pct_24h": -5.30484959
+        },
+        {
+          "symbol": "JUP",
+          "name": "Jupiter",
+          "pct_24h": -4.40253763
         },
         {
           "symbol": "DASH",
           "name": "Dash",
-          "pct_24h": -3.45302775
-        },
-        {
-          "symbol": "XLM",
-          "name": "Stellar",
-          "pct_24h": -3.23518445
+          "pct_24h": -2.96099798
         }
       ]
     },
     "categories": [
       {
         "name": "Winklevoss Capital Portfolio",
-        "avg_price_change": 0.7048153343812625,
-        "market_cap": 1513566529768.0571,
-        "market_cap_change": 0.731506042547,
-        "num_tokens": 6
+        "avg_price_change": 1.0982027932298726,
+        "market_cap": 1514173847868.56,
+        "market_cap_change": 1.060052597993,
+        "num_tokens": 5
       },
       {
         "name": "Polychain Capital Portfolio",
-        "avg_price_change": 0.6854766117205879,
-        "market_cap": 1519163427832.3333,
-        "market_cap_change": 0.724544788583,
+        "avg_price_change": 1.0534096175010703,
+        "market_cap": 1519762004016.363,
+        "market_cap_change": 1.054078197757,
         "num_tokens": 50
       },
       {
+        "name": "Doggone Doggerel",
+        "avg_price_change": 0.10496267117656241,
+        "market_cap": 16957725767.662764,
+        "market_cap_change": 0.03530064408,
+        "num_tokens": 428
+      },
+      {
         "name": "Filesharing",
-        "avg_price_change": -0.274434265699978,
-        "market_cap": 1455902697.2657037,
-        "market_cap_change": -0.008490932512,
+        "avg_price_change": -0.17898651746622837,
+        "market_cap": 1450401556.881968,
+        "market_cap_change": 0.049028085588,
         "num_tokens": 51
       },
       {
-        "name": "Doggone Doggerel",
-        "avg_price_change": -0.30576317675210196,
-        "market_cap": 18257551889.73392,
-        "market_cap_change": -0.370571201859,
-        "num_tokens": 437
-      },
-      {
         "name": "NFTs & Collectibles",
-        "avg_price_change": -1.1176931498383036,
-        "market_cap": 6359328886.561537,
-        "market_cap_change": -1.130227194798,
-        "num_tokens": 785
+        "avg_price_change": -0.5405919538626898,
+        "market_cap": 6355005035.965487,
+        "market_cap_change": -0.767538300344,
+        "num_tokens": 776
       },
       {
         "name": "xStocks Ecosystem",
-        "avg_price_change": -1.286685738116114,
-        "market_cap": 5609906254.134832,
-        "market_cap_change": -0.997337441919,
+        "avg_price_change": -0.8636013599347844,
+        "market_cap": 5618553128.531666,
+        "market_cap_change": -0.733250608647,
         "num_tokens": 85
       }
     ],
-    "regime_terms": {
-      "breadth": 1.0,
-      "trend": 1.0,
-      "vol_factor": 0.6,
-      "fng": 0.22,
-      "dominance": 0.565,
-      "mktcap": 0.251,
-      "fng_mom": 0.48,
-      "score": 0.352
-    }
+    "regime_terms": null
   },
   "cmc_api": {
-    "credits_today": 70,
+    "credits_today": 138,
     "daily_budget": 9000,
-    "credits_month": 1420,
+    "credits_month": 1488,
     "monthly_budget": 290000,
-    "req_count": 1006,
+    "req_count": 1025,
     "last_status": 200,
     "last_credit_count": 1,
     "rate_wait_total_s": 0.0,
@@ -1510,16 +2269,9 @@
     "ta_enabled": true,
     "skill_enabled": true,
     "mcp": {
-      "calls": 11,
+      "calls": 1,
       "by_tool": {
-        "get_crypto_technical_analysis": 4,
-        "get_global_metrics_latest": 1,
-        "trending_crypto_narratives": 1,
-        "get_crypto_marketcap_technical_analysis": 1,
-        "get_global_crypto_derivatives_metrics": 1,
-        "get_upcoming_macro_events": 1,
-        "get_crypto_quotes_latest": 1,
-        "get_crypto_latest_news": 1
+        "get_crypto_quotes_latest": 1
       },
       "tools_available": [
         "get_crypto_quotes_latest",
@@ -1535,115 +2287,11 @@
         "get_upcoming_macro_events",
         "get_crypto_latest_news"
       ],
-      "last_call_ts": 1782149428
+      "last_call_ts": 1782152945
     },
-    "ta_health": 0.5669,
-    "ta_source": "cmc+skill",
-    "skill": {
-      "skill_source": "composed",
-      "risk_budget": 0.5088,
-      "regime": "neutral",
-      "fear_greed": 22,
-      "btc_dominance": 58.55,
-      "mktcap_change_24h": 0.37196,
-      "ta_breadth": {
-        "tokens": 4,
-        "macd_bull": 4,
-        "above_ema": 1,
-        "overbought": 0
-      },
-      "headline": "CMC composed market-overview: neutral (risk budget 51%). TA breadth 4/4 bullish-MACD, F&G 22; deriv stress 17%",
-      "narratives": [
-        "Binance Ecosystem",
-        "FTX Bankruptcy Estate ",
-        "Bitcoin Ecosystem"
-      ],
-      "tools_used": [
-        "get_crypto_latest_news",
-        "get_crypto_marketcap_technical_analysis",
-        "get_crypto_quotes_latest",
-        "get_crypto_technical_analysis",
-        "get_global_crypto_derivatives_metrics",
-        "get_global_metrics_latest",
-        "get_upcoming_macro_events",
-        "trending_crypto_narratives"
-      ],
-      "derivatives": {
-        "stress": 0.1726,
-        "oi_change_24h": 5.4,
-        "funding_rate": 0.0035614,
-        "open_interest_usd": 390650000000.0
-      },
-      "mktcap_ta": {
-        "rsi14": 53.91,
-        "macd_histogram": 14160000000.0,
-        "market_cap_usd": 2210000000000.0,
-        "health": 0.5891
-      },
-      "next_macro_event": {
-        "title": "End of EU MiCA Transitional Period",
-        "event_date": "1 July 2026",
-        "url": "https://coinmarketcap.com/community/articles/6a31aa189cbc78512b374f86",
-        "hours_to": 198.5,
-        "high_impact": false
-      },
-      "quotes_cross_check": {
-        "AVAX": {
-          "price": 6.2954228748795895,
-          "pct_24h": 0.46190698,
-          "pct_7d": -10.16971711,
-          "volume_24h": 251945523.27623397,
-          "market_cap": 2718187081.13,
-          "symbol_cmc": "AVAX"
-        },
-        "ETH": {
-          "price": 1735.4887982381294,
-          "pct_24h": 0.54157397,
-          "pct_7d": -5.17577167,
-          "volume_24h": 13846153486.979197,
-          "market_cap": 209445516824.7,
-          "symbol_cmc": "ETH"
-        },
-        "LINK": {
-          "price": 7.956625267697008,
-          "pct_24h": 0.12839406,
-          "pct_7d": -6.31886846,
-          "volume_24h": 235703471.4443849,
-          "market_cap": 5785261996.83,
-          "symbol_cmc": "LINK"
-        },
-        "UNI": {
-          "price": 3.0233064540822157,
-          "pct_24h": -1.0731399,
-          "pct_7d": 11.2559084,
-          "volume_24h": 140614171.02796733,
-          "market_cap": 1879406898.56,
-          "symbol_cmc": "UNI"
-        }
-      },
-      "top_news": [
-        {
-          "title": "How high will Bitcoin get in 2026? | Prediction Markets | Coinbase",
-          "url": "https://www.coinbase.com/predictions/event/KXBTCMAXY-26DEC31",
-          "published_at": "31 December 2026 12:00 AM UTC+0"
-        },
-        {
-          "title": "ARMA Act (Bitcoin reserve bill) is suddenly trending\nHere's  | KuCoin",
-          "url": "https://www.kucoin.com/news/insight/BTC/6a2749377fa88d00071d1df0",
-          "published_at": "6 August 2026 12:00 AM UTC+0"
-        },
-        {
-          "title": "Is a 60% Bitcoin Crash Still on the Table? Analyst Points to Wall Street",
-          "url": "https://coinmarketcap.com/community/articles/6a396ff123f17d044278a4d6",
-          "published_at": "22 June 2026 05:12 PM UTC+0"
-        },
-        {
-          "title": "Is a 60% Bitcoin Crash Still on the Table? Analyst Points to Wall Street",
-          "url": "https://cryptopotato.com/is-a-60-bitcoin-crash-still-on-the-table-analyst-points-to-wall-street/",
-          "published_at": "22 June 2026 05:12 PM UTC+0"
-        }
-      ]
-    },
+    "ta_health": null,
+    "ta_source": null,
+    "skill": null,
     "x402": {
       "total": 22,
       "settled": 22,
@@ -1654,16 +2302,8 @@
     "x402_enabled": true,
     "onchain": null,
     "onchain_enabled": true,
-    "rotation": {
-      "mom": {},
-      "trending": [
-        "Binance Ecosystem",
-        "FTX Bankruptcy Estate ",
-        "Bitcoin Ecosystem"
-      ],
-      "sector_hits": []
-    },
+    "rotation": null,
     "rotation_enabled": true
   },
-  "served_at": "2026-06-22T17:30:51.644359+00:00"
+  "served_at": "2026-06-22T18:30:13.224885+00:00"
 }
