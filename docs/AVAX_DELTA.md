@@ -113,13 +113,32 @@ make avax_demo            # or: python scripts/avax_demo.py   (--no-mint / --no-
 
 ## Verification status (truthfulness)
 
-Per the hard rule, "deployed on Avalanche C-Chain" is only claimed once Section 8 of the spec passes.
-Done so far (this branch): integrated the **official x402 SDK** (2.13.1) + the **canonical ERC-8004
-contracts** via web3 (bnbagent removed from the avax paths); EIP-712 domain verified on-chain; Fuji
-USDC + ERC-8004 registry presence verified via `eth_getCode` (live `ownerOf` read returns a real
-address); the SDK emits the correct 402 challenge (Fuji USDC, `eip155:43113`) live against the
-Ultravioleta facilitator; full test suite (1568) green. **Pending a funded wallet:** the live on-chain
-settlement tx + the ERC-8004 mint + heartbeat tx (`make avax_demo`, then link the Snowtrace txns here).
+Integrated the **official x402 SDK** (2.13.1) + the **canonical ERC-8004 contracts** via web3 (bnbagent
+removed from the avax paths); full test suite green.
+
+**ERC-8004 — DONE, live on Fuji** (agent wallet `0xA9aa558b0a8006390f01A89824832086C080904a`):
+- Identity **agentId 218** minted on the canonical registry — tx
+  [`0x34f98d…2148`](https://testnet.snowtrace.io/tx/0x34f98d37d5cb3227432972efca3377d875995ffb3ce3680cf01f175b0dec2148)
+  (`status=1`; `ownerOf(218)` = the agent wallet).
+- On-chain **heartbeat** (`setMetadata`) — tx
+  [`0x00808e…cdc6`](https://testnet.snowtrace.io/tx/0x00808edc77b3e3f58bfe52563ed868e60901f5fef98f016577cf69808a93cdc6)
+  (`getMetadata` reads back `{ts, nav, rationale}`; `tokenURI(218)` = the agent card).
+
+**x402 — DONE, settled on Fuji.** The agent paid its OWN x402 server 0.01 USDC: the official x402 SDK
+client signed the EIP-3009 `TransferWithAuthorization`, the Ultravioleta facilitator verified
+(`/verify` 200) and settled (`/settle` 200) it on-chain, and the server returned the CMC Regime Report
+(`status=ok`, regime_score 0.419). Settlement tx
+[`0x14ddec…55f4`](https://testnet.snowtrace.io/tx/0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4)
+(`status=1`, `to` = Fuji USDC; an earlier run also settled
+[`0x8022b9…3a71`](https://testnet.snowtrace.io/tx/0x8022b9e6942d38c2fff5efa312579ea3e544c159f2746e5a90c7f7d8fd4a3a71)).
+The provider ledger recorded it (`served_jobs=1, revenue_usdc=0.01`), so the dashboard x402 panel
+populates. **Both headline legs (pay→get-paid x402 + ERC-8004 identity) are now proven on-chain.**
+
+> Two robustness fixes surfaced by the live run: the EIP-1559 gas formula (`max priority > max fee`
+> on a quiet Fuji) and the ledger middleware ordering (Starlette runs the last-added middleware
+> outermost, so the ledger middleware must be added after the payment middleware to see the
+> `PAYMENT-RESPONSE` header). The SDK `/settle` waits for on-chain confirmation (~30s), so the consumer
+> read timeout is 120s.
 
 > Note: the June-2026 Speedrun submission deadline is on the Team1 India form
 > (`india.team1.network/speedrun/june-2026`) — confirm it before the cutoff.

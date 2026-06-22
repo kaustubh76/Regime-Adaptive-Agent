@@ -301,9 +301,14 @@ class Settings(BaseSettings):
     x402_network: str = Field(default="eip155:43113", alias="X402_NETWORK")
     x402_price_units: int = Field(default=10_000, alias="X402_PRICE_UNITS")  # 6dp -> 0.01 USDC / report
     # Hosted Avalanche x402 facilitator the SDK verifies + settles through (gas sponsored by it).
+    # Resilience: the SDK re-initializes per paid request, so a TRANSIENT outage self-heals. For a
+    # SUSTAINED outage, swap this to PayAI (https://facilitator.payai.network — also lists eip155:43113
+    # exact). NOTE: a "[primary, fallback]" client list does NOT help — the SDK's initialize() aborts on
+    # the first unreachable facilitator (earlier-takes-precedence), so it never reaches the fallback; the
+    # robust fallback is this env swap, not a list.
     x402_facilitator_url: str = Field(
         default="https://facilitator.ultravioletadao.xyz", alias="X402_FACILITATOR_URL"
-    )  # Ultravioleta DAO (supports eip155:43113 exact, gasless). Fallback: facilitator.payai.network
+    )  # Ultravioleta DAO (supports eip155:43113 exact, gasless)
     # Public base URL of THIS agent's x402 server (the `resource`/`payTo` discovery surface + the
     # ERC-8004 commerce endpoint). Empty -> the consumer/demo loop targets the local server directly.
     x402_server_url: str = Field(default="", alias="X402_SERVER_URL")

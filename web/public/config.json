@@ -1,4 +1,4 @@
 {
-  "_comment": "Runtime API base for the SPA. Points the Vercel deploy at the Render API. Must match the render.yaml service URL; override here (or via VITE_API_BASE) + redeploy Vercel if the service name differs.",
-  "apiBase": "https://bnb-mission-control-api.onrender.com"
+  "_comment": "Runtime API base for the SPA. Points the Vercel deploy at the Render API. Must match the render.yaml service URL (avax-agentic-payments-api); override here (or via VITE_API_BASE) + redeploy Vercel if the service name differs.",
+  "apiBase": "https://avax-agentic-payments-api.onrender.com"
 }

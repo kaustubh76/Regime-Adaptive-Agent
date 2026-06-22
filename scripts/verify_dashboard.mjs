@@ -11,13 +11,13 @@
  * (the screenshot only captures the top of the page — the DOM dump is the authoritative coverage).
  * Warm the Render API first (curl /api/health) so the SPA fetch is fast within the virtual-time budget.
  *
- *   node scripts/verify_dashboard.mjs            # verify https://bnb-mission-control-two.vercel.app
+ *   node scripts/verify_dashboard.mjs            # verify https://avax-agentic-payments.vercel.app
  *   DASH_URL=http://localhost:5173 node scripts/verify_dashboard.mjs
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const URL = process.env.DASH_URL || "https://bnb-mission-control-two.vercel.app";
+const URL = process.env.DASH_URL || "https://avax-agentic-payments.vercel.app";
 const CHROME =
   process.env.CHROME_BIN || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const OUT_DIR = "data/reports";

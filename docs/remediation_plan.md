@@ -4,7 +4,7 @@
 **Hard dates:** submission lock Jun 21 (treat as **12:00 UTC** until verified — Step 0.1), trading window **Jun 22 00:00 UTC → Jun 28**.
 **Claimed done (must re-verify in Phase 0 — see 0.2):** ERC-8004 mint (agentId 1313) + contest registration (participant `0xE8A3…6215`) on 2026-06-08 per [bnb_strategy_decision.md](bnb_strategy_decision.md). ⚠ `AGENT_ID` is **absent from `.env`**, so the mint result was never persisted — treat registration status as *unverified* until the Phase 0 check.
 **Missing runtime artifacts:** zero x402 receipts (`data/x402/` doesn't exist), no live swap tx hash (`allocator_live.jsonl`: 1 row, `tx: []`), no registration proof pack, no LICENSE file.
-**Live deploys:** dashboard `https://bnb-mission-control-two.vercel.app` · API `https://bnb-mission-control-api.onrender.com`.
+**Live deploys:** dashboard `https://avax-agentic-payments.vercel.app` · API `https://avax-agentic-payments-api.onrender.com`.
 
 Each step has commands and an **Accept** check. Phases are sequential except where marked parallel-safe.
 
@@ -103,7 +103,7 @@ Getting $1-2 USDC onto Base from a BSC-centric stack is the plan's longest exter
 ### 1.3 Push and verify both deploys
 ```bash
 git push origin feat/implementation
-curl -s https://bnb-mission-control-api.onrender.com/api/health
+curl -s https://avax-agentic-payments-api.onrender.com/api/health
 make refresh_dashboard
 ```
 **Accept:** `git status --porcelain` empty except README.md; both URLs serve the refactored UI; `bash scripts/build_web.sh` green locally.
@@ -120,7 +120,7 @@ In the archived file: prepend a 2-line "Archived 2026-06 — upstream ICT perp b
 
 New `README.md` — 12 sections, each with an existing source to lift (full source map in the Jun 12 gathering record; key notes):
 1. **90-second pitch** — lift the `bnb_hackathon_plan.md` 🔒 LOCKED paragraph + the 🟢 LIVE proof line + the "honest bottom line". ⚠ **Numbers in one vintage only:** use `bnb_strategy_decision.md` §7 (**17.3% worst-week DD, ~15.4 trades/wk**) everywhere — not 17.6/11.5 or 16.8/15.4.
-2. **Live links table** (above the fold): Vercel dashboard · Render API (`/api/health`, `/api/pillars`, `/api/nav`) · BscScan identity + registration. Never link `ictbot-scanner.onrender.com` (legacy deploy).
+2. **Live links table** (above the fold): Vercel dashboard · Render API (`/api/health`, `/api/pillars`, `/api/nav`) · Snowtrace identity + registration. Never link `ictbot-scanner.onrender.com` (legacy deploy).
 3. **The strategy** — decision record §2-§3 nearly verbatim (5-step list, regime→cap table, code links).
 4. **Why this strategy — the honest negative-edge audit** — §1 five-way evidence table.
 5. **Three pillars** — §4 diagram + bullets (heartbeat claim is code-verified: `identity.py::write_heartbeat` ← `run_allocator.py:529-534`).

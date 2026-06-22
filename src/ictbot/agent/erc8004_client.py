@@ -89,13 +89,17 @@ def _send(fn):
         gas = int(fn.estimate_gas({"from": acct.address}) * 1.3)
     except Exception:
         gas = 500_000
+    # EIP-1559 fees: maxFee = 2*baseFee + priority guarantees maxFee >= priority on a quiet Fuji
+    # (where gas_price*2 can fall below a fixed 1-gwei priority → "max priority fee > max fee").
+    base = w3.eth.get_block("latest").get("baseFeePerGas") or w3.eth.gas_price
+    priority = w3.to_wei(1, "gwei")
     tx = fn.build_transaction({
         "from": acct.address,
         "nonce": w3.eth.get_transaction_count(acct.address),
         "chainId": _chain_id(),
         "gas": gas,
-        "maxFeePerGas": w3.eth.gas_price * 2,
-        "maxPriorityFeePerGas": w3.to_wei(1, "gwei"),
+        "maxFeePerGas": int(base) * 2 + priority,
+        "maxPriorityFeePerGas": priority,
     })
     signed = Account.sign_transaction(tx, key)
     raw = getattr(signed, "raw_transaction", None) or signed.rawTransaction

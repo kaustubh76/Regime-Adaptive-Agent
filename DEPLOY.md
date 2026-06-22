@@ -3,7 +3,7 @@
 > ⚠️ **This is the LEGACY ICT-scanner deploy guide** (the Delta/Binance signal
 > bot). The BNB Hack × CMC **dashboard** has its own fresh, self-contained
 > blueprint — see **[docs/deploy_dashboard.md](docs/deploy_dashboard.md)**.
-> The repo's `render.yaml` now deploys the **dashboard** (`bnb-mission-control`),
+> The repo's `render.yaml` now deploys the **dashboard** (`avax-agentic-payments`),
 > not the scanner; this document is kept only for the scanner image at
 > `./Dockerfile`. Don't mix the two.
 

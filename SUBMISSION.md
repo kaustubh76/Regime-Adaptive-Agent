@@ -52,8 +52,8 @@ during the event window.
 ## Links
 
 - **Repo:** <this repository>
-- **Dashboard (Mission Control):** https://bnb-mission-control-two.vercel.app
-- **Read-only API:** https://bnb-mission-control-api.onrender.com (`/api/health`, `/api/pillars`)
+- **Dashboard (Mission Control):** https://avax-agentic-payments.vercel.app
+- **Read-only API:** https://avax-agentic-payments-api.onrender.com (`/api/health`, `/api/pillars`)
 - **Agent / participant address:** `0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215` (`isRegistered=true` on `0x212c61b9b72c95d95bf29cf032f5e5635629aed5`)
 - **ERC-8004 identity:** agentId 133085 — https://bscscan.com/token/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432?a=133085
 - **x402 receipts:** [docs/x402_receipts.md](docs/x402_receipts.md) (20+ settled, $0.20+ on Base; see `data/x402/receipts.json`)

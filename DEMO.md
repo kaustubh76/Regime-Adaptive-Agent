@@ -8,7 +8,7 @@
 ## Pre-roll setup (have open before recording)
 
 - A terminal in the repo (venv active).
-- The live dashboard: <https://bnb-mission-control-two.vercel.app>.
+- The live dashboard: <https://avax-agentic-payments.vercel.app>.
 - A BscScan tab + a Base explorer tab (for the x402 payer).
 - `twak` CLI authed (`~/.twak/wallet.json`, `TWAK_WALLET_PASSWORD` set).
 - `.env` with `ENABLE_LIVE_TRADING=true`, `X402_ENABLED=true` for the live segments.
@@ -68,7 +68,7 @@ identified on BNB Chain. Repo and live dashboard in the description."
 | TWAK swap | `make run_allocator ARGS="--mode live"` | **pre-record** (needs live BNB + a clean RPC); banks the real tx hash |
 | x402 panel | dashboard CMC Agent Hub panel | live (reads existing receipts) |
 | BscScan/identity | open tx + token 133085 | live |
-| Dashboard | https://bnb-mission-control-two.vercel.app | live |
+| Dashboard | https://avax-agentic-payments.vercel.app | live |
 
 **Dropped from the brief's stale checklist** (superseded by the momentum allocator): "ICT BUY
 signal", "exit watcher closing on TP touch", "Prometheus counter" — there is no ICT signal, no

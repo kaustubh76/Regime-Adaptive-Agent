@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 # ===========================================================================
-# BNB Hack × CMC — Mission Control API (read-only data backend).
+# AVAX Agentic Payments — Mission Control API (read-only data backend).
 #
 # Lean & API-ONLY: the React SPA is hosted on Vercel
-# (https://bnb-mission-control-two.vercel.app) and calls this API cross-origin.
+# (https://avax-agentic-payments.vercel.app) and calls this API cross-origin.
 # So this image does NOT build/serve the SPA and does NOT pull the legacy
 # Streamlit/Plotly UI (those moved to the [ui] extra). Just the FastAPI data
-# layer + the allocator (for the seeded sim tick) + bnbagent (live pillar-3 /
-# x402 status).
+# layer + the allocator (for the seeded sim tick) + the x402 SDK / web3 ERC-8004
+# client (live Avalanche wallet + identity status).
 #
 # Independent of the legacy ICT scanner image at ./Dockerfile.
 # ===========================================================================
@@ -21,15 +21,16 @@ RUN apt-get update \
 WORKDIR /app
 
 # Deps first (cache-friendly).
-#   [api] = fastapi + uvicorn (the `ictbot-api` console script)
-#   [bnb] = bnbagent + web3 — needed so the dashboard computes the LIVE pillar-3
-#           status (NodeReal link, identity wallet) and the x402 pay wallet.
+#   [api]  = fastapi + uvicorn (the `ictbot-api` console script)
+#   [x402] = x402 SDK + eth-account + web3 — the Avalanche path: reads the Fuji
+#            wallet (AVAX + USDC) and the ERC-8004 identity via the web3
+#            erc8004_client (bnbagent is BSC-only and never imported on avax).
 # Streamlit/Plotly are NOT installed (they're the [ui] extra) → lean image.
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY scripts ./scripts
 COPY config ./config
-RUN pip install --no-cache-dir -e ".[api,bnb]"
+RUN pip install --no-cache-dir -e ".[api,x402]"
 
 # Runtime artefacts (journal/state/x402 receipts). Ephemeral on Render free tier;
 # mount a Render disk at /app/data on a paid plan for persistence.

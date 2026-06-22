@@ -50,6 +50,22 @@ def _configure(settings, key: str, addr: str) -> None:
     settings.agent_identity_address = addr
     settings.x402_server_enabled = True
     settings.x402_enabled = True
+    # The ERC-8004 agentId is per-chain — IGNORE the .env AGENT_ID (that's the BNB-chain identity) and
+    # use the Fuji one persisted in the keyfile after the first mint (absent → 0 → mint a fresh one).
+    try:
+        settings.agent_id = int(json.loads(KEY_FILE.read_text()).get("agent_id") or 0)
+    except Exception:
+        settings.agent_id = 0
+
+
+def _persist_agent_id(aid: int) -> None:
+    """Save the minted Fuji agentId to the keyfile so later runs reuse it (heartbeat-only)."""
+    try:
+        d = json.loads(KEY_FILE.read_text())
+        d["agent_id"] = int(aid)
+        KEY_FILE.write_text(json.dumps(d, indent=2))
+    except Exception:
+        pass
 
 
 def _tx_of(res) -> str | None:
@@ -110,8 +126,9 @@ def _run_identity(settings) -> list[tuple[str, str]]:
             settings.agent_id = aid
             if tx:
                 out.append(("ERC-8004 mint", tx))
-            print(f"  ✓ minted identity — agent_id={aid or '?'} "
-                  f"(set AGENT_ID={aid} in .env to reuse it next run)")
+            if aid:
+                _persist_agent_id(aid)  # later runs reuse it (heartbeat-only)
+            print(f"  ✓ minted identity — agent_id={aid or '?'} (persisted to the keyfile for reuse)")
             if not aid:
                 print(f"    (could not parse agent_id; raw result: {json.dumps(res, default=str)[:200]})")
         except Exception as e:  # noqa: BLE001

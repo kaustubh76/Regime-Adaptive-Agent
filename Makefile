@@ -354,7 +354,7 @@ snapshot:
 
 # ONE-COMMAND dashboard redeploy (post-faucet / after a real ERC-8183 job settles).
 # Regenerates the snapshot (incl. pillars.commerce), reseeds infra/seed, builds, and deploys the
-# PREBUILT output to the canonical Vercel project (bnb-mission-control-two.vercel.app). The plain
+# PREBUILT output to the canonical Vercel project (avax-agentic-payments.vercel.app). The plain
 # `vercel --prod` build fails on the project's framework preset, so we ship the Build Output API.
 #   ERC8183_ENABLED=true make deploy_dashboard
 deploy_dashboard:
@@ -367,7 +367,7 @@ deploy_dashboard:
 #   make verify_dashboard            # the deployed site
 #   DASH_URL=http://localhost:5173 make verify_dashboard
 verify_dashboard:
-	@curl -s -m 30 https://bnb-mission-control-api.onrender.com/api/health -o /dev/null || true
+	@curl -s -m 30 https://avax-agentic-payments-api.onrender.com/api/health -o /dev/null || true
 	node scripts/verify_dashboard.mjs
 
 # ARM CHECK — one read-only command that runs EVERY no-funds go-live check (TWAK creds +
@@ -418,7 +418,7 @@ refresh_dashboard: snapshot
 	@echo "    git add web/public/snapshot.json infra/seed/allocator_journal.jsonl infra/seed/allocator_state.json infra/seed/strategy_gates.json infra/seed/strategy_stability.json infra/seed/cmc_mcp_usage.json"
 	@echo "    git commit -m 'chore(dashboard): refresh PnL data' && git push    # Render auto-redeploys"
 	@echo "    vercel --prod --yes                                               # deploy the Vercel SPA"
-	@echo "  verify: curl -s https://bnb-mission-control-api.onrender.com/api/nav | python -c 'import sys,json;print(json.load(sys.stdin)[\"current_nav\"])'"
+	@echo "  verify: curl -s https://avax-agentic-payments-api.onrender.com/api/nav | python -c 'import sys,json;print(json.load(sys.stdin)[\"current_nav\"])'"
 
 # Phase 9.A: per-pair WFO driver. Writes data/wfo/per_pair_<UTC-date>.json
 # with the winning (sl_frac, tp_frac, poi_tol) per pair + classify verdict.

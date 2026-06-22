@@ -4,11 +4,11 @@ Two pieces, already split:
 
 ```
   Vercel (React SPA)  ──fetch /api/*──▶  Render (read-only FastAPI)
-  bnb-mission-control-two.vercel.app      bnb-mission-control-api.onrender.com
+  avax-agentic-payments.vercel.app      avax-agentic-payments-api.onrender.com
 ```
 
 - **UI** — the React SPA in [`web/`](../web), live on Vercel:
-  <https://bnb-mission-control-two.vercel.app>
+  <https://avax-agentic-payments.vercel.app>
 - **API** — the lean read-only FastAPI on Render, surfacing all three Track-1
   pillars (CMC/x402 · TWAK · BNB-SDK/NodeReal).
 
@@ -37,7 +37,7 @@ git push
 
 [Render Dashboard](https://dashboard.render.com) → **New +** → **Blueprint** →
 connect this repo. Render detects [`render.yaml`](../render.yaml) and proposes
-**`bnb-mission-control-api`** (Docker, free). **Apply**. First build ~2–3 min.
+**`avax-agentic-payments-api`** (Docker, free). **Apply**. First build ~2–3 min.
 
 ### 3. Secrets — set NONE (zero-secret deploy)
 
@@ -60,11 +60,11 @@ the Vercel CORS origin). The dashboard runs fully on public data + the committed
 ### 4. Verify
 
 ```bash
-curl https://bnb-mission-control-api.onrender.com/api/health     # {"ok":true,...}
-curl -s https://bnb-mission-control-api.onrender.com/api/pillars  # nodereal.reachable / chain_id / sponsorable
+curl https://avax-agentic-payments-api.onrender.com/api/health     # {"ok":true,...}
+curl -s https://avax-agentic-payments-api.onrender.com/api/pillars  # nodereal.reachable / chain_id / sponsorable
 # CORS preflight from the Vercel origin:
-curl -si -X OPTIONS https://bnb-mission-control-api.onrender.com/api/snapshot \
-     -H 'Origin: https://bnb-mission-control-two.vercel.app' \
+curl -si -X OPTIONS https://avax-agentic-payments-api.onrender.com/api/snapshot \
+     -H 'Origin: https://avax-agentic-payments.vercel.app' \
      -H 'Access-Control-Request-Method: GET' | grep -i access-control-allow-origin
 ```
 
@@ -74,7 +74,7 @@ curl -si -X OPTIONS https://bnb-mission-control-api.onrender.com/api/snapshot \
 
 The SPA resolves its API base from [`web/public/config.json`](../web/public/config.json)
 (runtime) or the `VITE_API_BASE` build env (takes precedence). `config.json` is
-already set to `https://bnb-mission-control-api.onrender.com`.
+already set to `https://avax-agentic-payments-api.onrender.com`.
 
 - **If the Render service URL matches** that value → just **redeploy on Vercel**
   (push, or Vercel → Deployments → Redeploy) so it picks up the committed

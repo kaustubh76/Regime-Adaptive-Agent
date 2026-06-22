@@ -114,7 +114,7 @@ make avax_demo    # python scripts/avax_demo.py   (--no-mint / --no-x402 to scop
 | `make avax_derisk` | keygen → balance → settle-if-funded (the Fuji EIP-3009 spike) |
 | `make avax_demo` | the headline pay→get-paid + ERC-8004 mint + heartbeat loop |
 | `make api` + `cd web && npm run dev` | Mission Control locally (FastAPI :8000 + Vite :5173) |
-| `make test` | the full suite (1567 passing; on-chain settle is opt-in / skipped) |
+| `make test` | the full suite (on-chain settle is opt-in / skipped) |
 
 `GET /x402/info` advertises the paid service (price, network, payTo, facilitator, served-jobs).
 
@@ -125,17 +125,20 @@ table with the plain-language rationale, the ERC-8004 identity card (Snowtrace l
 **x402-server panel** (served jobs + USDC revenue + last settlement tx). The deploy is zero-secret —
 it reads public on-chain state by address and never holds a key.
 
-## 7. Verification status (truthfulness)
+## 7. Verification status — proven on-chain (Fuji)
 
-Per the hard rule, "deployed on Avalanche C-Chain" is claimed only once the on-chain run passes.
-**Done:** the SDK integration (x402 2.13.1 + canonical ERC-8004 via web3) with the full test suite
-green; the EIP-712 domain verified on-chain; the Fuji USDC + ERC-8004 registry verified via
-`eth_getCode`/`ownerOf`; the SDK emits the correct live 402 challenge against the Ultravioleta
-facilitator. **Pending a funded wallet:** the live settlement tx + the ERC-8004 mint + heartbeat tx —
-run `make avax_demo` and paste the Snowtrace links into [`docs/AVAX_DELTA.md`](docs/AVAX_DELTA.md).
+**Both headline legs are settled on-chain** from the agent wallet
+`0xA9aa558b0a8006390f01A89824832086C080904a`:
 
-The agent test wallet is `0xA9aa558b0a8006390f01A89824832086C080904a` (key git-ignored under
-`data/avax/`). Confirm the Speedrun submission deadline on the Team1 India form before the cutoff.
+| Leg | tx | proof |
+|---|---|---|
+| **x402** — agent pays its own server 0.01 USDC | [`0x14ddec…55f4`](https://testnet.snowtrace.io/tx/0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4) | SDK signs EIP-3009 → facilitator `/verify`+`/settle` → real `transferWithAuthorization` on Fuji USDC (`status=1`); report served; ledger `served_jobs=1` |
+| **ERC-8004** — mint identity **#218** | [`0x34f98d…2148`](https://testnet.snowtrace.io/tx/0x34f98d37d5cb3227432972efca3377d875995ffb3ce3680cf01f175b0dec2148) | `ownerOf(218)` = the agent wallet; `tokenURI` = the agent card |
+| **ERC-8004** — heartbeat (`setMetadata`) | [`0x00808e…cdc6`](https://testnet.snowtrace.io/tx/0x00808edc77b3e3f58bfe52563ed868e60901f5fef98f016577cf69808a93cdc6) | `getMetadata("heartbeat")` reads back `{ts, nav, rationale}` |
+
+The SDK integration (x402 2.13.1 + canonical ERC-8004 via web3) passes the full test suite; rerun the
+whole loop any time with `make avax_demo`. Confirm the Speedrun submission deadline on the Team1 India
+form before the cutoff. Full detail: [`docs/AVAX_DELTA.md`](docs/AVAX_DELTA.md).
 
 ## 8. Repo map
 

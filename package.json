@@ -1,5 +1,5 @@
 {
-  "name": "bnb-mission-control-site",
+  "name": "avax-agentic-payments-site",
   "private": true,
   "version": "0.1.0",
   "description": "Vercel build wrapper — builds the web/ Vite SPA for static hosting. (The app itself is a Python project; this file only exists so Vercel builds the dashboard.)",

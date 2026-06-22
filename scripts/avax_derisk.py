@@ -245,7 +245,9 @@ def cmd_settle(value_units: int = 10_000) -> int:
         "nonce": w3.eth.get_transaction_count(addr),
         "chainId": FUJI_CHAIN_ID,
         "gas": 200_000,
-        "maxFeePerGas": w3.eth.gas_price * 2,
+        # maxFee = 2*baseFee + priority guarantees maxFee >= priority on a quiet Fuji.
+        "maxFeePerGas": int(w3.eth.get_block("latest").get("baseFeePerGas") or w3.eth.gas_price) * 2
+        + w3.to_wei(1, "gwei"),
         "maxPriorityFeePerGas": w3.to_wei(1, "gwei"),
     })
     signed_tx = Account.sign_transaction(tx, pk)

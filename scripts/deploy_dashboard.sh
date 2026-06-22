@@ -17,8 +17,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-PROJECT="${VERCEL_PROJECT:-bnb-mission-control}"   # the canonical project (bnb-mission-control-two.vercel.app)
-CANON_URL="https://bnb-mission-control-two.vercel.app"
+PROJECT="${VERCEL_PROJECT:-avax-agentic-payments}"   # the canonical project (avax-agentic-payments.vercel.app)
+CANON_URL="https://avax-agentic-payments.vercel.app"
 
 # node/npm/vercel live under nvm and are NOT on a non-login `make` shell's PATH — source nvm if missing.
 if ! command -v npm >/dev/null 2>&1 || ! command -v vercel >/dev/null 2>&1; then

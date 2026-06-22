@@ -1,10 +1,10 @@
 # ===========================================================================
-# Render Blueprint — BNB Hack × CMC "Mission Control" API (data backend).
+# Render Blueprint — AVAX Agentic Payments — Mission Control API (data backend).
 #
-# Render hosts ONLY the read-only FastAPI. The React UI is already live on
-# Vercel (https://bnb-mission-control-two.vercel.app) and calls this API
-# cross-origin. Lean (no SPA build, no Streamlit); surfaces all three Track-1
-# pillars live: CMC/x402 · TWAK · BNB-SDK/NodeReal.
+# Render hosts ONLY the read-only FastAPI. The React UI is live on Vercel
+# (https://avax-agentic-payments.vercel.app) and calls this API cross-origin.
+# Lean (no SPA build, no Streamlit); surfaces the agent's Avalanche legs live:
+# CMC data · x402 (USDC, EIP-3009 on Avalanche) · ERC-8004 on-chain identity.
 #
 #   Architecture:  Vercel (SPA)  ──fetch /api/*──▶  Render (this API)
 #
@@ -15,33 +15,30 @@
 # non-secret. In particular NEVER set on Render:
 #   - AGENT_PRIVATE_KEY / AGENT_WALLET_PASSWORD            (identity/x402 signing)
 #   - TWAK_ACCESS_ID / TWAK_HMAC_SECRET / TWAK_WALLET_PASSWORD (trading wallet)
-#   - NODEREAL_API_KEY                                     (keep LOCAL — see below)
 # The ONLY key intentionally on Render is CMC_API_KEY — a READ-ONLY DATA key (cannot move
 # funds; worst case = API quota) — set via `sync: false` to price the Real-Funds card + F&G.
 # All keys live ONLY on your local machine. The dashboard shows the identity wallet
 # via the PUBLIC AGENT_IDENTITY_ADDRESS and reads balances by address — no key.
 #
 # Optional (accept the no-2FA risk): you MAY add CMC_API_KEY (low risk: rate-limited
-# data key → live Fear&Greed) and/or NODEREAL_API_KEY (bounded: gas-tank spend up to
-# your sponsor-policy cap → the live `sponsorable` check). Default is to deploy NEITHER;
-# the dashboard degrades gracefully (F&G from the snapshot; NodeReal shown key-free,
-# verify `sponsorable` locally via `make verify_nodereal`).
+# data key → live Fear&Greed). Default is to deploy it via `sync: false`; without it the
+# dashboard degrades gracefully (F&G from the snapshot; balances read keyless on-chain).
 # ─────────────────────────────────────────────────────────────────────────
 #
 # Deploy:
 #   1. Render Dashboard → New → Blueprint → connect this repo (root has this file).
-#   2. Apply. Set NOTHING in Environment (zero secrets).
+#   2. Apply. Set ONLY CMC_API_KEY in Environment (everything else is committed non-secret).
 #   3. Confirm the URL matches web/public/config.json's apiBase
-#      (https://bnb-mission-control-api.onrender.com); edit + redeploy Vercel if not.
-#   4. Free tier sleeps after 15 min idle — point UptimeRobot at /api/health.
+#      (https://avax-agentic-payments-api.onrender.com); edit + redeploy Vercel if not.
+#   4. Free tier sleeps after 15 min idle — the GH Actions keepalive pings /api/health.
 # See docs/deploy_dashboard.md for the full security + 2FA checklist.
 # ===========================================================================
 services:
   - type: web
-    name: bnb-mission-control-api
+    name: avax-agentic-payments-api
     runtime: docker
     plan: free                          # paid plan needed to attach a persistent disk
-    branch: feat/implementation         # deploy from THIS branch (not the default)
+    branch: main                        # deploy from the default branch
     dockerfilePath: ./infra/Dockerfile.dashboard
     dockerContext: .
     healthCheckPath: /api/health        # Render health check + keep-alive ping target
@@ -49,8 +46,8 @@ services:
     envVars:
       # ---- CORS: allow the Vercel SPA to call this API --------------------
       - key: API_CORS_ORIGINS           # the live SPA origin (comma-sep list, or "*")
-        value: "https://bnb-mission-control-two.vercel.app"
-      # ---- Pillar 1 — CMC (data) -----------------------------------------
+        value: "https://avax-agentic-payments.vercel.app"
+      # ---- CMC (data) ----------------------------------------------------
       # CMC_API_KEY prices the Real-Funds card via CMC + powers live Fear&Greed. It is a
       # READ-ONLY DATA key (cannot move funds; worst case = API quota), so it is set
       # OUT-OF-BAND on the service via `sync: false` — the VALUE is NEVER committed to git.
@@ -65,69 +62,71 @@ services:
         value: "true"                  # same key). The API only SERVES reads — no ticks here.
       - key: CMC_SKILL_REGIME          # mark the composed market-overview skill ON so the Agent
         value: "true"                  # Hub "skill" pill matches the SIM journal this API serves.
-      - key: X402_ENABLED               # ON for DISPLAY ONLY: no wallet password is deployed,
-        value: "true"                   # so x402_cmc.available()==False -> the API can NEVER pay;
-                                        # this only enables the read-only Base USDC balance read.
-                                        # Real payments settle LOCALLY; receipts ship via infra/seed.
-      - key: X402_BASE_RPC_URL          # public RPC to READ the pay wallet's Base USDC balance
-        value: "https://mainnet.base.org"
-      # ---- Pillar 2 — TWAK (execution); dashboard is READ-ONLY, NO creds --
+      # ---- x402 (USDC micropayments on Avalanche) — DISPLAY ONLY ----------
+      - key: X402_ENABLED               # ON for DISPLAY ONLY: no wallet password is deployed, so
+        value: "true"                   # the API can NEVER pay/settle — this only enables the
+                                        # read-only Fuji USDC balance read. Real settlements run
+                                        # LOCALLY; the receipt + last tx ship via infra/seed.
+      - key: X402_NETWORK               # CAIP-2 wire id (Avalanche Fuji)
+        value: "eip155:43113"
+      - key: X402_USDC_AVAX_ADDRESS     # USDC on Fuji (6dp, EIP-3009)
+        value: "0x5425890298aed601595a70AB815c96711a31Bc65"
+      - key: X402_FACILITATOR_URL       # hosted x402 facilitator (verify/settle)
+        value: "https://facilitator.ultravioletadao.xyz"
+      - key: X402_PRICE_UNITS           # 6dp USDC units -> 0.01 USDC / report
+        value: "10000"
+      - key: X402_SERVER_ENABLED        # OFF on Render: serving paid reports needs the signing key
+        value: "false"
+      # ---- Execution (paper); dashboard is READ-ONLY, NO creds ------------
       - key: TWAK_MODE                  # sim track for the public dashboard (no real funds)
         value: "sim"
       - key: ENABLE_LIVE_TRADING
         value: "false"
       - key: DASHBOARD_JOURNAL          # which track the dashboard renders (sim | live)
         value: "sim"
-      # ---- Pillar 3 — BNB AI Agent SDK + NodeReal/MegaFuel ---------------
-      - key: AGENT_NETWORK              # mainnet (chain 56) — matches the live agent
-        value: "bsc"
+      # ---- ERC-8004 on-chain identity (Avalanche Fuji) -------------------
+      - key: AGENT_NETWORK              # Avalanche Fuji testnet (chain 43113)
+        value: "avax-testnet"
+      - key: AVAX_RPC_URL               # Fuji C-Chain RPC — reads the wallet balance + identity
+        value: "https://api.avax-test.network/ext/bc/C/rpc"
       - key: AGENT_IDENTITY_ADDRESS     # PUBLIC identity wallet (display + balance only; NO key).
-        value: "0xEb7bF36aab4912c955474206EF0b835170389655"
-      - key: AGENT_TRADING_ADDRESS      # PUBLIC TWAK trading wallet shown on the identity card
-        value: "0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215"
-      # NODEREAL_API_KEY is NOT deployed (no Render 2FA). The dashboard shows the
-      # NodeReal pillar key-free; verify `sponsorable` locally via `make verify_nodereal`.
-      - key: AGENT_USE_PAYMASTER
-        value: "true"
+        value: "0xA9aa558b0a8006390f01A89824832086C080904a"
+      - key: AGENT_TRADING_ADDRESS      # PUBLIC trading wallet shown on the identity card (same self-custody wallet)
+        value: "0xA9aa558b0a8006390f01A89824832086C080904a"
+      - key: AGENT_USE_PAYMASTER        # Avalanche pays AVAX gas directly (no paymaster)
+        value: "false"
       - key: AGENT_HEARTBEAT_ENABLED    # MUST stay false here — writing on-chain needs the key
         value: "false"                  # (which isn't deployed). Heartbeats run locally only.
-      - key: AGENT_ID                   # ERC-8004 token id (public; set after the first mint)
-        value: "0"
-      # ---- SDK prize — ERC-8183 agentic commerce (SELL side) -------------
+      - key: AGENT_ID                   # minted ERC-8004 token id (public)
+        value: "218"
+      - key: ERC8004_REGISTRY_AVAX      # canonical ERC-8004 Identity Registry (all testnets incl. Fuji)
+        value: "0x8004A818BFB912233c491871b3d84c89A494BD9e"
+      # ---- Agent Commerce (SELL side) — display label coherence ----------
       - key: ERC8183_ENABLED            # DISPLAY-ONLY: arms the Agent Commerce panel's "armed"
         value: "true"                   # pill. No wallet password is deployed, so commerce
                                         # available()/serve() stay False — the API can NEVER
                                         # accept/settle a job or spend on-chain; this only flips
-                                        # the dashboard's commerce.enabled flag. (Render reads
-                                        # blueprint envVars on create/sync only, so this value is
-                                        # ALSO set out-of-band via the API to apply on the live svc.)
-      - key: ERC8183_NETWORK            # commerce runs on BNB Smart Chain MAINNET (the testnet "U"
-        value: "bsc-mainnet"            # faucet is dead). DISPLAY-scoped on Render (no signing key);
-                                        # real jobs are served by the LOCAL operator CLI. Also set
-                                        # out-of-band via the API (blueprint envVars sync on create).
+                                        # the dashboard's commerce.enabled flag.
+      - key: ERC8183_NETWORK            # label-coherence with the Avalanche deployment
+        value: "avax-testnet"
       # ---- Live on-chain "Real Funds" card (keyless) ---------------------
-      # Reads the PUBLIC trading-wallet balance on a PUBLIC BSC RPC (no key) so the
-      # dashboard shows real funds next to the SIM PnL. USD is priced via on-chain
-      # Chainlink here (CMC_API_KEY isn't deployed); add CMC_API_KEY to upgrade pricing
-      # to CMC (pillar 1) — low-risk read-only data key, your call on the no-2FA risk.
+      # Reads the PUBLIC wallet balance on the Fuji RPC (no key) so the dashboard shows
+      # real AVAX + USDC next to the SIM PnL. Add CMC_API_KEY to price USD via CMC.
       - key: ONCHAIN_READS_ENABLED
         value: "true"
-      - key: ONCHAIN_BSC_RPC_URL        # public RPC reachable from Render's datacenter IP
-        value: "https://bsc-rpc.publicnode.com"
       # ---- Dashboard runtime ---------------------------------------------
       - key: API_SEED_ON_START          # seed ONE sim tick on boot so NAV/rebalances render
         value: "1"
 
 # ---------------------------------------------------------------------------
 # Dynamism & persistence
-# - Live pillar status (NodeReal link reachable/chain/sponsorable, x402 pay wallet +
-#   Base balance + receipts) is computed server-side per request (60s TTL cache) —
-#   dynamic on every plan, even free.
+# - Live status (Fuji wallet balance + ERC-8004 identity #218 + x402 receipt) is
+#   computed server-side per request (60s TTL cache) — dynamic on every plan, even free.
 # - Free tier has NO persistent disk and sleeps after 15 min idle, so the journal is
 #   RESEEDED (one sim tick) on each cold start. For a continuously-updating NAV feed,
 #   upgrade to a paid instance, add under this service:
 #       disk:
-#         name: bnb-data
+#         name: avax-data
 #         mountPath: /app/data
 #         sizeGB: 1
 #   and run the allocator loop (run_allocator.py --loop) so the persisted journal grows.

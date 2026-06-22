@@ -179,10 +179,10 @@ def _build_server():
     facilitator = HTTPFacilitatorClient(FacilitatorConfig(url=settings.x402_facilitator_url))
     server = x402ResourceServer(facilitator)
     server.register(settings.x402_network, ExactEvmServerScheme())
-    try:
-        server.initialize()  # fetch /supported from the facilitator (network; best-effort)
-    except Exception as e:  # noqa: BLE001 — the unpaid-402 path works without it; settle needs the net anyway
-        log.warning("x402 server.initialize() failed (continuing): %s", type(e).__name__)
+    # Deliberately NO server.initialize() here. The SDK's PaymentMiddlewareASGI initializes lazily on
+    # the FIRST paid request (sync_facilitator_on_start=True) and RETRIES on failure — so the boot is
+    # non-blocking and a transient facilitator outage self-heals per request. The unpaid-402 challenge
+    # never touches the facilitator at all (the middleware emits it before init).
     return server
 
 
@@ -196,8 +196,11 @@ def mount_payment_middleware(app) -> bool:
 
     server = _build_server()
     routes = _routes()
-    app.add_middleware(X402LedgerMiddleware)
+    # Starlette runs the LAST-added middleware OUTERMOST (it processes the response LAST). The x402
+    # payment middleware sets the PAYMENT-RESPONSE header AFTER settlement, so the ledger middleware
+    # must be added AFTER it (= outermost) to see that header on the final response and journal it.
     app.add_middleware(PaymentMiddlewareASGI, routes=routes, server=server)
+    app.add_middleware(X402LedgerMiddleware)
     global _PAYMENT_GATED
     _PAYMENT_GATED = True
     return True
@@ -254,7 +257,7 @@ def _consumer_key() -> str | None:
     return None
 
 
-def pay_and_fetch(base_url: str | None = None, timeout: float = 30.0) -> dict | None:
+def pay_and_fetch(base_url: str | None = None, timeout: float = 120.0) -> dict | None:
     """The agent pays its OWN x402 server for the report, using the x402 SDK's sync requests client
     (auto 402 → sign EIP-3009 → settle via the facilitator). Returns the report dict (with an
     `_x402` {settled, tx, explorer} block) on success, else None. Drives a LIVE server URL — the
