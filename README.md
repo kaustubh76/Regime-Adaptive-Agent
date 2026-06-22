@@ -18,6 +18,24 @@ web3.py) — not hand-rolled HTTP.
 
 ---
 
+## See it live (judges: start here)
+
+| | link |
+|---|---|
+| 🟢 **Mission Control dashboard** (Vercel) | <https://avax-agentic-payments.vercel.app> |
+| 🔌 **Read-only API** (Render; free tier cold-starts ~30s) | [`/api/health`](https://avax-agentic-payments-api.onrender.com/api/health) · [`/api/snapshot`](https://avax-agentic-payments-api.onrender.com/api/snapshot) · [`/api/pillars`](https://avax-agentic-payments-api.onrender.com/api/pillars) |
+| ⛓ **On-chain proof** (Avalanche Fuji) | x402 settle [`0x14ddec…55f4`](https://testnet.snowtrace.io/tx/0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4) · ERC-8004 mint [`0x34f98d…2148`](https://testnet.snowtrace.io/tx/0x34f98d37d5cb3227432972efca3377d875995ffb3ce3680cf01f175b0dec2148) · heartbeat [`0x00808e…cdc6`](https://testnet.snowtrace.io/tx/0x00808edc77b3e3f58bfe52563ed868e60901f5fef98f016577cf69808a93cdc6) |
+| 🪪 **ERC-8004 identity** | agentId **218** on the canonical Fuji registry [`0x8004A818…BD9e`](https://testnet.snowtrace.io/nft/0x8004A818BFB912233c491871b3d84c89A494BD9e/218) |
+| 🤖 **Agent wallet** (pays + gets paid + holds the identity) | [`0xA9aa558b…904a`](https://testnet.snowtrace.io/address/0xA9aa558b0a8006390f01A89824832086C080904a) |
+
+```bash
+# reproduce the whole loop yourself (after funding the wallet — see §5):
+make api          # the x402 server + dashboard API
+make avax_demo    # agent pays its own server (x402) + mints/heartbeats its ERC-8004 identity
+```
+
+---
+
 ## 1. The headline demo — pay → get paid → prove identity
 
 For the live demo, one funded agent pays **its own** x402 server, so judges watch the CMC Regime
@@ -120,10 +138,15 @@ make avax_demo    # python scripts/avax_demo.py   (--no-mint / --no-x402 to scop
 
 ## 6. Mission Control — dashboard
 
+**Live:** <https://avax-agentic-payments.vercel.app>
+
 A React/Vite SPA polls a read-only FastAPI and renders the regime dial + adaptive cap, the rebalance
 table with the plain-language rationale, the ERC-8004 identity card (Snowtrace links), and the
-**x402-server panel** (served jobs + USDC revenue + last settlement tx). The deploy is zero-secret —
-it reads public on-chain state by address and never holds a key.
+**x402-server panel** (served jobs + USDC revenue + last settlement tx). The deploy is split + zero-secret:
+the **Vercel** CDN serves the static SPA; the SPA reads `config.json` and polls the **Render** read-only
+API (`avax-agentic-payments-api.onrender.com`, CORS-locked to the Vercel origin), falling back to the
+committed `snapshot.json` if the free-tier API is cold. No key is ever held — it reads public on-chain
+state by address. Deploy pipeline: [`docs/deploy_dashboard.md`](docs/deploy_dashboard.md) (`make deploy_dashboard`).
 
 ## 7. Verification status — proven on-chain (Fuji)
 
