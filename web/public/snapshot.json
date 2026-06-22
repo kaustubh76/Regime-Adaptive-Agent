@@ -1,7 +1,7 @@
 {
   "health": {
     "ok": true,
-    "heartbeat_age_s": 1325956.0,
+    "heartbeat_age_s": 1327313.9,
     "last_beat_iso": "2026-06-07T06:30:28.350000+00:00",
     "mode": "sim",
     "journal_mode": "sim",
@@ -1845,10 +1845,10 @@
       "note": null,
       "agent_id": 218,
       "heartbeat_enabled": true,
-      "identity_wallet_bnb": "0.498745535998745557",
+      "identity_wallet_bnb": "0.498690083998690105",
       "last_heartbeat_ok": true,
-      "last_heartbeat_tx": "0x00808edc77b3e3f58bfe52563ed868e60901f5fef98f016577cf69808a93cdc6",
-      "last_heartbeat_ts": "2026-06-22T09:38:18Z",
+      "last_heartbeat_tx": "0x18c3db57cd2d3db0d04212b727e45658f23b38ea699be43cd813b6b2edf33534",
+      "last_heartbeat_ts": "2026-06-22T15:08:25Z",
       "last_heartbeat_error": null
     },
     "commerce": {
@@ -1898,10 +1898,10 @@
       "can_create": false,
       "x402_server": {
         "enabled": false,
-        "served_jobs": 1,
-        "revenue_usdc": 0.01,
-        "last_settlement_tx": "0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4",
-        "last_ts": "2026-06-22T09:51:33Z",
+        "served_jobs": 2,
+        "revenue_usdc": 0.02,
+        "last_settlement_tx": "0x61b94e9dacf9795ca686f4e2245a1b1333788fb968ef706ef0d7f4553034b2ee",
+        "last_ts": "2026-06-22T15:08:20Z",
         "price_usdc": 0.01
       }
     }
@@ -1910,14 +1910,14 @@
     "ok": true,
     "address": "0xA9aa558b0a8006390f01A89824832086C080904a",
     "explorer_url": "https://testnet.snowtrace.io/address/0xA9aa558b0a8006390f01A89824832086C080904a",
-    "block": 56485036,
+    "block": 56485479,
     "network": "avax-testnet",
     "assets": [
       {
         "symbol": "AVAX",
-        "amount": 0.49874553599874555,
-        "usd": 3.1542391109859023,
-        "price": 6.324345549618785,
+        "amount": 0.4986900839986901,
+        "usd": 3.151283741929244,
+        "price": 6.319122523273435,
         "source": "cmc",
         "is_gas": true
       },
@@ -1932,21 +1932,21 @@
     ],
     "total_usd": 23.15,
     "priced_source": "cmc",
-    "gas_bnb": 0.49874553599874555,
+    "gas_bnb": 0.4986900839986901,
     "gas_low": false,
     "x402_budget_usdc": 20.0,
-    "served_at": "2026-06-22T14:49:49.503984+00:00",
+    "served_at": "2026-06-22T15:12:26.573198+00:00",
     "note": null
   },
   "market_intel": {
     "enabled": true,
     "global_metrics": {
-      "btc_dominance": 58.567552692414,
-      "eth_dominance": 9.527572208762,
-      "stablecoin_market_cap": 286669128764.30884,
-      "total_market_cap": 2219356552275.5547,
-      "total_volume_24h": 66787618772.72,
-      "altcoin_market_cap": 919533734089.0334
+      "btc_dominance": 58.593553887823,
+      "eth_dominance": 9.520189714895,
+      "stablecoin_market_cap": 286692503850.4716,
+      "total_market_cap": 2221968597688.8296,
+      "total_volume_24h": 66541638276.55,
+      "altcoin_market_cap": 920038230031.5278
     },
     "fng_trend": [
       {
@@ -2011,54 +2011,54 @@
         {
           "symbol": "DEXE",
           "name": "DeXe",
-          "pct_24h": 26.83361914
+          "pct_24h": 25.62171768
         },
         {
           "symbol": "TIA",
           "name": "Celestia",
-          "pct_24h": 7.26946069
-        },
-        {
-          "symbol": "ZRO",
-          "name": "LayerZero",
-          "pct_24h": 6.25755106
+          "pct_24h": 9.25793359
         },
         {
           "symbol": "LIT",
           "name": "Lighter",
-          "pct_24h": 5.99797898
+          "pct_24h": 6.04482342
         },
         {
-          "symbol": "ENA",
-          "name": "Ethena",
-          "pct_24h": 5.8600085
+          "symbol": "ZRO",
+          "name": "LayerZero",
+          "pct_24h": 5.76609293
+        },
+        {
+          "symbol": "OKB",
+          "name": "OKB",
+          "pct_24h": 5.48285142
         }
       ],
       "losers": [
         {
           "symbol": "H",
           "name": "Humanity",
-          "pct_24h": -22.93291751
+          "pct_24h": -22.90024895
         },
         {
           "symbol": "JUP",
           "name": "Jupiter",
-          "pct_24h": -7.10917641
-        },
-        {
-          "symbol": "BEAT",
-          "name": "Audiera",
-          "pct_24h": -6.32132973
+          "pct_24h": -6.6469963
         },
         {
           "symbol": "SKYAI",
           "name": "SKYAI",
-          "pct_24h": -4.35545324
+          "pct_24h": -4.6341535
+        },
+        {
+          "symbol": "BEAT",
+          "name": "Audiera",
+          "pct_24h": -4.49054507
         },
         {
           "symbol": "DASH",
           "name": "Dash",
-          "pct_24h": -3.60054223
+          "pct_24h": -3.32109559
         }
       ]
     },
@@ -2118,11 +2118,11 @@
     }
   },
   "cmc_api": {
-    "credits_today": 20,
+    "credits_today": 30,
     "daily_budget": 9000,
-    "credits_month": 1370,
+    "credits_month": 1380,
     "monthly_budget": 290000,
-    "req_count": 956,
+    "req_count": 966,
     "last_status": 200,
     "last_credit_count": 1,
     "rate_wait_total_s": 0.0,
@@ -2137,16 +2137,16 @@
     "ta_enabled": true,
     "skill_enabled": true,
     "mcp": {
-      "calls": 119,
+      "calls": 15,
       "by_tool": {
-        "get_crypto_technical_analysis": 65,
-        "get_global_metrics_latest": 8,
-        "trending_crypto_narratives": 8,
-        "get_crypto_marketcap_technical_analysis": 8,
-        "get_global_crypto_derivatives_metrics": 7,
-        "get_upcoming_macro_events": 7,
-        "get_crypto_quotes_latest": 9,
-        "get_crypto_latest_news": 7
+        "get_crypto_technical_analysis": 8,
+        "get_global_metrics_latest": 1,
+        "trending_crypto_narratives": 1,
+        "get_crypto_marketcap_technical_analysis": 1,
+        "get_global_crypto_derivatives_metrics": 1,
+        "get_upcoming_macro_events": 1,
+        "get_crypto_quotes_latest": 1,
+        "get_crypto_latest_news": 1
       },
       "tools_available": [
         "get_crypto_quotes_latest",
@@ -2162,7 +2162,7 @@
         "get_upcoming_macro_events",
         "get_crypto_latest_news"
       ],
-      "last_call_ts": 1782122190
+      "last_call_ts": 1782140891
     },
     "ta_health": 0.4017,
     "ta_source": "cmc+skill",
@@ -2448,5 +2448,5 @@
     },
     "rotation_enabled": true
   },
-  "served_at": "2026-06-22T14:49:52.489543+00:00"
+  "served_at": "2026-06-22T15:12:28.459461+00:00"
 }
