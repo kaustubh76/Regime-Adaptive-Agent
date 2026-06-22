@@ -1,4 +1,4 @@
-# Deploy the BNB "Mission Control" dashboard
+# Deploy the Avalanche "Mission Control" dashboard
 
 Two pieces, already split:
 
@@ -9,16 +9,15 @@ Two pieces, already split:
 
 - **UI** — the React SPA in [`web/`](../web), live on Vercel:
   <https://avax-agentic-payments.vercel.app>
-- **API** — the lean read-only FastAPI on Render, surfacing all three Track-1
-  pillars (CMC/x402 · TWAK · BNB-SDK/NodeReal).
+- **API** — the lean read-only FastAPI on Render, surfacing the agent's Avalanche
+  legs (CMC/x402 data + revenue · ERC-8004 on-chain identity).
 
-This is the BNB-contest dashboard — **separate from the legacy ICT scanner**
-(`./Dockerfile` + the old [DEPLOY.md](../DEPLOY.md)). The Render image is
-**API-only and lean**: no SPA build, and no Streamlit/Plotly (those are the
-opt-in `[ui]` extra now, not core deps).
+This is the Avalanche Agentic-Payments dashboard. The Render image is **API-only and
+lean**: no SPA build, and no Streamlit/Plotly (those are the opt-in `[ui]` extra now,
+not core deps).
 
 - Blueprint: [`render.yaml`](../render.yaml)
-- Image: [`infra/Dockerfile.dashboard`](../infra/Dockerfile.dashboard) — `pip install .[api,bnb]`, `CMD ictbot-api`
+- Image: [`infra/Dockerfile.dashboard`](../infra/Dockerfile.dashboard) — `pip install .[api,x402]`, `CMD ictbot-api`
 
 ---
 
@@ -43,25 +42,25 @@ connect this repo. Render detects [`render.yaml`](../render.yaml) and proposes
 
 **Render free tier has no account 2FA**, so we deploy **zero secrets** — nothing to
 leak if the account is ever compromised. Leave the Environment tab empty; every var
-is a committed non-secret in `render.yaml` (`AGENT_NETWORK=bsc`, the **public**
-`AGENT_IDENTITY_ADDRESS` / `AGENT_TRADING_ADDRESS`, `TWAK_MODE=sim`, `API_SEED_ON_START=1`,
-the Vercel CORS origin). The dashboard runs fully on public data + the committed snapshot.
+is a committed non-secret in `render.yaml` (`AGENT_NETWORK=avax-testnet`, the **public**
+`AGENT_IDENTITY_ADDRESS`, the X402 *display-only* vars, `API_SEED_ON_START=1`, the Vercel
+CORS origin). The dashboard runs fully on public on-chain data + the committed snapshot.
 
-> 🔒 **Never set on Render:** `AGENT_PRIVATE_KEY`, `AGENT_WALLET_PASSWORD`, any `TWAK_*`,
-> and (without 2FA) not even `CMC_API_KEY` / `NODEREAL_API_KEY`. All keys stay local.
+> 🔒 **Never set on Render:** `AGENT_PRIVATE_KEY`, `AGENT_WALLET_PASSWORD` — and without
+> 2FA, not even `CMC_API_KEY`. All keys stay local. The dashboard never signs, mints, or
+> pays, so it needs no key.
 
 **Optional (only if you accept the no-2FA risk):**
 
 | Key | Risk | Adds |
 |---|---|---|
-| `CMC_API_KEY` | low — rate-limited data key | live Fear & Greed (else from snapshot) |
-| `NODEREAL_API_KEY` | bounded — leak can spend the MegaFuel gas tank up to your **sponsor-policy cap** | the live `sponsorable` check (else shown key-free; verify with `make verify_nodereal`) |
+| `CMC_API_KEY` | low — rate-limited **data** key (can't move funds) | live Fear & Greed + USD pricing (else from the snapshot) |
 
 ### 4. Verify
 
 ```bash
-curl https://avax-agentic-payments-api.onrender.com/api/health     # {"ok":true,...}
-curl -s https://avax-agentic-payments-api.onrender.com/api/pillars  # nodereal.reachable / chain_id / sponsorable
+curl https://avax-agentic-payments-api.onrender.com/api/health      # {"ok":true,...}
+curl -s https://avax-agentic-payments-api.onrender.com/api/pillars   # ERC-8004 identity: chain_id / agent_id
 # CORS preflight from the Vercel origin:
 curl -si -X OPTIONS https://avax-agentic-payments-api.onrender.com/api/snapshot \
      -H 'Origin: https://avax-agentic-payments.vercel.app' \
@@ -93,53 +92,44 @@ already set to `https://avax-agentic-payments-api.onrender.com`.
 
 ## Security & 2FA
 
-These keys touch **real mainnet funds**, so the deploy is designed to keep every
-fund-controlling secret OFF the cloud.
+The agent's signing key controls its on-chain identity + its x402 wallet, so the
+deploy is designed to keep **every fund-controlling secret OFF the cloud**.
 
 **1. Never deploy a signing key to the dashboard.** It's read-only — it shows the
 identity wallet via the **public** `AGENT_IDENTITY_ADDRESS` and reads balances by
-address. The following stay **only on your local machine** (where the agent signs):
-`AGENT_PRIVATE_KEY`, `AGENT_WALLET_PASSWORD`, `TWAK_ACCESS_ID`, `TWAK_HMAC_SECRET`,
-`TWAK_WALLET_PASSWORD`. The blueprint does not list them; don't add them.
+address. `AGENT_PRIVATE_KEY` and `AGENT_WALLET_PASSWORD` stay **only on your local
+machine** (where the agent signs, mints, and pays). The blueprint does not list them;
+don't add them.
 
-**2. Keep funds minimal + segregated.**
-- The **TWAK trading wallet** (`0xE8A3…6215`) holds the trading BNB/USDT; its key is
-  TWAK-custodied and never enters env/cloud. Live trading runs locally only.
-- The **identity/x402 wallet** (`0xEb7bF…9655`): keep only ~$1–2 USDC on Base (enough
-  for x402 micropayments) so even a worst-case key compromise loses almost nothing.
+**2. Keep funds minimal.** The agent wallet (`0xA9aa558b0a8006390f01A89824832086C080904a`)
+is a **throwaway Avalanche Fuji testnet** wallet holding only faucet USDC + AVAX gas —
+a worst-case key compromise loses testnet funds only. (For a mainnet run, keep just a
+few dollars of USDC for x402 micropayments.)
 
-**3. Scope the NodeReal / MegaFuel key (if you deploy it).** In the NodeReal
-dashboard, set the MegaFuel **sponsor policy** to whitelist *only* the ERC-8004
-registry + your wallet, with a **daily/total gas-spend cap**. Then a leaked
-`NODEREAL_API_KEY` can at most burn that capped gas budget — it can't touch funds.
-Or omit the key entirely (see secrets table).
-
-**4. Turn on 2FA everywhere these keys live or deploy from:**
+**3. Turn on 2FA everywhere these keys live or deploy from:**
 
 | Account | 2FA | Why / mitigation |
 |---|---|---|
-| **GitHub** (`kaustubh76/BNB`) | enable | repo is private; 2FA stops a takeover from exposing history/secrets |
+| **GitHub** (`kaustubh76/Regime-Adaptive-Agent`) | enable | 2FA stops a takeover from exposing history |
 | **Render** | ❌ not on free plan | **can't enable 2FA on free** → mitigated by deploying **zero secrets** (nothing to leak) |
 | **Vercel** | enable | controls the deployed UI + its env (no secrets there either) |
-| **NodeReal** | enable | controls the MegaFuel gas tank + sponsor policy (key kept local) |
 | **CoinMarketCap** | enable | controls the API key/quota (key kept local) |
 
 > Because Render free has no 2FA, the deploy is built so a Render compromise leaks
 > **nothing** — no key is stored there. That's the whole point of the zero-secret design.
 
-**5. Rotate anything that was ever exposed.** `.env` is git-ignored now, but if it
-was committed earlier in history (private repo, so not public — still visible to any
-collaborator), rotate the keys that were in it: `CMC_API_KEY`, `NODEREAL_API_KEY`,
-`TWAK_*`, and **re-create the identity wallet** if `AGENT_PRIVATE_KEY` was ever
-committed. Scrubbing history (`git filter-repo`) is optional once rotated.
+**4. Rotate anything that was ever exposed.** `.env` is git-ignored; if it was ever
+committed, rotate `CMC_API_KEY` and **re-create the agent wallet** if `AGENT_PRIVATE_KEY`
+was ever committed.
 
-**6. Tighten CORS** once stable: `API_CORS_ORIGINS` is pinned to your Vercel origin
+**5. Tighten CORS** once stable: `API_CORS_ORIGINS` is pinned to your Vercel origin
 (not `*`), so only your SPA can call the API from a browser.
 
 ## Dynamism & persistence
 
-- **Live by design:** pillar status (NodeReal link, x402 wallet/balance/receipts)
-  is computed server-side per request with a 60 s TTL cache — dynamic on every plan.
+- **Live by design:** the identity + x402 pillars (on-chain identity, x402 wallet/
+  balance/served-jobs/revenue) are computed server-side per request with a 60 s TTL
+  cache — dynamic on every plan.
 - **Free tier** has no persistent disk and sleeps after 15 min idle, so the journal
   is **reseeded** (one sim tick) on each cold start. Keep it warm with an
   [UptimeRobot](https://uptimerobot.com) HTTP monitor on `/api/health` every 5 min.
@@ -149,7 +139,7 @@ committed. Scrubbing history (`git filter-repo`) is optional once rotated.
 
   ```yaml
       disk:
-        name: bnb-data
+        name: avax-data
         mountPath: /app/data
         sizeGB: 1
   ```
@@ -160,7 +150,8 @@ committed. Scrubbing history (`git filter-repo`) is optional once rotated.
 ## Static fallback
 
 The SPA also ships a committed `web/public/snapshot.json` (offline fallback for when
-the API is cold). Refresh it before a Vercel deploy with `make snapshot`.
+the API is cold). Refresh it before a Vercel deploy with `make snapshot` (or
+`make refresh_dashboard` to reseed the Render image too).
 
 ---
 
@@ -171,6 +162,6 @@ the API is cold). Refresh it before a Vercel deploy with `make snapshot`.
 | Tail API logs | Render → service → **Logs** |
 | Redeploy API | push to the connected branch (auto-deploy on) |
 | Redeploy SPA | Vercel → Deployments → Redeploy (or push) |
-| Update secrets | Render → service → **Environment** → edit → Save |
-| Show the live track | set `DASHBOARD_JOURNAL=live` (+ `TWAK_MODE=live`) once the contest track runs |
+| Update env | Render → service → **Environment** → edit → Save |
+| Show the live track | set `DASHBOARD_JOURNAL=live` once the live track runs |
 | Run the old Streamlit UI locally | `pip install -e ".[ui]"` then `streamlit run src/ictbot/ui/app.py` |

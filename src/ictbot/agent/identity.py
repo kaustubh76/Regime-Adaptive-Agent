@@ -558,6 +558,6 @@ def heartbeat_gas_ready(network: str | None = None) -> dict:
         min_bnb=_MIN_HEARTBEAT_BNB,
         ready=(bal is not None and bal >= _MIN_HEARTBEAT_BNB),
         detail=(None if (bal is not None and bal >= _MIN_HEARTBEAT_BNB)
-                else f"fund {addr} with >= {_MIN_HEARTBEAT_BNB} BNB (have {bal})"),
+                else f"fund {addr} with >= {_MIN_HEARTBEAT_BNB} {'AVAX' if _is_avax() else 'BNB'} (have {bal})"),
     )
     return out

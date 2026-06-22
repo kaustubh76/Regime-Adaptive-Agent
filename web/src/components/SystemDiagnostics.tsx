@@ -131,7 +131,7 @@ const CHECKS: Check[] = [
   },
   {
     key: "pillars",
-    label: "On-chain identity (NodeReal)",
+    label: "On-chain identity (ERC-8004)",
     term: "erc8004",
     run: async () => {
       const p = await verifyPillars();

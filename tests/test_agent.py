@@ -72,6 +72,8 @@ def test_identity_profile_is_key_free_and_describes_the_agent():
 def test_identity_register_requires_wallet_password(monkeypatch):
     # no private key needed (bnbagent self-manages the wallet) — but a keystore
     # password is required; registration must refuse cleanly, not crash.
+    # Legacy BSC/bnbagent identity path (the default is now avax-testnet).
+    monkeypatch.setattr("ictbot.agent.identity.settings.agent_network", "bsc", raising=False)
     monkeypatch.setattr("ictbot.agent.identity.settings.agent_wallet_password", "", raising=False)
     with pytest.raises(RuntimeError, match="WALLET_PASSWORD"):
         identity.register_identity()
@@ -193,6 +195,9 @@ def test_display_address_is_key_free_with_public_address(monkeypatch):
     """SECURITY: a deployed read-only dashboard shows the wallet via the PUBLIC
     AGENT_IDENTITY_ADDRESS with NO key/password — display_address never derives, so
     no fund-controlling secret is needed in the cloud."""
+    # Legacy BSC/bnbagent identity path (the default is now avax-testnet, which has a
+    # local keyfile fallback; this security property is covered for avax separately).
+    monkeypatch.setattr("ictbot.agent.identity.settings.agent_network", "bsc", raising=False)
     addr = "0xEb7bF36aab4912c955474206EF0b835170389655"
     monkeypatch.setattr(
         "ictbot.agent.identity.settings.agent_identity_address", addr, raising=False
@@ -235,6 +240,8 @@ def test_payment_address_deterministic_for_pinned_key(monkeypatch, tmp_path):
     ~/.bnbagent/wallets/ (a second keystore there would break _identity_address)."""
     import bnbagent.wallets.evm_wallet_provider as evm
 
+    # Legacy BSC/bnbagent derivation path (the default is now avax-testnet).
+    monkeypatch.setattr("ictbot.agent.identity.settings.agent_network", "bsc", raising=False)
     monkeypatch.setattr(evm, "_WALLETS_DIR", tmp_path, raising=False)
     from ictbot.data import x402_cmc
 

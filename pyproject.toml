@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ictbot"
 version = "0.1.0"
-description = "Regime-adaptive, long-only spot momentum allocator for the BNB Hack AI Trading Agent contest — CMC Agent Hub data (MCP/x402), TWAK self-custody execution on BSC (gasless via MegaFuel), and an ERC-8004 on-chain agent identity."
+description = "Regime-adaptive, long-only spot momentum agent for the Avalanche Agentic-Payments track — it PAYS for CMC Agent Hub data and GETS PAID for its CMC Regime Report over x402 (USDC, EIP-3009 on Avalanche C-Chain), and holds an ERC-8004 on-chain identity it heartbeats each cycle."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"

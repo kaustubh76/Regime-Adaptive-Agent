@@ -14,7 +14,7 @@ async function verifyCheck() {
     ok: !!np.reachable && !!np.chain_ok,
     detail: np.reachable
       ? `chain ${np.chain_id ?? "—"} · agent #${np.agent_id || "unminted"} · nonce ${np.nonce ?? "—"}`
-      : np.note ?? "NodeReal RPC unreachable",
+      : np.note ?? "Avalanche RPC unreachable",
   };
 }
 

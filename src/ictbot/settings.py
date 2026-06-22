@@ -227,8 +227,8 @@ class Settings(BaseSettings):
     # (the submission target). identity._sdk_network builds a custom NetworkConfig for avax-*
     # (bnbagent ships no Avalanche preset); explorer/balance reads branch to Snowtrace + Fuji USDC.
     agent_network: Literal["bsc-testnet", "bsc", "avax-testnet", "avax"] = Field(
-        default="bsc", alias="AGENT_NETWORK"
-    )
+        default="avax-testnet", alias="AGENT_NETWORK"
+    )  # Avalanche Fuji by default (the submission target); "bsc"/"bsc-testnet" = legacy BNB path
     agent_description: str = Field(
         default="Autonomous regime-adaptive momentum agent: reads CoinMarketCap (price, "
         "Fear & Greed) to score market regime and rank momentum. It PAYS for data and GETS "
@@ -251,12 +251,11 @@ class Settings(BaseSettings):
     agent_heartbeat_enabled: bool = Field(default=False, alias="AGENT_HEARTBEAT_ENABLED")
     agent_id: int = Field(default=0, alias="AGENT_ID")  # ERC-8004 token id; set after first mint
     # ---- ERC-8183 agentic commerce (the agent SELLS its CMC Regime Report to other agents) ----
-    # The provider side of a two-sided agent economy: x402 BUYS data, ERC-8183 SELLS analysis.
-    # Default OFF + bsc-testnet (the SDK's public gasless MegaFuel — free, no NodeReal key). Flip
-    # ERC8183_NETWORK=bsc-mainnet for real on-chain commerce. SECURITY: enabling requires the local
+    # The provider side of a two-sided agent economy: x402 BUYS data, the commerce layer SELLS analysis.
+    # Default OFF + avax-testnet (Avalanche Fuji). SECURITY: enabling requires the local
     # AGENT_WALLET_PASSWORD (the same identity keystore) — never runs on the read-only deploy.
     erc8183_enabled: bool = Field(default=False, alias="ERC8183_ENABLED")
-    erc8183_network: str = Field(default="bsc-testnet", alias="ERC8183_NETWORK")
+    erc8183_network: str = Field(default="avax-testnet", alias="ERC8183_NETWORK")
     erc8183_service_price: int = Field(default=10000, alias="ERC8183_SERVICE_PRICE")  # payment-token min units
     erc8183_storage: str = Field(default="local", alias="ERC8183_STORAGE")  # local | ipfs
     erc8183_agent_url: str = Field(default="", alias="ERC8183_AGENT_URL")  # for file:// deliverable routing
