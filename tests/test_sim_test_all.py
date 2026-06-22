@@ -19,8 +19,8 @@ def _reb(strategy="dual_momentum", *, nav=1000.0, target=None, n_swaps=2, **over
         "nav_before": 1000.0,
         "nav_after": nav,
         "deploy_cap": 0.6,
-        "target": {"BNB": 0.3, "CAKE": 0.3} if target is None else target,
-        "weights_after": {"BNB": 0.3, "CAKE": 0.3} if target is None else target,
+        "target": {"AVAX": 0.3, "SOL": 0.3} if target is None else target,
+        "weights_after": {"AVAX": 0.3, "SOL": 0.3} if target is None else target,
         "n_swaps": n_swaps,
         "tx": ["sim-1"] if n_swaps else [],
     }
@@ -30,12 +30,12 @@ def _reb(strategy="dual_momentum", *, nav=1000.0, target=None, n_swaps=2, **over
 
 def test_valid_deployed_arm_is_ok_with_breadth():
     r = st.validate_arm(
-        [_reb(target={"BNB": 0.3, "ETH": 0.2, "CAKE": 0.1})],
-        {"cumulative_swaps": 2, "balances": {"BNB": 1.0}},
+        [_reb(target={"AVAX": 0.3, "ETH": 0.2, "SOL": 0.1})],
+        {"cumulative_swaps": 2, "balances": {"AVAX": 1.0}},
         "dual_momentum",
     )
     assert r["status"] == "OK" and not r["errors"]
-    assert r["distinct_tokens"] == ["BNB", "CAKE", "ETH"] and r["n_distinct"] == 3
+    assert r["distinct_tokens"] == ["AVAX", "ETH", "SOL"] and r["n_distinct"] == 3
 
 
 def test_cash_only_arm_is_valid():
@@ -49,7 +49,7 @@ def test_cash_only_arm_is_valid():
 def test_malformed_rows_flagged_error():
     bad_nav = st.validate_arm([_reb(nav=-5.0)], None, "dual_momentum")
     assert bad_nav["status"] == "ERROR" and any("nav_after" in e for e in bad_nav["errors"])
-    over = st.validate_arm([_reb(weights_after={"BNB": 0.7, "CAKE": 0.7})], None, "dual_momentum")
+    over = st.validate_arm([_reb(weights_after={"AVAX": 0.7, "SOL": 0.7})], None, "dual_momentum")
     assert over["status"] == "ERROR" and any("over-deployed" in e for e in over["errors"])
     no_tx = st.validate_arm([_reb(n_swaps=4, tx=[])], None, "dual_momentum")
     assert no_tx["status"] == "ERROR" and any("empty tx" in e for e in no_tx["errors"])
@@ -79,7 +79,7 @@ def test_render_report_lists_arms_and_errors():
             "status": "OK",
             "n_rebalances": 3,
             "total_swaps": 8,
-            "distinct_tokens": ["BNB", "ETH"],
+            "distinct_tokens": ["AVAX", "ETH"],
             "n_distinct": 2,
             "nav_first": 1000.0,
             "nav_last": 999.8,
@@ -107,12 +107,12 @@ def test_run_over_arms_reads_isolated_tree(tmp_path):
     jdir = tmp_path / "forward" / "grid" / "journal"
     jdir.mkdir(parents=True)
     (jdir / "allocator_journal.jsonl").write_text(
-        json.dumps(_reb(strategy="grid", target={"BNB": 0.2, "DOGE": 0.2})) + "\n", encoding="utf-8"
+        json.dumps(_reb(strategy="grid", target={"AVAX": 0.2, "JOE": 0.2})) + "\n", encoding="utf-8"
     )
     (jdir / "allocator_state.json").write_text(
         json.dumps({"cumulative_swaps": 2, "balances": {}}), encoding="utf-8"
     )
     res = st.run_sim_test_all(arms=["grid"], save=False, now_iso="t", data_dir=tmp_path)
     assert (
-        len(res) == 1 and res[0]["status"] == "OK" and res[0]["distinct_tokens"] == ["BNB", "DOGE"]
+        len(res) == 1 and res[0]["status"] == "OK" and res[0]["distinct_tokens"] == ["AVAX", "JOE"]
     )

@@ -283,9 +283,9 @@ def test_reconcile_none_when_no_expected(ra):
 
 
 def test_reconcile_detects_drift(ra):
-    c = _FakeClient({"USDT": 80.0, "BNB": 0.10})
-    drift = ra._reconcile_live(c, {"USDT": 100.0, "BNB": 0.10}, tol=0.02)
-    assert "USDT" in drift and "BNB" not in drift
+    c = _FakeClient({"USDT": 80.0, "AVAX": 0.10})
+    drift = ra._reconcile_live(c, {"USDT": 100.0, "AVAX": 0.10}, tol=0.02)
+    assert "USDT" in drift and "AVAX" not in drift
 
 
 def test_reconcile_within_tolerance(ra):
@@ -379,7 +379,7 @@ def test_flatten_fields_distinguishes_confirmed_sells_from_attempts(ra):
     # the risk-rail fix: a leg that fails after retries must NOT be counted as flattened.
     from ictbot.exec.twak_client import SwapResult
 
-    ok = SwapResult("BNB", "USDT", 1.0, 600.0, 600.0, 0.5, tx="0xok", ok=True)
+    ok = SwapResult("AVAX", "USDT", 1.0, 600.0, 600.0, 0.5, tx="0xok", ok=True)
     bad = SwapResult("ETH", "USDT", 1.0, 0.0, 0.0, 0.0, tx="", ok=False, error="rpc 503")
     partial = ra._flatten_fields([ok, bad])
     assert partial["flattened_attempted"] == 2 and partial["flattened_ok"] == 1
@@ -453,7 +453,7 @@ def _seed_state(ra, *, hwm, halted=False, balances=None):
         {
             "hwm": hwm,
             "halted": halted,
-            "balances": balances if balances is not None else {"USDT": 50.0, "BNB": 1.0},
+            "balances": balances if balances is not None else {"USDT": 50.0, "AVAX": 1.0},
             "cumulative_swaps": 0,
             "window_start_ts": None,
         },
@@ -471,7 +471,7 @@ def test_dd_watch_flattens_and_halts_on_breach(ra, tmp_path, monkeypatch):
     last = _journal_rows(tmp_path)[-1]
     assert last["event"] == "DD_HALT" and last["source"] == "dd_watch"
     assert last["flattened"] >= 1
-    assert st["balances"].get("BNB", 0.0) == pytest.approx(0.0, abs=1e-9)  # book flat
+    assert st["balances"].get("AVAX", 0.0) == pytest.approx(0.0, abs=1e-9)  # book flat
 
 
 def test_dd_watch_noop_within_cap(ra, tmp_path, monkeypatch):
@@ -512,14 +512,14 @@ def test_dd_watch_noop_without_persisted_hwm(ra, tmp_path, monkeypatch):
 def test_build_broker_universe_is_active_union_held(ra):
     """A deselected token with a balance must STAY in the broker loop so the
     next rebalance sells it (target 0) instead of stranding it."""
-    state = {"balances": {"USDT": 500.0, "CAKE": 100.0}}
-    broker, _ = ra.build_broker("sim", lambda t: 1.0, state, active=["BNB", "ETH"])
-    assert list(broker.tokens) == ["BNB", "ETH", "CAKE"]  # canonical order
+    state = {"balances": {"USDT": 500.0, "SOL": 100.0}}
+    broker, _ = ra.build_broker("sim", lambda t: 1.0, state, active=["AVAX", "ETH"])
+    assert list(broker.tokens) == ["AVAX", "ETH", "SOL"]  # canonical order
 
 
 def test_build_broker_universe_unknown_holdings_degrades_to_full(ra):
     """No persisted balances (first live run) -> full universe, identical to legacy."""
-    broker, _ = ra.build_broker("sim", lambda t: 1.0, {}, active=["BNB", "ETH"])
+    broker, _ = ra.build_broker("sim", lambda t: 1.0, {}, active=["AVAX", "ETH"])
     assert tuple(broker.tokens) == ra.CONTEST_TOKENS
 
 
@@ -565,6 +565,6 @@ def test_build_broker_live_balance_read_failure_degrades_to_full(ra, monkeypatch
     monkeypatch.setattr(ra, "make_client", lambda *a, **k: StubClient())
     monkeypatch.setattr(ra.settings, "enable_live_trading", True)  # broker guard
     broker, _ = ra.build_broker(
-        "live", lambda t: 1.0, {"balances": {"USDT": 500.0}}, active=["BNB", "ETH"]
+        "live", lambda t: 1.0, {"balances": {"USDT": 500.0}}, active=["AVAX", "ETH"]
     )
     assert tuple(broker.tokens) == ra.CONTEST_TOKENS
