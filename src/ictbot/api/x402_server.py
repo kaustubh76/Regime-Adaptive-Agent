@@ -296,9 +296,9 @@ def pay_and_fetch(base_url: str | None = None, timeout: float = 120.0) -> dict |
             except Exception:
                 tx = None
         if tx:
-            report.setdefault("_x402", {}).update(
-                settled=True, tx=tx, explorer=f"https://testnet.snowtrace.io/tx/{tx}"
-            )
+            net = str(getattr(settings, "x402_network", "") or "")
+            base = "https://snowtrace.io/tx/" if net.endswith("43114") else "https://testnet.snowtrace.io/tx/"
+            report.setdefault("_x402", {}).update(settled=True, tx=tx, explorer=f"{base}{tx}")
         return report
     except Exception as e:  # noqa: BLE001
         log.warning("x402 pay_and_fetch failed: %s: %s", type(e).__name__, str(e)[:120])

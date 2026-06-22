@@ -34,6 +34,9 @@ echo "==> 2/5 reseed infra/seed (so a Render redeploy on git push serves the sam
 for f in commerce_jobs.jsonl allocator_journal.jsonl allocator_state.json; do
   [ -f "data/journal/$f" ] && cp "data/journal/$f" infra/seed/ && echo "    + infra/seed/$f" || true
 done
+# x402 SERVER ledger (the 'agent GETS PAID' panel) lives under data/x402/, not data/journal/.
+[ -f "data/x402/server_jobs.jsonl" ] && cp "data/x402/server_jobs.jsonl" infra/seed/x402_server_jobs.jsonl \
+  && echo "    + infra/seed/x402_server_jobs.jsonl" || true
 
 echo "==> 3/5 build the dashboard (typecheck + bundle)"
 ( cd web && npm run build )

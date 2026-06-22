@@ -148,6 +148,30 @@ def test_server_stats_shape():
         assert k in st
 
 
+def test_server_stats_counts_settled_rows(monkeypatch, tmp_path):
+    """server_stats() drives the dashboard's x402-server panel — assert it actually parses a SETTLED
+    row (served_jobs + USDC revenue + last tx) and ignores non-SETTLED events, on an ISOLATED ledger
+    so the assertion is deterministic (not coupled to the real accumulating provider ledger)."""
+    from ictbot.api import x402_server
+
+    tx = "0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4"
+    ledger = tmp_path / "server_jobs.jsonl"
+    ledger.write_text(
+        '{"ts": "2026-06-17T18:52:06Z", "event": "REJECTED", "reason": "recipient mismatch"}\n'
+        '{"ts": "2026-06-22T09:51:33Z", "event": "SETTLED", "tx": "' + tx + '", '
+        '"value": 10000, "payer": "0xA9aa558b0a8006390f01A89824832086C080904a"}\n'
+    )
+    monkeypatch.setattr(x402_server, "SERVER_LEDGER", ledger)
+    monkeypatch.setattr(settings, "x402_price_units", 10000, raising=False)
+
+    st = x402_server.server_stats()
+    assert st["served_jobs"] == 1                       # the REJECTED row must NOT count
+    assert st["revenue_usdc"] == 0.01                   # 10000 units / 1e6
+    assert st["last_settlement_tx"] == tx
+    assert st["last_ts"] == "2026-06-22T09:51:33Z"
+    assert st["price_usdc"] == 0.01
+
+
 def test_http_unpaid_returns_402_with_sdk_challenge():
     """The x402 SDK middleware returns 402 + an x402 challenge in the `payment-required` header,
     advertising the Avalanche Fuji USDC payment requirement."""
@@ -191,6 +215,7 @@ def test_http_info_endpoint(monkeypatch):
     assert info["asset"] == settings.x402_usdc_avax_address
     assert info["pay_to"].lower() == _TEST_ADDR.lower()
     assert info["sdk"] == "x402"
-    # served_jobs reads the REAL accumulating provider ledger (real demo settlements land here), so
-    # assert the shape, not a fixed count.
-    assert isinstance(info["stats"]["served_jobs"], int) and info["stats"]["served_jobs"] >= 0
+    # served_jobs here reads the REAL accumulating provider ledger (live demo settlements land here),
+    # so this route asserts only the shape; the parse is covered deterministically by
+    # test_server_stats_counts_settled_rows above.
+    assert isinstance(info["stats"]["served_jobs"], int)

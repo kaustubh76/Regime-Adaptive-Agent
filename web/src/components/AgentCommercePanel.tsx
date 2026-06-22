@@ -7,8 +7,8 @@ import Card from "./ui/Card";
 import StatusPill from "./ui/StatusPill";
 import InfoTip from "./ui/Tooltip";
 
-// The SELL side of the agent economy (ERC-8183). Violet to distinguish from the blue CMC-Hub
-// (buy side). The two panels together tell the "two-sided agent economy" story for the SDK prize.
+// The SELL side of the agent economy (ERC-8004 agentic commerce). Violet to distinguish from the
+// blue CMC-Hub (buy side). The two panels together tell the "two-sided agent economy" story.
 const COMMERCE_VIOLET = "#8b9dff";
 
 function Tile({ label, value, color, tip }: { label: string; value: string; color?: string; tip?: GlossaryKey }) {

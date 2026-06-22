@@ -16,7 +16,7 @@ export default {
         ink: "rgb(var(--c-ink) / <alpha-value>)", // primary text (replaces hardcoded text-slate-*)
 
         // ── Brand + signal (semantic tokens; vivid on both themes → stay fixed) ──
-        brand: "#f0b90b", // BNB gold — primary / headline accent
+        brand: "#f0b90b", // gold — primary / headline accent
         up: "#16c784", // gain green
         down: "#ea3943", // loss red
         cool: "#3861fb", // CMC blue — the one cool secondary

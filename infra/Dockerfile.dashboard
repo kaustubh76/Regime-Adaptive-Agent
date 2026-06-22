@@ -50,6 +50,9 @@ COPY infra/seed/cmc_mcp_usag[e].json ./data/journal/
 # x402 receipts (real settled USDC micropayments) so the live dashboard's CMC Agent Hub
 # panel shows the paid-data artifact (settled count + spend). Optional glob like above.
 COPY infra/seed/x402_receipt[s].json ./data/x402/receipts.json
+# x402 SERVER ledger (real SETTLED jobs the agent GOT PAID for) so the dashboard's x402-server
+# panel shows served jobs + USDC revenue + the last settlement tx. Optional [s] glob like above.
+COPY infra/seed/x402_server_job[s].jsonl ./data/x402/server_jobs.jsonl
 # Strategy verdicts (survival/forward/perf) + stability grades so the dashboard's Strategy
 # Lab shows real readiness + the backtest scoreboard on the cloud — `make campaign`/`make
 # stability` run LOCALLY (Render can't reach market data) and reseed these via

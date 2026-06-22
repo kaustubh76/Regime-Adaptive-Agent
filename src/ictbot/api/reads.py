@@ -99,7 +99,7 @@ def _fg_label(fg: int | None) -> str:
 
 
 def _explorer_base() -> str:
-    """Block-explorer tx base for on-chain links. Snowtrace on Avalanche, BscScan on BNB."""
+    """Block-explorer tx base for on-chain links — Snowtrace on Avalanche (Fuji / mainnet)."""
     net = settings.agent_network
     if net == "avax-testnet":
         return "https://testnet.snowtrace.io/tx/"
@@ -399,7 +399,8 @@ def rebalances_card(n: int = 10, rows: list[dict] | None = None) -> dict:
                 "n_failed": r.get("n_failed", 0),
                 "failed_swaps": r.get("failed_swaps") or [],
                 "fees_usd": r.get("fees_usd", 0.0),
-                "tx": [{"hash": h, "url": f"{base}{h}"} for h in (r.get("tx") or [])],
+                # Only linkify REAL on-chain hashes (0x…); paper-tick ids ("sim-1") would 404 on Snowtrace.
+                "tx": [{"hash": h, "url": f"{base}{h}"} for h in (r.get("tx") or []) if str(h).startswith("0x")],
                 "target": r.get("target") or {},
                 "weights_after": r.get("weights_after") or {},
                 "rationale": r.get("rationale"),
@@ -725,7 +726,9 @@ def pillars_card(rows: list[dict] | None = None) -> dict:
             "identity_wallet_bnb": net.get("identity_wallet_bnb"),
             "last_heartbeat_ok": ((latest or {}).get("heartbeat") or {}).get("ok"),
             "last_heartbeat_tx": ((latest or {}).get("heartbeat") or {}).get("tx"),
-            "last_heartbeat_ts": (latest or {}).get("ts") if (latest or {}).get("heartbeat") else None,
+            # Prefer the heartbeat's own on-chain ts; fall back to the tick ts for older rows.
+            "last_heartbeat_ts": (((latest or {}).get("heartbeat") or {}).get("ts")
+                                  or ((latest or {}).get("ts") if (latest or {}).get("heartbeat") else None)),
             # WHY the last heartbeat failed (e.g. MegaFuel 403 / sponsor unset / insufficient gas) —
             # so the IdentityCard shows the reason, not just "failing". Public, never a secret.
             "last_heartbeat_error": ((latest or {}).get("heartbeat") or {}).get("error"),

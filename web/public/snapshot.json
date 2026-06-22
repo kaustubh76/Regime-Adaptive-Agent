@@ -1,7 +1,7 @@
 {
   "health": {
     "ok": true,
-    "heartbeat_age_s": 904175.8,
+    "heartbeat_age_s": 1325956.0,
     "last_beat_iso": "2026-06-07T06:30:28.350000+00:00",
     "mode": "sim",
     "journal_mode": "sim",
@@ -13,11 +13,11 @@
     "name": "RegimeAdaptiveMomentumAgent",
     "network": "avax-testnet",
     "trading_wallet": "0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215",
-    "description": "Autonomous regime-adaptive momentum agent: reads CoinMarketCap (price, Fear & Greed) to score market regime and rank momentum. It PAYS for data and GETS PAID for its CMC Regime Report over x402 (USDC, EIP-3009 on Avalanche C-Chain), and holds an ERC-8004 on-chain identity it heartbeats each cycle. Risk-first.",
+    "description": "Autonomous regime-adaptive momentum agent: reads CoinMarketCap (price, Fear & Greed) to score market regime and rank momentum. It PAYS for data and GETS PAID for its CMC Regime Report over x402 (USDC, EIP-3009 on Avalanche C-Chain), and holds an ERC-8004 on-chain identity it heartbeats each cycle. Risk-first. Trades from wallet 0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215 (TWAK-signed).",
     "endpoints": [
       {
         "name": "trading",
-        "endpoint": "https://testnet.snowtrace.io/address/0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215",
+        "endpoint": "https://testnet.snowtrace.io/address/0xA9aa558b0a8006390f01A89824832086C080904a",
         "version": "0.1.0",
         "capabilities": [
           "momentum-allocator",
@@ -62,8 +62,8 @@
   "strategies": {
     "items": [
       {
-        "name": "AVAX_STRATEGY_01",
-        "summary": "AVAX_STRATEGY_01 (alias of momentum_adaptive) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
+        "name": "BNB_STRATEGY_01",
+        "summary": "BNB_STRATEGY_01 (alias of momentum_adaptive) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed).",
         "current": false,
         "alias_of": "momentum_adaptive",
         "survival": {
@@ -96,8 +96,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_02",
-        "summary": "AVAX_STRATEGY_02 (alias of momentum_voltarget) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
+        "name": "BNB_STRATEGY_02",
+        "summary": "BNB_STRATEGY_02 (alias of momentum_voltarget) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: vol-target 1.2%/bar (de-risk only)",
         "current": false,
         "alias_of": "momentum_voltarget",
         "survival": {
@@ -130,8 +130,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_03",
-        "summary": "AVAX_STRATEGY_03 (alias of dual_momentum) \u2014 Dual momentum: hold top-2 of 8 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
+        "name": "BNB_STRATEGY_03",
+        "summary": "BNB_STRATEGY_03 (alias of dual_momentum) \u2014 Dual momentum: hold top-2 of 8 by 120-bar return with a positive-momentum cash filter; rotate FULLY to USDT when the basket itself is down over 120 bars. Long-only risk-off.",
         "current": false,
         "alias_of": "dual_momentum",
         "survival": {
@@ -164,8 +164,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_04",
-        "summary": "AVAX_STRATEGY_04 (alias of rotation) \u2014 Relative-strength rotation: hold top-3 of 8 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
+        "name": "BNB_STRATEGY_04",
+        "summary": "BNB_STRATEGY_04 (alias of rotation) \u2014 Relative-strength rotation: hold top-3 of 8 by a blended 120+60-bar momentum z-score, inverse-vol, regime-capped (no cash filter).",
         "current": false,
         "alias_of": "rotation",
         "survival": {
@@ -198,8 +198,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_05",
-        "summary": "AVAX_STRATEGY_05 (alias of breakout) \u2014 Volatility breakout: hold the 8-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
+        "name": "BNB_STRATEGY_05",
+        "summary": "BNB_STRATEGY_05 (alias of breakout) \u2014 Volatility breakout: hold the 8-token names that break their 20-bar high (exit on the 5-bar low), inverse-vol, regime-capped. Asymmetric exit channel replaces the AMM stop.",
         "current": false,
         "alias_of": "breakout",
         "survival": {
@@ -232,8 +232,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_06",
-        "summary": "AVAX_STRATEGY_06 (alias of momentum_fast) \u2014 Short-horizon momentum: hold top-2 of 8 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
+        "name": "BNB_STRATEGY_06",
+        "summary": "BNB_STRATEGY_06 (alias of momentum_fast) \u2014 Short-horizon momentum: hold top-2 of 8 by 60-bar (~10d) return, rebalanced every 3 bars (12h); regime-adaptive deployment. Faster/reactive variant.",
         "current": false,
         "alias_of": "momentum_fast",
         "survival": {
@@ -266,8 +266,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_07",
-        "summary": "AVAX_STRATEGY_07 (alias of momentum_mafilter) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
+        "name": "BNB_STRATEGY_07",
+        "summary": "BNB_STRATEGY_07 (alias of momentum_mafilter) \u2014 Regime-adaptive momentum: hold top-2 of 8 by 120-bar return, inverse-vol; deployment scales with a live risk-on score (breadth + trend + vol + Fear&Greed). | overlay: MA(50) trend filter",
         "current": false,
         "alias_of": "momentum_mafilter",
         "survival": {
@@ -300,8 +300,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_08",
-        "summary": "AVAX_STRATEGY_08 (alias of mean_reversion) \u2014 Mean-reversion: buy 8-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
+        "name": "BNB_STRATEGY_08",
+        "summary": "BNB_STRATEGY_08 (alias of mean_reversion) \u2014 Mean-reversion: buy 8-token names trading >1.0\u03c3 below their 20-bar mean, inverse-vol, regime-capped. Forward-gated capability arm with an adverse prior (reversal flips to momentum on majors) \u2014 promote with extra skepticism.",
         "current": false,
         "alias_of": "mean_reversion",
         "survival": {
@@ -334,8 +334,8 @@
         }
       },
       {
-        "name": "AVAX_STRATEGY_09",
-        "summary": "AVAX_STRATEGY_09 (alias of grid) \u2014 Grid / range: hold MORE of each of the 8 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
+        "name": "BNB_STRATEGY_09",
+        "summary": "BNB_STRATEGY_09 (alias of grid) \u2014 Grid / range: hold MORE of each of the 8 tokens the lower it sits in its 50-bar range (buy dips), less the higher; flatten on a breakdown below the range (hard stop). Inverse-vol, regime-capped. Net-inventory model \u2014 no resting orders.",
         "current": false,
         "alias_of": "grid",
         "survival": {
@@ -1038,20 +1038,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.1545,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          },
-          {
-            "hash": "sim-3",
-            "url": "https://testnet.snowtrace.io/tx/sim-3"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.0918,
           "ETH": 0.1069,
@@ -1222,24 +1209,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.1721,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          },
-          {
-            "hash": "sim-3",
-            "url": "https://testnet.snowtrace.io/tx/sim-3"
-          },
-          {
-            "hash": "sim-4",
-            "url": "https://testnet.snowtrace.io/tx/sim-4"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.0824,
           "CAKE": 0.0865,
@@ -1355,16 +1325,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.0591,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.1007,
           "ETH": 0.1007,
@@ -1422,28 +1383,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.635,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          },
-          {
-            "hash": "sim-3",
-            "url": "https://testnet.snowtrace.io/tx/sim-3"
-          },
-          {
-            "hash": "sim-4",
-            "url": "https://testnet.snowtrace.io/tx/sim-4"
-          },
-          {
-            "hash": "sim-5",
-            "url": "https://testnet.snowtrace.io/tx/sim-5"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.1595,
           "ETH": 0.1245,
@@ -1656,16 +1596,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.0354,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.3836,
           "CAKE": 0.2545
@@ -1716,16 +1647,7 @@
         "n_failed": 0,
         "failed_swaps": [],
         "fees_usd": 0.1244,
-        "tx": [
-          {
-            "hash": "sim-1",
-            "url": "https://testnet.snowtrace.io/tx/sim-1"
-          },
-          {
-            "hash": "sim-2",
-            "url": "https://testnet.snowtrace.io/tx/sim-2"
-          }
-        ],
+        "tx": [],
         "target": {
           "BNB": 0.4042,
           "CAKE": 0.2853
@@ -1884,8 +1806,8 @@
   "pillars": {
     "cmc": {
       "x402_enabled": true,
-      "pay_wallet": "0xEb7bF36aab4912c955474206EF0b835170389655",
-      "base_usdc_balance": 0.894218,
+      "pay_wallet": "0xA9aa558b0a8006390f01A89824832086C080904a",
+      "base_usdc_balance": 20.0,
       "receipts": {
         "total": 22,
         "settled": 22,
@@ -1917,21 +1839,21 @@
       "chain_id": null,
       "chain_ok": null,
       "sponsorable": null,
-      "wallet": "0xEb7bF36aab4912c955474206EF0b835170389655",
+      "wallet": "0xA9aa558b0a8006390f01A89824832086C080904a",
       "nonce": null,
       "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
       "note": null,
-      "agent_id": 133085,
+      "agent_id": 218,
       "heartbeat_enabled": true,
-      "identity_wallet_bnb": "0.0018434894",
-      "last_heartbeat_ok": false,
-      "last_heartbeat_tx": null,
-      "last_heartbeat_ts": "2026-06-16T13:17:36+00:00",
-      "last_heartbeat_error": "Failed to set metadata: {'code': -32000, 'message': 'insufficient funds for gas * price + value: balance 4029000000000, tx cost 22588900000000, overshot 18559900000000'}"
+      "identity_wallet_bnb": "0.498745535998745557",
+      "last_heartbeat_ok": true,
+      "last_heartbeat_tx": "0x00808edc77b3e3f58bfe52563ed868e60901f5fef98f016577cf69808a93cdc6",
+      "last_heartbeat_ts": "2026-06-22T09:38:18Z",
+      "last_heartbeat_error": null
     },
     "commerce": {
-      "enabled": true,
-      "network": "avax-testnet",
+      "enabled": false,
+      "network": "bsc-testnet",
       "jobs_created": 2,
       "jobs_funded": 2,
       "jobs_served": 2,
@@ -1948,13 +1870,13 @@
         "price": 10000,
         "storage": "ipfs",
         "capabilities": [
-          "erc8183",
+          "x402",
           "regime-report",
           "momentum-ranking",
           "cmc-intelligence"
         ],
-        "provider": "0xEb7bF36aab4912c955474206EF0b835170389655",
-        "agent_id": 133085,
+        "provider": "0xA9aa558b0a8006390f01A89824832086C080904a",
+        "agent_id": 218,
         "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e"
       },
       "preview": {
@@ -1973,80 +1895,60 @@
         ],
         "rationale": "CMC Fear & Greed is 25 (fear); my risk-on score is 0.35 (cautious), so I'm capping deployment at 51% of book. CMC macro: BTC dominance falling (60%\u219258%); total mktcap contracting;\u2026"
       },
-      "can_create": false
+      "can_create": false,
+      "x402_server": {
+        "enabled": false,
+        "served_jobs": 1,
+        "revenue_usdc": 0.01,
+        "last_settlement_tx": "0x14ddec0e2b201ed11a4209e4ed90b46a43047ba93550c5754ea845c91efe55f4",
+        "last_ts": "2026-06-22T09:51:33Z",
+        "price_usdc": 0.01
+      }
     }
   },
   "wallet": {
     "ok": true,
-    "address": "0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215",
-    "explorer_url": "https://testnet.snowtrace.io/address/0xE8A30d24BbA030D3e8a844bD1c4F6e1374EA6215",
-    "block": 104799760,
+    "address": "0xA9aa558b0a8006390f01A89824832086C080904a",
+    "explorer_url": "https://testnet.snowtrace.io/address/0xA9aa558b0a8006390f01A89824832086C080904a",
+    "block": 56485036,
     "network": "avax-testnet",
     "assets": [
       {
         "symbol": "AVAX",
-        "amount": 0.0428,
-        "usd": 1.3002120920404434,
-        "price": 30.38,
+        "amount": 0.49874553599874555,
+        "usd": 3.1542391109859023,
+        "price": 6.324345549618785,
         "source": "cmc",
         "is_gas": true
       },
       {
-        "symbol": "USDT",
-        "amount": 5.042360274718277,
-        "usd": 5.042360274718277,
+        "symbol": "USDC",
+        "amount": 20.0,
+        "usd": 20.0,
         "price": 1.0,
         "source": "stable",
         "is_gas": false
-      },
-      {
-        "symbol": "CAKE",
-        "amount": 1.29322689441059,
-        "usd": 1.8121360775183735,
-        "price": 1.4012514627947674,
-        "source": "cmc",
-        "is_gas": false
       }
     ],
-    "total_usd": 8.15,
+    "total_usd": 23.15,
     "priced_source": "cmc",
-    "gas_bnb": 0.0428,
-    "gas_low": true,
-    "x402_budget_usdc": 0.894218,
-    "served_at": "2026-06-17T17:40:18.002217+00:00",
+    "gas_bnb": 0.49874553599874555,
+    "gas_low": false,
+    "x402_budget_usdc": 20.0,
+    "served_at": "2026-06-22T14:49:49.503984+00:00",
     "note": null
   },
   "market_intel": {
     "enabled": true,
     "global_metrics": {
-      "btc_dominance": 58.527949594059,
-      "eth_dominance": 9.504853711802,
-      "stablecoin_market_cap": 286779085076.8173,
-      "total_market_cap": 2257730759106.6855,
-      "total_volume_24h": 71010526687.38,
-      "altcoin_market_cap": 936327238447.1696
+      "btc_dominance": 58.567552692414,
+      "eth_dominance": 9.527572208762,
+      "stablecoin_market_cap": 286669128764.30884,
+      "total_market_cap": 2219356552275.5547,
+      "total_volume_24h": 66787618772.72,
+      "altcoin_market_cap": 919533734089.0334
     },
     "fng_trend": [
-      {
-        "ts": 1780444800,
-        "value": 23
-      },
-      {
-        "ts": 1780531200,
-        "value": 20
-      },
-      {
-        "ts": 1780617600,
-        "value": 16
-      },
-      {
-        "ts": 1780704000,
-        "value": 13
-      },
-      {
-        "ts": 1780790400,
-        "value": 15
-      },
       {
         "ts": 1780876800,
         "value": 15
@@ -2082,106 +1984,126 @@
       {
         "ts": 1781568000,
         "value": 24
+      },
+      {
+        "ts": 1781654400,
+        "value": 22
+      },
+      {
+        "ts": 1781740800,
+        "value": 20
+      },
+      {
+        "ts": 1781827200,
+        "value": 20
+      },
+      {
+        "ts": 1781913600,
+        "value": 22
+      },
+      {
+        "ts": 1782000000,
+        "value": 21
       }
     ],
     "movers": {
       "gainers": [
         {
-          "symbol": "SPX",
-          "name": "SPX6900",
-          "pct_24h": 14.99192348
+          "symbol": "DEXE",
+          "name": "DeXe",
+          "pct_24h": 26.83361914
         },
         {
-          "symbol": "ASTER",
-          "name": "Aster",
-          "pct_24h": 13.94629104
+          "symbol": "TIA",
+          "name": "Celestia",
+          "pct_24h": 7.26946069
         },
         {
-          "symbol": "ENA",
-          "name": "Ethena",
-          "pct_24h": 10.8326742
+          "symbol": "ZRO",
+          "name": "LayerZero",
+          "pct_24h": 6.25755106
         },
         {
           "symbol": "LIT",
           "name": "Lighter",
-          "pct_24h": 10.34716971
+          "pct_24h": 5.99797898
         },
         {
-          "symbol": "VVV",
-          "name": "Venice Token",
-          "pct_24h": 10.16550364
+          "symbol": "ENA",
+          "name": "Ethena",
+          "pct_24h": 5.8600085
         }
       ],
       "losers": [
         {
-          "symbol": "BEAT",
-          "name": "Audiera",
-          "pct_24h": -32.08532377
-        },
-        {
-          "symbol": "DEXE",
-          "name": "DeXe",
-          "pct_24h": -18.04786627
-        },
-        {
           "symbol": "H",
           "name": "Humanity",
-          "pct_24h": -9.37882895
+          "pct_24h": -22.93291751
         },
         {
-          "symbol": "STABLE",
-          "name": "Stable",
-          "pct_24h": -7.9642199
+          "symbol": "JUP",
+          "name": "Jupiter",
+          "pct_24h": -7.10917641
         },
         {
-          "symbol": "NIGHT",
-          "name": "Midnight",
-          "pct_24h": -6.7445482
+          "symbol": "BEAT",
+          "name": "Audiera",
+          "pct_24h": -6.32132973
+        },
+        {
+          "symbol": "SKYAI",
+          "name": "SKYAI",
+          "pct_24h": -4.35545324
+        },
+        {
+          "symbol": "DASH",
+          "name": "Dash",
+          "pct_24h": -3.60054223
         }
       ]
     },
     "categories": [
       {
-        "name": "NFTs & Collectibles",
-        "avg_price_change": 2.347655260816995,
-        "market_cap": 6619457769.4958935,
-        "market_cap_change": 1.785211760401,
-        "num_tokens": 786
-      },
-      {
-        "name": "Filesharing",
-        "avg_price_change": 1.754051080982944,
-        "market_cap": 1478096154.0210483,
-        "market_cap_change": 0.871539937898,
-        "num_tokens": 51
-      },
-      {
-        "name": "Doggone Doggerel",
-        "avg_price_change": 1.0271109143015034,
-        "market_cap": 19142854194.444805,
-        "market_cap_change": 0.835056732597,
-        "num_tokens": 432
-      },
-      {
-        "name": "Polychain Capital Portfolio",
-        "avg_price_change": 0.009808182127043203,
-        "market_cap": 1547840840685.2795,
-        "market_cap_change": 0.114147300607,
-        "num_tokens": 49
-      },
-      {
         "name": "Winklevoss Capital Portfolio",
-        "avg_price_change": -0.03224653175058204,
-        "market_cap": 1541918766729.1921,
-        "market_cap_change": 0.085558416312,
+        "avg_price_change": 1.5104862056980068,
+        "market_cap": 1520362329738.9,
+        "market_cap_change": 1.442089367127,
         "num_tokens": 6
       },
       {
+        "name": "Polychain Capital Portfolio",
+        "avg_price_change": 1.4543517084674578,
+        "market_cap": 1526010719098.1633,
+        "market_cap_change": 1.435913278599,
+        "num_tokens": 50
+      },
+      {
+        "name": "Doggone Doggerel",
+        "avg_price_change": 0.5813507316921658,
+        "market_cap": 18371055209.633083,
+        "market_cap_change": 8.212808295411,
+        "num_tokens": 435
+      },
+      {
+        "name": "Filesharing",
+        "avg_price_change": -0.24189659894332122,
+        "market_cap": 1457772569.7961018,
+        "market_cap_change": 0.071377512075,
+        "num_tokens": 51
+      },
+      {
         "name": "xStocks Ecosystem",
-        "avg_price_change": -1.776330809135647,
-        "market_cap": 5658247254.731356,
-        "market_cap_change": 0.426523533725,
-        "num_tokens": 85
+        "avg_price_change": -0.45809833207328304,
+        "market_cap": 5632458580.13109,
+        "market_cap_change": -0.602523215185,
+        "num_tokens": 84
+      },
+      {
+        "name": "NFTs & Collectibles",
+        "avg_price_change": -2.6145249523327743,
+        "market_cap": 6384461671.039368,
+        "market_cap_change": -0.744930626437,
+        "num_tokens": 782
       }
     ],
     "regime_terms": {
@@ -2196,11 +2118,11 @@
     }
   },
   "cmc_api": {
-    "credits_today": 146,
+    "credits_today": 20,
     "daily_budget": 9000,
-    "credits_month": 1332,
+    "credits_month": 1370,
     "monthly_budget": 290000,
-    "req_count": 918,
+    "req_count": 956,
     "last_status": 200,
     "last_credit_count": 1,
     "rate_wait_total_s": 0.0,
@@ -2215,16 +2137,16 @@
     "ta_enabled": true,
     "skill_enabled": true,
     "mcp": {
-      "calls": 15,
+      "calls": 119,
       "by_tool": {
-        "get_crypto_technical_analysis": 8,
-        "get_global_metrics_latest": 1,
-        "trending_crypto_narratives": 1,
-        "get_crypto_marketcap_technical_analysis": 1,
-        "get_global_crypto_derivatives_metrics": 1,
-        "get_upcoming_macro_events": 1,
-        "get_crypto_quotes_latest": 1,
-        "get_crypto_latest_news": 1
+        "get_crypto_technical_analysis": 65,
+        "get_global_metrics_latest": 8,
+        "trending_crypto_narratives": 8,
+        "get_crypto_marketcap_technical_analysis": 8,
+        "get_global_crypto_derivatives_metrics": 7,
+        "get_upcoming_macro_events": 7,
+        "get_crypto_quotes_latest": 9,
+        "get_crypto_latest_news": 7
       },
       "tools_available": [
         "get_crypto_quotes_latest",
@@ -2240,7 +2162,7 @@
         "get_upcoming_macro_events",
         "get_crypto_latest_news"
       ],
-      "last_call_ts": 1781716599
+      "last_call_ts": 1782122190
     },
     "ta_health": 0.4017,
     "ta_source": "cmc+skill",
@@ -2526,5 +2448,5 @@
     },
     "rotation_enabled": true
   },
-  "served_at": "2026-06-17T17:40:18.011209+00:00"
+  "served_at": "2026-06-22T14:49:52.489543+00:00"
 }

@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // Relative root/outDir ONLY — never hand the bundler the absolute project path,
-// which contains a space and a '*' ("BNB Hack * CMC") that breaks some tooling.
+// which contains a space and a '*' (the project folder name) that breaks some tooling.
 // In dev, /api is proxied to the FastAPI server so the SPA uses same-origin
 // relative URLs identically in dev and prod (where FastAPI serves web/dist).
 export default defineConfig({

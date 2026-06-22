@@ -27,6 +27,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 KEY_FILE = REPO / "data" / "avax" / "agent_wallet.json"
+JOURNAL = REPO / "data" / "journal" / "allocator_journal.jsonl"
 SNOWTRACE = "https://testnet.snowtrace.io"
 
 
@@ -145,6 +146,7 @@ def _run_identity(settings) -> list[tuple[str, str]]:
         if res and res.get("ok") and res.get("tx"):
             out.append(("ERC-8004 heartbeat", res["tx"]))
             print("  ✓ heartbeat written on-chain")
+            _journal_heartbeat(ok=True, tx=res["tx"])  # reflect it on the dashboard, not just on-chain
             try:
                 back = identity.read_heartbeat(aid)
                 if back:
@@ -153,7 +155,22 @@ def _run_identity(settings) -> list[tuple[str, str]]:
                 pass
         else:
             print(f"  ✗ heartbeat failed: {(res or {}).get('error')}", file=sys.stderr)
+            _journal_heartbeat(ok=False, error=(res or {}).get("error"))
     return out
+
+
+def _journal_heartbeat(ok: bool, tx: str | None = None, error: str | None = None) -> None:
+    """Stamp the on-chain heartbeat result onto the allocator journal's latest tick so the
+    dashboard's IdentityCard reflects it (write_heartbeat settles on-chain but doesn't journal)."""
+    import time
+
+    try:
+        from ictbot.agent.heartbeat_journal import record_heartbeat
+
+        ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        record_heartbeat(JOURNAL, ok=ok, tx=tx, ts=ts, error=error)
+    except Exception:
+        pass
 
 
 def main() -> int:

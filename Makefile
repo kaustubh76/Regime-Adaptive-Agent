@@ -406,6 +406,8 @@ commerce_job:
 refresh_dashboard: snapshot
 	@test -f data/journal/allocator_journal.jsonl || { echo "ERROR: no data/journal/allocator_journal.jsonl — run a tick first"; exit 1; }
 	cp data/journal/allocator_journal.jsonl data/journal/allocator_state.json infra/seed/
+	@if [ -f data/x402/server_jobs.jsonl ]; then cp data/x402/server_jobs.jsonl infra/seed/x402_server_jobs.jsonl && echo "  reseeded x402 server ledger -> infra/seed/x402_server_jobs.jsonl (x402-server panel)"; \
+	else echo "  (skip x402_server_jobs.jsonl — no settled paid jobs yet)"; fi
 	@PYTHONPATH=src .venv/bin/python -c "import json; r=[json.loads(l) for l in open('infra/seed/allocator_journal.jsonl') if l.strip()]; b=[x for x in r if x.get('event')=='REBALANCE']; print(f'  reseeded infra/seed + snapshot -> {len(b)} ticks, NAV {b[-1][\"nav_after\"]} ({b[-1][\"ts\"]})')"
 	@for f in strategy_gates.json strategy_stability.json; do \
 	  if [ -f data/reports/$$f ]; then cp data/reports/$$f infra/seed/ && echo "  reseeded strategy report -> infra/seed/$$f (Strategy Lab)"; \
@@ -415,7 +417,7 @@ refresh_dashboard: snapshot
 	else echo "  (skip cmc_mcp_usage.json — no CMC MCP telemetry journaled yet)"; fi
 	@echo ""
 	@echo "  next (operator-run — outward-facing):"
-	@echo "    git add web/public/snapshot.json infra/seed/allocator_journal.jsonl infra/seed/allocator_state.json infra/seed/strategy_gates.json infra/seed/strategy_stability.json infra/seed/cmc_mcp_usage.json"
+	@echo "    git add web/public/snapshot.json infra/seed/allocator_journal.jsonl infra/seed/allocator_state.json infra/seed/x402_server_jobs.jsonl infra/seed/strategy_gates.json infra/seed/strategy_stability.json infra/seed/cmc_mcp_usage.json"
 	@echo "    git commit -m 'chore(dashboard): refresh PnL data' && git push    # Render auto-redeploys"
 	@echo "    vercel --prod --yes                                               # deploy the Vercel SPA"
 	@echo "  verify: curl -s https://avax-agentic-payments-api.onrender.com/api/nav | python -c 'import sys,json;print(json.load(sys.stdin)[\"current_nav\"])'"
