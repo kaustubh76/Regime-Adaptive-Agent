@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""Generate docs/architecture.excalidraw — the DETAILED, UNIFORM full-flow execution diagram
-of the AVALANCHE momentum agent (AVAX Agentic Payments).
+"""Generate docs/architecture.{excalidraw,svg,png} — the DETAILED, full-system architecture of the
+AVALANCHE regime-adaptive momentum agent (AVAX Agentic Payments).
 
-Layout = a strict grid: two balanced top→down stage-banded columns (LEFT: entry → guards → risk
-gate · RIGHT: decide → execute → persist), joined by an off-page connector Ⓐ. Every card shares
-one size, every row shares one pitch, every guard's SKIP/HALT terminal sits in an aligned outer
-column reached by a straight horizontal arrow — no diagonals. A centre lane carries the CMC data
-sub-cards + the dd-watch fast loop; the far-right lane carries the strategy core, identity and
-Mission Control. Zero ICT.
+Layout = five stacked, top→down LAYER PLANES (read the bands in order):
+  ①  DATA INGEST    — CMC-native pipeline (WebSocket → bars/snapshots → store → unified signals)
+  ②  DECIDE         — pluggable strategy registry + regime-adaptive cap + auto-selector + campaign gate
+  ③  EXECUTE        — one rebalance tick(), self-custody signer, every guard fails safe (skip / halt)
+  ④  AGENTIC ECONOMY— two-sided x402 on ONE ERC-8004 identity:  pays for data AND gets paid for analysis
+  ⑤  PERSIST & OBSERVE — atomic journal/state → snapshot → Mission Control (Render API + Vercel SPA)
 
-Emits a complete modern Excalidraw schema (autoResize text, boundElements=[]) PLUS a deterministic
-1:1 SVG mirror (docs/architecture.svg) and, if cairosvg is present, a PNG — so the diagram is
-viewable in any browser / GitHub, immune to render-cache or frozen-link quirks.
+Within a plane cards flow left→right; between planes a bold connector flows down. Zero CEX on the
+contest path (CMC_ONLY firewall). Settlements are real USDC on Avalanche Fuji (EIP-3009), verifiable
+on Snowtrace.
+
+Anti-staleness: the x402 settled-job count/total/last-tx are DERIVED at build time from
+data/x402/server_jobs.jsonl, so the diagram can never drift from the ledger. Before writing, the
+script self-asserts that every required layer token is present.
+
+Emits a modern Excalidraw schema PLUS a deterministic 1:1 SVG mirror (docs/architecture.svg) and, if
+cairosvg is present, a PNG — viewable in any browser / GitHub, immune to render-cache quirks.
 """
 import json
 import math
@@ -21,11 +28,47 @@ EL = []
 _n = [0]
 CIRCLED = {1: "①", 2: "②", 3: "③", 4: "④", 5: "⑤", 6: "⑥", 7: "⑦", 8: "⑧", 9: "⑨",
            10: "⑩", 11: "⑪", 12: "⑫", 13: "⑬", 14: "⑭", 15: "⑮", 16: "⑯", 17: "⑰"}
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def _id():
     _n[0] += 1
     return _n[0]
+
+
+# ---- grouping (Excalidraw groupIds: innermost first, outermost last) ----
+_g = [0]
+_PLANE_G = [None]
+_PLANE_START = [None]
+
+
+def _gid():
+    _g[0] += 1
+    return f"g{_g[0]}"
+
+
+def _stamp_inner(start):
+    """Group the EL slice [start:] (one card/pill/gate) so it moves as a unit."""
+    gid = _gid()
+    for e in EL[start:]:
+        e["groupIds"] = [gid] + e.get("groupIds", [])
+
+
+def _close_prev_plane():
+    """Append the current plane's group as the OUTERMOST group on every element drawn in it."""
+    if _PLANE_G[0] is None or _PLANE_START[0] is None:
+        return
+    gid = _PLANE_G[0]
+    for e in EL[_PLANE_START[0]:]:
+        if gid not in e.get("groupIds", []):
+            e["groupIds"] = e.get("groupIds", []) + [gid]
+
+
+# Width estimate, per font family, SAFELY >= Excalidraw's true metric (mono≈0.60, sans≈0.50 per
+# pt/char) so a non-autoResize box never wraps when the .excalidraw is opened in the app.
+def _twidth(s, size, family):
+    per = 0.62 if family == 3 else 0.56
+    return max((len(ln) for ln in s.split("\n")), default=1) * size * per + 8
 
 
 def _el(**kw):
@@ -56,23 +99,22 @@ def ellipse(x, y, w, h, stroke, fill, sw=2):
                   backgroundColor=fill, strokeWidth=sw))
 
 
+# autoResize=False + an accurate box → Excalidraw renders at our exact coords (no on-load reflow), so
+# the app view matches the SVG mirror 1:1. emit_svg uses x (left) / x+width/2=cx (centre) — unchanged.
 def text(x, y, s, size=15, color="#1e1e1e", family=2):
-    lines = s.split("\n")
-    w = max((len(ln) for ln in lines), default=1) * size * 0.55
-    h = len(lines) * size * 1.25
-    EL.append(_el(type="text", x=x, y=y, width=w, height=h, strokeColor=color, strokeWidth=1,
+    EL.append(_el(type="text", x=x, y=y, width=_twidth(s, size, family),
+                  height=len(s.split("\n")) * size * 1.25, strokeColor=color, strokeWidth=1,
                   fontSize=size, fontFamily=family, text=s, originalText=s, textAlign="left",
-                  verticalAlign="top", containerId=None, lineHeight=1.25, autoResize=True))
+                  verticalAlign="top", containerId=None, lineHeight=1.25, autoResize=False))
 
 
 def tcenter(cx, cy, s, size=14, color="#1e1e1e", family=2):
-    lines = s.split("\n")
-    w = max((len(ln) for ln in lines), default=1) * size * 0.6
-    h = len(lines) * size * 1.25
+    w = _twidth(s, size, family)
+    h = len(s.split("\n")) * size * 1.25
     EL.append(_el(type="text", x=cx - w / 2, y=cy - h / 2, width=w, height=h, strokeColor=color,
                   strokeWidth=1, fontSize=size, fontFamily=family, text=s, originalText=s,
                   textAlign="center", verticalAlign="top", containerId=None, lineHeight=1.25,
-                  autoResize=True))
+                  autoResize=False))
 
 
 def arrow(x1, y1, x2, y2, color="#495057", sw=2.5, label=None, dashed=False):
@@ -84,7 +126,7 @@ def arrow(x1, y1, x2, y2, color="#495057", sw=2.5, label=None, dashed=False):
     if label:
         mx, my = (x1 + x2) / 2, (y1 + y2) / 2
         if abs(x2 - x1) < abs(y2 - y1):      # vertical → label to the side
-            text(mx + 7, my - 9, label, 11, color)
+            text(mx + 8, my - 9, label, 11, color)
         else:                                 # horizontal → label above
             tcenter(mx, my - 11, label, 11, color)
 
@@ -100,251 +142,400 @@ PROC = ("#495057", "#f8f9fa", "#fbfcfd")
 SKIPC = ("#868e96", "#f1f3f5", "#fafafa")
 
 # ---------------- grid ----------------
-TOP = 320
-PITCH = 150
-CARD_W, CARD_H = 440, 100
-DIA_W, DIA_H = 320, 100
-COL1_X, COL2_X = 320, 1180
-C1, C2 = COL1_X + CARD_W / 2, COL2_X + CARD_W / 2     # 540, 1400
-TERM_L_X, TERM_L_W = 40, 250
-TERM_R_X, TERM_R_W = 1660, 460
-GUT_X, GUT_W = 800, 350                                # 800..1150 (between columns)
+PLANE_X, PLANE_W = 50, 2620
+CARD_W, CARD_H = 432, 100
 
 
-def ry(i):
-    return TOP + i * PITCH
+def colx(i):
+    return 110 + i * 486            # 110 · 596 · 1082 · 1568 · 2054 (right edge 2486)
 
 
-def card(col_x, i, title, subs, role, num=None, dashed=False):
+def plane(y, h, label, role):
+    _close_prev_plane()                 # close the previous layer's group
+    _PLANE_G[0] = _gid()                # open this layer's group
+    _PLANE_START[0] = len(EL)
+    rect(PLANE_X, y, PLANE_W, h, role[0], role[2], sw=1.5)
+    text(PLANE_X + 18, y + 11, label, 16, role[0])
+
+
+def acard(x, y, title, subs, role, w=CARD_W, h=CARD_H, num=None, dashed=False, emph=False):
+    start = len(EL)
     st, fi = role[0], role[1]
-    y = ry(i)
-    rect(col_x, y, CARD_W, CARD_H, st, fi, sw=2, dashed=dashed)
+    rect(x, y, w, h, st, fi, sw=3 if emph else 2, dashed=dashed)
     t = f"{CIRCLED[num]}  {title}" if num else title
-    text(col_x + 16, y + 9, t, 15, "#1e1e1e")
+    text(x + 15, y + 9, t, 15 if emph else 14, "#1e1e1e")
     yy = y + 33
     for s in subs:
-        text(col_x + 16, yy, s, 11.5, st, family=3)
-        yy += 16
-    return (col_x, y, CARD_W, CARD_H)
+        text(x + 15, yy, s, 11, st, family=3)
+        yy += 15.5
+    _stamp_inner(start)
+    return (x, y, w, h)
 
 
-def gate(cx, i, label, caption, role=SAFE):
-    st, fi = role[0], role[1]
-    y = ry(i)
-    diamond(cx - DIA_W / 2, y, DIA_W, DIA_H, st, fi, sw=2)
-    tcenter(cx, y + DIA_H / 2 - 9, label, 14, "#1e1e1e")
+def agate(cx, cy, label, caption, role=SAFE, w=300, h=96):
+    start = len(EL)
+    diamond(cx - w / 2, cy - h / 2, w, h, role[0], role[1], sw=2)
+    tcenter(cx, cy - 8, label, 13, "#1e1e1e")
     if caption:
-        tcenter(cx, y + DIA_H / 2 + 12, caption, 10, st)
-    return (cx - DIA_W / 2, y, DIA_W, DIA_H)
+        tcenter(cx, cy + 12, caption, 9.5, role[0])
+    _stamp_inner(start)
+    return (cx - w / 2, cy - h / 2, w, h)
 
 
-def vconnect(cx, i_from, i_to, label=None, color="#495057"):
-    arrow(cx, ry(i_from) + CARD_H, cx, ry(i_to), color, sw=2.5, label=label)
-
-
-def term(side, i, edge, title, sub, role, dia_cx):
-    """Aligned outer-column terminal reached by a straight horizontal arrow."""
-    st, fi = role[0], role[1]
-    th = 70
-    y = ry(i) + (CARD_H - th) / 2
-    if side == "L":
-        rect(TERM_L_X, y, TERM_L_W, th, st, fi, sw=2.5)
-        text(TERM_L_X + 14, y + 11, title, 12.5, "#1e1e1e")
-        if sub:
-            text(TERM_L_X + 14, y + 31, sub, 9.5, st, family=3)
-        arrow(dia_cx - DIA_W / 2, ry(i) + DIA_H / 2, TERM_L_X + TERM_L_W, y + th / 2, st, sw=2.5, label=edge)
-    else:
-        rect(TERM_R_X, y, TERM_R_W, th, st, fi, sw=2.5)
-        text(TERM_R_X + 14, y + 11, title, 12.5, "#1e1e1e")
-        if sub:
-            text(TERM_R_X + 14, y + 31, sub, 9.5, st, family=3)
-        arrow(dia_cx + DIA_W / 2, ry(i) + DIA_H / 2, TERM_R_X, y + th / 2, st, sw=2.5, label=edge)
-    return (TERM_L_X if side == "L" else TERM_R_X, y, TERM_L_W if side == "L" else TERM_R_W, th)
-
-
-def band(col_x, i0, i1, label, role):
-    st, _, faint = role
-    x = col_x - 22
-    y = ry(i0) - 30
-    w = CARD_W + 44
-    h = (ry(i1) + CARD_H) - y + 14
-    rect(x, y, w, h, st, faint, sw=1.5)
-    text(x + 12, y + 6, label, 13, st)
-
-
-def ctx(x, y, w, h, title, sub, body, role, dashed=False):
-    st, fi = role[0], role[1]
-    rect(x, y, w, h, st, fi, sw=2.5, dashed=dashed)
-    text(x + 14, y + 10, title, 13.5, st)
+def pill(x, y, w, h, title, sub, role, fill=None):
+    start = len(EL)
+    st = role[0]
+    rect(x, y, w, h, st, fill or role[1], sw=2.5)
+    text(x + 13, y + 9, title, 12, "#1e1e1e")
     if sub:
-        text(x + 14, y + 30, sub, 9.5, st, family=3)
-    text(x + 14, y + (50 if sub else 32), body, 11, "#1e1e1e")
+        text(x + 13, y + 28, sub, 9, st, family=3)
+    _stamp_inner(start)
+    return (x, y, w, h)
 
+
+def harrow(a, b, label=None, color="#495057", dashed=False):
+    (x, y, w, h) = a
+    (x2, y2, w2, h2) = b
+    arrow(x + w, y + h / 2, x2, y2 + h2 / 2, color, sw=2.5, label=label, dashed=dashed)
+
+
+def vdown(x, y1, y2, label, color="#343a40"):
+    arrow(x, y1, x, y2, color, sw=3.5, label=label)
+
+
+# ---------------- derive live proof from the journals (anti-staleness) ----------------
+def _proof():
+    """The x402 SERVER ledger (the agent GETS PAID): settled jobs · revenue · last Fuji tx.
+    The agent pays its OWN server, so these settlements cover both the consumer and provider legs."""
+    out = {"n": None, "usd": None, "last_tx": None, "net": None}
+    try:
+        rows = []
+        with open(os.path.join(BASE, "data/x402/server_jobs.jsonl")) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    rows.append(json.loads(line))
+        settled = [r for r in rows
+                   if (r.get("event") == "SETTLED" or r.get("status") == "settled") and r.get("tx")]
+        out["n"] = len(settled)
+        out["usd"] = sum(int(r.get("value") or 0) for r in settled) / 1e6
+        if settled:
+            out["last_tx"] = settled[-1]["tx"]
+            out["net"] = settled[-1].get("network")
+    except Exception:
+        pass
+    return out
+
+
+RX = _proof()
+if RX["n"]:
+    X402_PROOF = f"{RX['n']} settled · ${RX['usd']:.2f} USDC · Fuji (Snowtrace)"
+    _lt = RX["last_tx"]
+    LAST_TX = f"{_lt[:8]}…{_lt[-4:]}"
+else:
+    X402_PROOF = "ledger: data/x402/server_jobs.jsonl"
+    LAST_TX = "—"
 
 # ============================================================ HEADER
-text(60, 34, "AVAX Agentic Payments — Momentum Agent · full execution flow", 30)
-text(60, 78, "One allocator tick(), end to end   ·   pillars:  CMC (data)  ·  x402 USDC (payments)  ·  ERC-8004 (on-chain identity)", 15, "#1971c2")
-text(60, 104, "Read DOWN the left column (entry → guards → risk), jump at Ⓐ, then DOWN the right column (decide → execute → persist).  Every guard fails safe — skip or halt, never crash.", 12, "#495057")
-# legend + return-code key
-ly = 134
+text(56, 30, "AVAX Agentic Payments — Regime-Adaptive Momentum Agent · full system architecture", 30)
+text(56, 74, "Five layers · one allocator tick · the two-sided agentic economy:  "
+     "x402 (buy data + GET PAID)  ·  ERC-8004 (on-chain identity)  ·  CMC (data)", 15, "#1971c2")
+text(56, 100, "Read the bands TOP→DOWN:  ① CMC-native data  →  ② decide (pluggable strategies)  →  "
+     "③ execute (self-custody signer)  →  ④ agentic economy (x402 pays + gets paid · ERC-8004)  →  "
+     "⑤ persist & observe.    Every guard fails safe — skip or halt, never crash.", 12, "#495057")
+# legend
+ly = 138
 leg = [("process", PROC), ("◆ decision", SAFE), ("CMC data", DATA), ("strategy", STRAT),
-       ("swap exec", EXEC), ("identity", IDENT), ("observability", OBS), ("skip/halt", SKIPC)]
-lx = 60
+       ("swap exec", EXEC), ("identity / x402 economy", IDENT), ("observability", OBS),
+       ("skip/halt", SKIPC)]
+lx = 56
 for lab, role in leg:
     rect(lx, ly, 15, 15, role[0], role[1], sw=2)
     text(lx + 21, ly - 1, lab, 11, "#343a40")
     lx += 26 + len(lab) * 7.1
-text(60, ly + 26, "return codes:   0 = ok / no-op   ·   1 = drawdown HALT (flattened)   ·   2 = skip this tick (guard tripped)", 11, "#868e96", family=3)
+text(56, ly + 24, "return codes:   0 = ok / no-op   ·   1 = drawdown HALT (flattened)   ·   2 = skip this tick (guard tripped)",
+     11, "#868e96", family=3)
+text(56, ly + 44, "on-chain anchors (Avalanche Fuji):   identity / signer 0xA9aa…904a  ·  agentId 218  ·  "
+     "registry 0x8004A818…BD9e  ·  USDC@Avalanche 0x5425…Bc65  ·  Snowtrace", 11, "#6741d9", family=3)
+text(56, ly + 64, "card styles:   solid colour = LIVE on the contest path   ·   "
+     "grey dashed = ROADMAP (built · human-gated · not yet auto-live)", 11, "#868e96", family=3)
 
-# ============================================================ STAGE BANDS (drawn first → behind)
-band(COL1_X, 0, 2, "1 · ENTRY", PROC)
-band(COL1_X, 3, 9, "2 · INPUTS & GUARDS", DATA)
-band(COL1_X, 10, 12, "3 · RISK GATE", SAFE)
-band(COL2_X, 0, 4, "4 · DECIDE · pluggable registry", STRAT)
-band(COL2_X, 5, 9, "5 · EXECUTE", EXEC)
-band(COL2_X, 10, 13, "6 · PERSIST & SIGNAL", IDENT)
+CX = PLANE_X + PLANE_W / 2     # 1360 — centre line for inter-plane connectors
 
-# ============================================================ LEFT COLUMN (entry · guards · risk)
-# r0 start
-rect(COL1_X, ry(0), CARD_W, CARD_H, "#1e1e1e", "#e9ecef", sw=2.5)
-text(COL1_X + 16, ry(0) + 18, "CRON  fires", 16, "#1e1e1e")
-text(COL1_X + 16, ry(0) + 46, "live_tick.sh / forward_tick.sh  ·  shell flock", 11.5, "#495057", family=3)
-text(COL1_X + 16, ry(0) + 66, "12h forward tick (campaign)  ·  + dd-watch every ~15 min", 11.5, "#495057", family=3)
+# ============================================================ ① DATA INGEST — CMC-native
+P1 = 250
+plane(P1, 350, "①  DATA INGEST — CMC-native pipeline    (pillar ①: the eyes · CMC_ONLY firewall → CoinMarketCap-only)", DATA)
+r1 = P1 + 44
+d0 = acard(colx(0), r1, "CMC WebSocket feed", [
+    "market@crypto_latest_price (price·mc·cs·vol·pXXd)",
+    "onchain@ token_metric · holders · liquidity · whale",
+    "scripts/cmc_stream.py · auto-reconnect daemon"], DATA)
+d1 = acard(colx(1), r1, "stream → bars + snapshots", [
+    "BarBuilder → 4h parquet (UTC grid, idempotent)",
+    "QuoteSnapshotWriter · on-chain harvester",
+    "heartbeat ts → watchdog"], DATA)
+d2 = acard(colx(2), r1, "cmc_stream_store.py", [
+    "zero-network · never-raise · staleness-gated",
+    "quote_snapshot() · onchain_* readers"], DATA)
+d3 = acard(colx(3), r1, "market_signals.py", [
+    "unified per-token buffet:",
+    "pct_24h/7d/30d · flow_ratio · liquidity_usd",
+    "whale_net · holders top10/top100"], DATA)
+harrow(d0, d1)
+harrow(d1, d2)
+harrow(d2, d3)
+r2 = P1 + 198
+m0 = acard(colx(0), r2, "CMC Agent Hub · MCP", [
+    "8 tools → composed market-overview skill",
+    "per-token TA · F&G · BTC-dom · mktcap · derivatives",
+    "macro-event de-risk · news brake → risk budget ∈ [0,1]"], DATA)
+m1 = acard(colx(1), r2, "CMC Pro REST + 4h candles", [
+    "price_fn · fear_greed · daily backfill",
+    "cold-start seed → cmc_seed_vol_floor"], DATA)
+m2 = acard(colx(2), r2, "x402 — paid data (mechanism)", [
+    "402 challenge → sign EIP-3009 USDC@Avalanche → resend",
+    X402_PROOF, "caps: $0.01/call · $1/session  (full role → ④)"], DATA)
+pill(colx(3), r2 + 6, CARD_W, 78, "CMC_ONLY  firewall", None, SAFE)
+text(colx(3) + 13, r2 + 36, "CMC_ONLY=true → live ticks use CoinMarketCap only.\n"
+     "any non-CMC candle source is refused (fail-safe),\nso the contest arm is CMC-native by construction.",
+     10, SAFE[0], family=3)
 
-card(COL1_X, 1, "run_allocator.py  tick(--mode)", ["sim ↔ live · flags: --dd-watch · --resume · --dd-cap", "--anchor-nav · --ensure-daily-floor · --unlock-profit"], PROC, num=1)
-g_lock = gate(C1, 2, "lock acquired?", "fcntl flock · per-mode")
-card(COL1_X, 3, "load_state", ["HWM · cumulative_swaps · halted · balances", "atomic .tmp+os.replace  ·  corrupt → safe defaults"], PROC, num=2)
-card(COL1_X, 4, "fetch 4h candles ×8 → align_close_matrix", ["8 momentum majors · regime-adaptive universe", "CMC 4h candles → disk-cache fallback"], DATA, num=3)
-g_bars = gate(C1, 5, "data sufficient?", "≥ 200 bars · ≥ 3 tokens")
-g_age = gate(C1, 6, "candles fresh?", "latest bar age ≤ 12h")
-card(COL1_X, 7, "CMC reads", ["price_fn · fear_greed", "(flag) build_regime_intel: dominance · mktcap · F&G 7d"], DATA, num=4)
-card(COL1_X, 8, "LIVE preflight  +  reconcile", ["_live_preflight: creds · wallet · enable_live", "_reconcile_live → drift? journal RECON_DRIFT"], DATA, num=5, dashed=True)
-g_px = gate(C1, 9, "prices ok & NAV>0?", "every px > 0 · nav > 0")
-card(COL1_X, 10, "NAV  +  HWM  +  drawdown", ["nav = USDT + Σ holdings·px", "HWM = max(nav, HWM)  ·  dd = (HWM − nav) / HWM"], SAFE, num=6)
-g_halt = gate(C1, 11, "already halted?", "state.halted (prior breach)")
-g_dd = gate(C1, 12, "dd > cap?", "0.10 campaign · 0.30 DQ")
+# ============================================================ ② DECIDE — strategies
+P2 = 650
+plane(P2, 330, "②  DECIDE — regime-adaptive strategy engine    (long-only spot · 8 momentum majors · NO leverage)", STRAT)
+s1 = P2 + 44
+e0 = acard(colx(0), s1, "resolve strategy", [
+    "LIVE = settings pin (.env STRATEGY_NAME)",
+    "registry.get(name) → PortfolioStrategy"], STRAT)
+e1 = acard(colx(1), s1, "live arm — regime-adaptive momentum", [
+    "hold top-k by 120-bar return · inverse-vol · capped",
+    "survival-passed · DQ-safe · 20 arms + 9 aliases",
+    "incumbent / fallback: momentum_adaptive"], STRAT)
+e2 = acard(colx(2), s1, "regime score → adaptive cap", [
+    "breadth + trend + vol + F&G + CMC TA/macro",
+    "cap ∈ [0.40, 0.85] · remainder = USDT"], STRAT)
+e3 = acard(colx(3), s1, "target = weights × cap", [
+    "inverse-vol sizing · abs-return filter",
+    "(flag) CMC 7-day rel-strength tilt"], STRAT)
+harrow(e0, e1)
+harrow(e1, e2)
+harrow(e2, e3)
+s2 = P2 + 198
+acard(colx(0), s2, "ROADMAP · auto-selector (forward-gated switching)", [
+    "risk-adj forward score · anti-chasing hysteresis (2-eval)",
+    "SIM auto-drives · LIVE recommend-only (auto-apply OFF)",
+    "switching engine built — promotes only on human sign-off"], SKIPC, w=CARD_W + 200, dashed=True)
+acard(colx(2) + 86, s2, "ROADMAP · multi-strategy campaign (5-stage gate)", [
+    "registered → backtest-survival → forward-started → eligible",
+    "→ operator sign-off · strategy_gates.json · risk-first board",
+    "validation harness — proves a challenger before promotion"], SKIPC, w=CARD_W + 200, dashed=True)
 
-# left-column vertical flow
-vconnect(C1, 0, 1)
-vconnect(C1, 1, 2)
-vconnect(C1, 2, 3, "yes")
-vconnect(C1, 3, 4)
-vconnect(C1, 4, 5)
-vconnect(C1, 5, 6, "yes")
-vconnect(C1, 6, 7, "yes")
-vconnect(C1, 7, 8)
-vconnect(C1, 8, 9, "ok")
-vconnect(C1, 9, 10, "yes")
-vconnect(C1, 10, 11)
-vconnect(C1, 11, 12, "no")
+# ============================================================ ③ EXECUTE — tick()
+P3 = 1010
+plane(P3, 620, "③  EXECUTE — rebalance, one tick()    (pillar ②: the hands · self-custody signer · native AVAX gas · sim/paper)", EXEC)
+xa = P3 + 46
+t0 = acard(colx(0), xa, "run_allocator.py  tick(--mode)", [
+    "sim ↔ live · --dd-watch --resume --dd-cap",
+    "--ensure-daily-floor · --unlock-profit"], PROC, num=1)
+t1 = acard(colx(1), xa, "load_state  (atomic)", [
+    "HWM · cumulative_swaps · halted · balances",
+    ".tmp+os.replace · corrupt → safe defaults"], PROC, num=2)
+t2 = acard(colx(2), xa, "FAIL-SAFE GUARDS", [
+    "lock (flock) · data ≥200 bars/≥3 tok · fresh ≤12h",
+    "LIVE preflight (creds·wallet·enable) · px>0 & nav>0",
+    "any fail → SKIP (return 2) · never crash"], SAFE, num=3)
+t3 = acard(colx(3), xa, "NAV · HWM · drawdown", [
+    "nav = USDT + Σ holdings·px",
+    "HWM=max(nav,HWM) · dd=(HWM−nav)/HWM"], SAFE, num=4)
+gdd = agate(colx(4) + CARD_W / 2, xa + CARD_H / 2, "dd > cap?", "0.10 campaign · 0.30 DQ", SAFE)
+harrow(t0, t1)
+harrow(t1, t2)
+harrow(t2, t3)
+arrow(t3[0] + t3[2], xa + CARD_H / 2, colx(4) + CARD_W / 2 - 150, xa + CARD_H / 2, SAFE[0], sw=2.5)
+# dd halt terminals under the gate
+hf = pill(colx(4) + 20, xa + 132, CARD_W - 40, 50, "EMERGENCY FLATTEN", "sell→USDT · 3× retry", SAFE)
+hh = pill(colx(4) + 60, xa + 210, CARD_W - 120, 46, "DD_HALT  (return 1)", "halt=True · book flat", SAFE, fill="#ffc9c9")
+arrow(colx(4) + CARD_W / 2, xa + CARD_H, colx(4) + CARD_W / 2, xa + 132, SAFE[0], sw=2.5, label="yes")
+arrow(colx(4) + CARD_W / 2, xa + 182, colx(4) + CARD_W / 2, xa + 210, SAFE[0], sw=2.5)
 
-# left terminals (aligned, straight horizontal)
-term("L", 2, "no", "SKIP  (2)", "another tick running", SKIPC, C1)
-term("L", 5, "no", "SKIP  (2)", "thin data", SKIPC, C1)
-term("L", 6, "no", "SKIP  (2)", "stale — LIVE skips, SIM warns", SKIPC, C1)
-term("L", 8, "fail", "SKIP  (2)", "missing creds / live off", SKIPC, C1)
-term("L", 9, "no", "SKIP  (2)", "guards a FALSE halt", SKIPC, C1)
-term("L", 11, "yes", "return 0", "book flat · no trade", OBS, C1)
-# dd>cap → emergency flatten → DD_HALT (special two-pill terminal, aligned at row 12)
-fy = ry(12) + (CARD_H - 70) / 2
-rect(TERM_L_X, fy, TERM_L_W, 70, SAFE[0], SAFE[1], sw=2.5)
-text(TERM_L_X + 14, fy + 10, "EMERGENCY FLATTEN", 12.5, "#1e1e1e")
-text(TERM_L_X + 14, fy + 31, "emergency_flatten · sell→USDT · 3× retry", 9, SAFE[0], family=3)
-arrow(C1 - DIA_W / 2, ry(12) + DIA_H / 2, TERM_L_X + TERM_L_W, fy + 35, SAFE[0], sw=2.5, label="yes")
-rect(TERM_L_X + 18, fy + 86, TERM_L_W - 36, 44, SAFE[0], "#ffc9c9", sw=2.5)
-text(TERM_L_X + 32, fy + 96, "DD_HALT  (return 1)", 12, "#1e1e1e")
-text(TERM_L_X + 32, fy + 114, "halt=True · source=daily_tick", 9, SAFE[0], family=3)
-arrow(TERM_L_X + TERM_L_W / 2, fy + 70, TERM_L_X + TERM_L_W / 2, fy + 86, SAFE[0], sw=2.5)
+xb = P3 + 300
+b0 = acard(colx(0), xb, "rebalance diff", [
+    "spot_broker.rebalance(target, prices)",
+    "skip moves <2% NAV · min-notional $1"], EXEC, num=5)
+b1 = acard(colx(1), xb, "SELL overweight → USDT", [
+    "frees quote first · qty=min(bal, −Δ/px)"], EXEC, num=6)
+b2 = acard(colx(2), xb, "BUY underweight ← USDT", [
+    "spend = min(Δ, USDT balance)"], EXEC, num=7)
+b3 = acard(colx(3), xb, "spot swap  (self-custody)", [
+    "Avalanche C-Chain · slippage cap · retry/backoff",
+    "self-custody signer (eth-account) · native AVAX gas"], EXEC, num=8)
+gsw = agate(colx(4) + CARD_W / 2, xb + CARD_H / 2, "swap ok?", "amount_out>0 AND tx", EXEC)
+# off-page connector Ⓐ : dd-gate "no" (far right, row A) → rebalance entry (far left, row B) — no diagonal
+_gx = colx(4) + CARD_W / 2
+arrow(_gx, xa + CARD_H, _gx, xa + CARD_H + 18, EXEC[0], sw=2.5)
+ellipse(_gx - 17, xa + CARD_H + 18, 34, 34, EXEC[0], "#dbe4ff", sw=2.5)
+tcenter(_gx, xa + CARD_H + 35, "Ⓐ", 16, EXEC[0])
+text(_gx - 252, xa + CARD_H + 26, "no / within cap   →   continue at Ⓐ", 11, EXEC[0])
+_bx = colx(0) + CARD_W / 2
+ellipse(_bx - 17, xb - 54, 34, 34, EXEC[0], "#dbe4ff", sw=2.5)
+tcenter(_bx, xb - 37, "Ⓐ", 16, EXEC[0])
+arrow(_bx, xb - 20, _bx, xb, EXEC[0], sw=2.5)
+harrow(b0, b1)
+harrow(b1, b2)
+harrow(b2, b3)
+arrow(b3[0] + b3[2], xb + CARD_H / 2, colx(4) + CARD_W / 2 - 150, xb + CARD_H / 2, EXEC[0], sw=2.5)
+pill(colx(4) + 20, xb + 132, CARD_W - 40, 46, "failed_swaps[]", "journaled · tick continues", SKIPC)
+arrow(colx(4) + CARD_W / 2, xb + CARD_H, colx(4) + CARD_W / 2, xb + 132, SKIPC[0], sw=2.5, label="no")
 
-# off-page connector Ⓐ : leave left column bottom → enter right column top
-arrow(C1, ry(12) + CARD_H, C1, ry(12) + CARD_H + 26, STRAT[0], sw=3)
-ellipse(C1 - 20, ry(12) + CARD_H + 26, 40, 40, STRAT[0], "#d3f9d8", sw=2.5)
-tcenter(C1, ry(12) + CARD_H + 46, "Ⓐ", 18, STRAT[0])
-text(C1 + 30, ry(12) + CARD_H + 34, "no — within cap →  continue at Ⓐ (top of DECIDE, right)", 11, STRAT[0])
+xc = P3 + 470
+acard(colx(0), xc, "auto_trader.sh — supervised daemon", [
+    "1 fresh run_allocator per cycle (hourly)",
+    "kill-switch · then export_snapshot.py"], OBS, h=92, dashed=True)
+acard(colx(1), xc, "dd-watch — fast loop (~15 min)", [
+    "same flock · read-only HWM · flatten-only",
+    "intraday DD_HALT + profit-lock · no opens"], SAFE, h=92, dashed=True)
+acard(colx(2), xc, "trade-floor auto-ensure", [
+    "≥7 trades/wk + ≥1/day (contest window)",
+    "rotation round-trips ~0 NAV · FLOOR_NUDGE"], STRAT, h=92, dashed=True)
+acard(colx(3), xc, "profit-lock ratchet (campaign)", [
+    "arm +5% · trail 3% · bank +10%",
+    "profit_locked ≠ halted (--unlock-profit)"], STRAT, h=92, dashed=True)
 
-# ============================================================ RIGHT COLUMN (decide · execute · persist)
-ellipse(C2 - 20, ry(0) - 62, 40, 40, STRAT[0], "#d3f9d8", sw=2.5)
-tcenter(C2, ry(0) - 42, "Ⓐ", 18, STRAT[0])
-arrow(C2, ry(0) - 22, C2, ry(0), STRAT[0], sw=3, label="from RISK")
+# ============================================================ ④ AGENTIC ECONOMY — two-sided x402
+P4 = 1670
+plane(P4, 380, "④  AGENTIC ECONOMY — two-sided x402 on ONE ERC-8004 identity    (pays for data  +  GETS PAID for analysis)", IDENT)
+ay = P4 + 70
+ic = acard(colx(2) + 28, ay, "ERC-8004  —  on-chain identity", [
+    "agentId 218 · registry 0x8004A818…BD9e",
+    "owner / self-custody signer 0xA9aa…904a",
+    "per-tick heartbeat: ts + NAV + rationale",
+    "(web3 eth-account · native AVAX gas)"], IDENT, w=CARD_W, h=128, emph=True)
+xc4 = acard(colx(0), ay, "x402  —  CONSUMER (buys data)", [
+    "pays per request · USDC@Avalanche (eip155:43113)",
+    X402_PROOF,
+    "402 → EIP-3009 → resend · pays its OWN server",
+    "agent's data COST (excluded from PnL)"], DATA, w=CARD_W, h=128)
+e8 = acard(colx(4), ay, "x402  —  PROVIDER / SERVER (gets paid)", [
+    "serves the CMC Regime Report over HTTP-402",
+    "402 challenge → verify → settle (Ultravioleta)",
+    f"served {RX['n'] or 0} · ${RX['usd'] or 0:.2f} · last tx {LAST_TX}",
+    "the genuinely net-new piece (track headline)"], IDENT, w=CARD_W, h=128, emph=True)
+buyer = acard(colx(4) + 40, ay + 152, "peer agent — BUYER", [
+    "distinct wallet (true agent-to-agent)"], OBS, w=CARD_W - 80, h=58)
+arrow(xc4[0] + xc4[2], ay + 64, ic[0], ay + 64, DATA[0], sw=3, label="pays from identity wallet")
+arrow(ic[0] + ic[2], ay + 64, e8[0], ay + 64, IDENT[0], sw=3, label="is the provider")
+arrow(buyer[0] + buyer[2] / 2, ay + 152, e8[0] + e8[2] / 2, ay + 128, OBS[0], sw=2.5, label="pays USDC for the report")
+tcenter(CX, P4 + 358, "one self-custody wallet — BUYS data (x402) and GETS PAID for analysis (x402 server), anchored by ERC-8004 #218.  "
+        "(ERC-8183 escrow = secondary commerce path.)", 12, IDENT[0])
 
-card(COL2_X, 0, "resolve strategy", ["strategy_select.json (SIM selector) / settings (LIVE pin)", "registry.get(name) → pluggable PortfolioStrategy"], STRAT, num=7)
-card(COL2_X, 1, "assemble StratContext", ["regime score (breadth+trend+vol+F&G+CMC) · cap band", "TA-health · TA token-scores · intel · active tokens"], STRAT, num=8)
-card(COL2_X, 2, "strat.target_weights_now(ctx)", ["→ WeightDecision{ weights, score, cap }", "momentum_adaptive (default) · arms · overlay-composed"], STRAT, num=9)
-card(COL2_X, 3, "target = weights × cap", ["(flag) momentum_tilt by CMC 7-day rel-strength", "deployment preserved · remainder = USDT"], STRAT, num=10)
-g_floor = gate(C2, 4, "trade-floor short?", "≥7/wk + ≥1/day · window 06-22→28", role=STRAT)
-card(COL2_X, 5, "rebalance diff", ["spot_broker.rebalance(target, prices)", "skip moves < 2% of NAV (min-rebal threshold)"], EXEC, num=11)
-card(COL2_X, 6, "SELL overweight → USDT", ["frees quote first · qty = min(bal, −Δ/px)"], EXEC, num=12)
-card(COL2_X, 7, "BUY underweight ← USDT", ["spend = min(Δ, USDT bal) · min-notional $1"], EXEC, num=13)
-card(COL2_X, 8, "spot swap  (self-custody)", ["Avalanche C-Chain · slippage cap · retry/backoff", "self-custody signer (eth-account) · native AVAX gas"], EXEC, num=14)
-g_swap = gate(C2, 9, "swap ok?", "amount_out > 0 AND tx", role=EXEC)
-card(COL2_X, 10, "journal  REBALANCE", ["strategy · nav b/a · dd · regime · cap · target · weights", "n_swaps/total/failed · fees · tx[] · rationale"], IDENT, num=15)
-card(COL2_X, 11, "save_state  (atomic)", [".tmp + os.replace · HWM · cum_swaps · halted"], IDENT, num=16)
-card(COL2_X, 12, "heartbeat → ERC-8004", ["write_heartbeat · set_metadata{ts,nav,rationale}", "web3 eth-account · native AVAX gas · best-effort"], IDENT, num=17)
-# r13 end pill
-rect(COL2_X + 60, ry(13), CARD_W - 120, 64, "#1e1e1e", "#e9ecef", sw=2.5)
-tcenter(C2, ry(13) + 32, "return 0   ✓", 16, "#1e1e1e")
+# ============================================================ ⑤ PERSIST & OBSERVE
+P5 = 2090
+plane(P5, 350, "⑤  PERSIST & OBSERVE — Mission Control    (zero-secret deploy · Render API + Vercel SPA)", OBS)
+q1 = P5 + 44
+p0 = acard(colx(0), q1, "journal + state  (atomic)", [
+    "REBALANCE · DD_HALT · PROFIT_LOCK · FLOOR_NUDGE",
+    ".tmp+os.replace · append-only JSONL"], IDENT)
+p1 = acard(colx(1), q1, "export_snapshot.py → snapshot", [
+    "live pillars → web/public/snapshot.json",
+    "+ infra/seed reseed (Render redeploy on push)"], PROC)
+p2 = acard(colx(2), q1, "Mission Control API (Render)", [
+    "FastAPI read-only /api/snapshot · /api/agent-hub",
+    "avax-agentic-payments-api.onrender.com · NO keys"], OBS)
+p3 = acard(colx(3), q1, "React SPA (Vercel)", [
+    "EquityCurve · RegimeDial · WeightsDonut",
+    "avax-agentic-payments.vercel.app"], OBS)
+harrow(p0, p1)
+harrow(p1, p2)
+harrow(p2, p3)
+q2 = P5 + 198
+acard(colx(0), q2, "keyless on-chain reads", [
+    "READ tier: Fuji RPC · wallet AVAX+USDC · ERC-8004 #218",
+    "x402-server panel: served jobs · revenue · last Snowtrace tx"], PROC, w=CARD_W + 200, dashed=True)
+acard(colx(2) + 86, q2, "honest PnL = trading-only", [
+    "headline = NAV − anchor (trading only)",
+    "x402 data cost + revenue shown separately, not in PnL"],
+    SAFE, w=CARD_W + 200, dashed=True)
 
-# right-column vertical flow
-vconnect(C2, 0, 1)
-vconnect(C2, 1, 2)
-vconnect(C2, 2, 3)
-vconnect(C2, 3, 4)
-vconnect(C2, 4, 5, "no / after nudge")
-vconnect(C2, 5, 6)
-vconnect(C2, 6, 7)
-vconnect(C2, 7, 8)
-vconnect(C2, 8, 9)
-vconnect(C2, 9, 10, "ok")
-vconnect(C2, 10, 11)
-vconnect(C2, 11, 12)
-arrow(C2, ry(12) + CARD_H, C2, ry(13), "#495057", sw=2.5)
+# ============================================================ ⑥ WIRINGS — text reference
+# A rigorous, plain-language map of EVERY connection, so a reader is clear on the wiring just by
+# reading: each Wn names the exact card titles above and what flows between them. Neutral band, no
+# inbound flow arrow (it is a legend, not a stage).
+def wgroup(x, y, header, hcolor, lines):
+    text(x, y, header, 12.5, hcolor)
+    text(x, y + 19, "\n".join(lines), 11, "#343a40", family=3)
+    return y + 19 + int(round(len(lines) * 11 * 1.25)) + 18
 
-# right terminals
-term("R", 4, "yes", "FLOOR_NUDGE", "_ensure_trade_floor · bounded round-trips · ~0 NAV", STRAT, C2)
-term("R", 9, "no", "failed_swaps[]", "journaled · tick continues (never crashes)", SKIPC, C2)
 
-# ============================================================ CENTRE LANE — campaign overlay + CMC sub-cards + dd-watch
-# Campaign overlay (2026-06-13) — the .env-only operator config for the forward sim track.
-ctx(GUT_X, ry(0), GUT_W, 300, "CAMPAIGN MODE  (2026-06-13)", "operator overlay · .env + active_tokens.json",
-    "TARGET +5–7% · honest: ~21% of 9-day\nwindows full-history, ~9% recent regime\n\n10% DD halt (« 30% DQ)\nPROFIT-LOCK ratchet: anchor 1000\n  arm +5% · trail 3% · bank +10%\n  profit_locked ≠ halted (--unlock-profit)\n≥1-trade/DAY floor (+ ≥7/wk)\n7-token universe · lb 60 · 12h cadence\n\nclean clone = validated baseline", STRAT)
-arrow(GUT_X, ry(2) + 60, COL1_X + CARD_W, ry(1) + CARD_H / 2, STRAT[0], sw=2, dashed=True, label="governs the tick")
-# CMC Agent Hub MCP (pillar 1) — 8 hosted tools composed into a market-overview skill.
-ctx(GUT_X, ry(4), GUT_W, 290, "CMC Agent Hub · MCP", "8 tools → market-overview skill (skill_source=composed)",
-    "per-token TA  ·  basket TA-health\nglobal metrics: F&G · BTC-dom · mktcap\nmktcap-TA  ·  derivatives leverage-BRAKE\nmacro-event de-risk GUARD · quotes x-check\nnews brake   →   risk budget ∈ [0,1]\n(local technicals fallback if MCP misses)\nsurfaced live → Mission Control CMC Agent Hub panel", DATA)
-ctx(GUT_X, ry(7), GUT_W, 100, "x402 · USDC micropayments", "the agent PAYS for data & GETS PAID (Avalanche Fuji)",
-    "402 → sign EIP-3009 (USDC@Avalanche) → resend\nconsumer + provider · settle on Snowtrace · served-jobs ledger", DATA)
-# feed ④ CMC reads (left guards) + the regime/cap term (right StratContext)
-arrow(GUT_X, ry(7) + CARD_H / 2, COL1_X + CARD_W, ry(7) + CARD_H / 2, DATA[0], sw=2, label="market data")
-arrow(GUT_X + GUT_W, ry(4) + 30, COL2_X, ry(1) + CARD_H / 2, DATA[0], sw=1.8, dashed=True, label="risk budget → ctx")
+P6 = 2480
+plane(P6, 286, "⑥  WIRINGS — every connection, in words    (read together with the arrows above)", PROC)
+WY = P6 + 46
+# --- column A : arrow grammar + data plane ---
+_ya = wgroup(90, WY, "ARROW LEGEND", PROC[0], [
+    "SOLID arrow  →   primary flow (down the stack · left→right within a plane)",
+    "DASHED arrow      side feed / governs / risk-budget / ROADMAP",
+    "Ⓐ = off-page 'continue here'    ·    diamond = decision / guard",
+    "return codes:   0 = ok   ·   1 = drawdown HALT   ·   2 = skip tick"])
+wgroup(90, _ya, "① DATA INGEST   →   ② DECIDE", DATA[0], [
+    "W1  CMC WebSocket → cmc_stream.py : live crypto_latest_price + onchain@* (reconnect)",
+    "W2  cmc_stream.py → disk : 4h parquet bars + atomic snapshots + heartbeat ts",
+    "W3  cmc_stream_store → market_signals : zero-network reads → one per-token buffet",
+    "W4  CMC Agent Hub (MCP · 8 tools) → regime : composed skill → risk budget ∈ [0,1]",
+    "W5  x402 → CMC (pay) : per-request USDC@Avalanche unlocks premium data",
+    "①→②   signals + risk budget feed the regime score"])
+# --- column B : decide + execute ---
+_yb = wgroup(970, WY, "② DECIDE", STRAT[0], [
+    "W6  resolve strategy → registry.get(name) : LIVE pins the default (.env STRATEGY_NAME)",
+    "W7  auto-selector → registry : ROADMAP · recommend-only (LIVE never auto-switches)",
+    "W8  regime score → adaptive cap [0.40, 0.85] → target = weights × cap",
+    "②→③   target weights enter the tick"])
+wgroup(970, _yb, "③ EXECUTE", EXEC[0], [
+    "W9   guards (lock·data·fresh·preflight·px/nav) : any fail → SKIP (2)",
+    "W10  NAV vs HWM → dd>cap? gate : yes → EMERGENCY FLATTEN → DD_HALT (1)",
+    "W11  target → spot_broker → SELL overweight → BUY underweight → self-custody swap",
+    "W12  swap ok? gate : no → failed_swaps[] journaled, tick continues",
+    "W13  auto_trader.sh → run_allocator (hourly) → export_snapshot · dd-watch shares the flock"])
+# --- column C : economy + persist ---
+_yc = wgroup(1850, WY, "④ AGENTIC ECONOMY    (one identity 0xA9aa…904a · agentId 218)", IDENT[0], [
+    "③→④   every tick fires the heartbeat (+ x402 serve on demand)",
+    "W14  x402 CONSUMER → pays its own server in USDC@Avalanche (data cost · excluded from PnL)",
+    "W15  ERC-8004 → per-tick heartbeat : ts + NAV + rationale (web3 eth-account · native gas)",
+    "W16  x402 PROVIDER → 402 challenge → verify → settle on Fuji (Ultravioleta facilitator) ;",
+    "         a distinct peer agent (buyer) pays for the report — true agent-to-agent",
+    "         (ERC-8183 escrow create_job→fund→submit(IPFS)→settle = secondary commerce path)"])
+wgroup(1850, _yc, "⑤ PERSIST & OBSERVE", OBS[0], [
+    "W17  tick → journal+state (atomic) → export_snapshot → web/public/snapshot.json + infra/seed",
+    "W18  API (Render, read-only, keyless) → React SPA (Vercel) :",
+    "         reads Fuji wallet + ERC-8004 #218 + x402-server ledger by public address",
+    "④→⑤   journal + heartbeat outputs flow to persistence / observability"])
 
-# dd-watch fast loop snapped to the RISK band → SAME ◆ dd>cap gate, clean horizontal (no crossing)
-rect(GUT_X, ry(10), GUT_W, 370, SAFE[0], SAFE[2], sw=2.5, dashed=True)
-text(GUT_X + 14, ry(10) + 12, "dd-watch — FAST LOOP", 13.5, SAFE[0])
-text(GUT_X + 14, ry(10) + 32, "run_allocator.py --dd-watch · ~15 min", 9.5, SAFE[0], family=3)
-text(GUT_X + 14, ry(10) + 58,
-     "shares the same flock · read-only HWM\nprice + NAV validity guards\n◆ dd > cap?  →  emergency_flatten → DD_HALT\n◆ profit-lock? → arm / bank / trail (intraday)\nflatten-only · no opens · no HWM reset\n\n“drawdown = reaction time”:\nslow rebalance + fast intraday monitor\n→ tighter worst-case loss, locked gains", 11, "#1e1e1e")
-arrow(GUT_X, ry(12) + DIA_H / 2, C1 + DIA_W / 2, ry(12) + DIA_H / 2, SAFE[0], sw=2, dashed=True, label="same gate, faster")
+# ============================================================ inter-plane connectors (down)
+_close_prev_plane()                      # close the last layer's group
+_PLANE_G[0] = None                       # connectors below belong to no plane
+vdown(CX, P1 + 350, P2, "①  data  →  ②  decide   (signals + risk budget)", DATA[0])
+vdown(CX, P2 + 330, P3, "②  decide  →  ③  execute   (target weights)", STRAT[0])
+vdown(CX, P3 + 620, P4, "③  execute  →  ④  heartbeat + x402 serve", IDENT[0])
+vdown(CX, P4 + 380, P5, "④  →  ⑤  journal · snapshot · observe", OBS[0])
 
-# ============================================================ FAR-RIGHT LANE — core · identity · observability
-ctx(TERM_R_X, ry(0) - 30, TERM_R_W, 162, "THE CORE — what it optimises", "regime_score.py · pluggable strategy registry",
-    "8 momentum majors · regime-adaptive cap 0.40–0.90\npluggable registry: momentum_adaptive (default) + 9 sibling strategies + 9 aliases\n+ de-risk overlays · spot via self-custody signer · NO leverage\ncampaign: 10% halt + profit-lock (lock the good path)\nHONEST EDGE: no fixed 7d alpha → built to SURVIVE the\n30% DQ + PARTICIPATE risk-on. 2,338 windows · 1175 tests.", STRAT)
+# ============================================================ self-assert: every layer present
+_blob = "\n".join(e["text"] for e in EL if e["type"] == "text")
+for tok in ("x402", "ERC-8004", "agentId 218", "Avalanche", "Snowtrace", "self-custody",
+            "CMC_ONLY", "ROADMAP", "Regime-Adaptive", "USDC@Avalanche", "GETS PAID"):
+    assert tok in _blob, f"architecture diagram is missing required layer token: {tok!r}"
 
-# Strategy registry + overlays — the pluggable pool the DECIDE stage selects from.
-ctx(TERM_R_X, ry(2) - 10, TERM_R_W, 260, "STRATEGY REGISTRY  +  OVERLAYS", "strategy/registry.py · adapters/ · overlays/",
-    "19 registered = 10 strategies + 9 aliases\ndefault (locked): momentum_adaptive\nbase: momentum · momentum_fast · dual_momentum · rotation\n  breakout · mean_reversion · grid\noverlay-composed: momentum_voltarget · momentum_mafilter\noverlays (de-risk only, never lever): vol_target · ma_filter\naliases: AVAX_STRATEGY_01–09 (delegate bit-for-bit)\nLIVE pins the default · SIM picks via dashboard", STRAT)
-arrow(TERM_R_X, ry(2) + 116, COL2_X + CARD_W, ry(2) + CARD_H / 2, STRAT[0], sw=2, label="registry.get(name)")
 
-# Multi-strategy validation campaign — `make campaign` wires EVERY arm through the 5-stage gate.
-ctx(TERM_R_X, ry(4) + 100, TERM_R_W, 290, "MULTI-STRATEGY CAMPAIGN", "make campaign · strategy_campaign.py (every arm, one shot)",
-    "5-stage gate per arm (risk-first · no alpha):\n  1 Registered  →  2 Backtest-survival\n     (Gate-A: worst-wk DD <25% · ≥7 t/wk @0.70%)\n  3 Forward-started → 4 Forward-eligible\n     (7d DD <25% · ≥7 t/wk · median wk-ret ≥0)\n  5 Operator sign-off (human: STRATEGY_NAME+LIVE)\n→ verdicts (strategy_gates.json) · GUARDIAN matrix\n→ risk-first leaderboard · default locked · no auto-promote", PROC)
-arrow(TERM_R_X + TERM_R_W / 2, ry(4) + 100, TERM_R_X + TERM_R_W / 2, ry(2) + 240, PROC[0], sw=2, dashed=True, label="verdicts → eligible")
+# ---- self-assert: no text box will wrap/overflow when opened in the Excalidraw app ----
+# Stored width must clear Excalidraw's true metric (mono≈0.60, sans≈0.50 per pt/char). Because
+# every text is autoResize=False, the app renders inside this exact box — so a box that clears the
+# real width guarantees the in-app render matches the SVG (no reflow, no drift).
+def _real_w(s, size, family):
+    per = 0.60 if family == 3 else 0.50
+    return max((len(ln) for ln in s.split("\n")), default=1) * size * per
 
-ctx(TERM_R_X, ry(10) - 6, TERM_R_W, 176, "MISSION CONTROL · observability", "api/ (Render) + web/ (Vercel)",
-    "journal JSONL → FastAPI /api/snapshot · /api/agent-hub\n  state · nav · regime · rebalances · pillars\n  strategy selector + survival/forward verdicts\n  guardian leaderboard · wallet · cmc-api\nReact: EquityCurve · RegimeDial · WeightsDonut\n  RebalanceTable · RationaleTicker · StrategyPanel\n  CmcAgentHubPanel — MCP tools · Skills · x402 exhibit", OBS)
-arrow(COL2_X + CARD_W, ry(10) + CARD_H / 2, TERM_R_X, ry(10) + CARD_H / 2, OBS[0], sw=2.5, label="observes")
-ctx(TERM_R_X, ry(12) - 4, TERM_R_W, 118, "ERC-8004 · on-chain identity", "agent/identity.py · erc8004_client (web3)",
-    "ERC-8004 on-chain identity NFT (#218 on Fuji)\nheartbeat via web3 eth-account · native AVAX gas\none self-custody wallet signs swaps + x402 + owns identity\n(sole signer · non-custodial keeper)", IDENT)
-arrow(COL2_X + CARD_W, ry(12) + CARD_H / 2, TERM_R_X, ry(12) + CARD_H / 2, IDENT[0], sw=2.5)
+
+for _e in EL:
+    if _e["type"] == "text":
+        assert _e["width"] >= _real_w(_e["text"], _e["fontSize"], _e["fontFamily"]), \
+            f"text box too narrow — would wrap in Excalidraw: {_e['text'][:48]!r}"
 
 
 # ---------------- SVG mirror (deterministic, derived from the SAME elements) ----------------
@@ -418,9 +609,9 @@ def emit_svg(elements):
 
 
 # ---------------- write ----------------
-# Derive docs/ from THIS file's location (scripts/../docs) so the path can't rot
-# when the repo is renamed or cloned (the old hardcoded absolute path silently broke).
-DOCS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs")
+# Derive docs/ from THIS file's location (scripts/../docs) so the path can't rot when the repo is
+# renamed or cloned (the old hardcoded absolute path silently broke).
+DOCS = os.path.join(BASE, "docs")
 out = {"type": "excalidraw", "version": 2, "source": "scripts/gen_architecture.py",
        "elements": EL, "appState": {"gridSize": None, "viewBackgroundColor": "#ffffff"}, "files": {}}
 with open(f"{DOCS}/architecture.excalidraw", "w") as f:
@@ -431,6 +622,7 @@ svg = emit_svg(EL)
 with open(f"{DOCS}/architecture.svg", "w") as f:
     f.write(svg)
 print(f"wrote {DOCS}/architecture.svg — {len(svg)} bytes")
+print(f"proof derived live: x402 = {X402_PROOF}  |  last tx = {LAST_TX}")
 
 try:
     import cairosvg
