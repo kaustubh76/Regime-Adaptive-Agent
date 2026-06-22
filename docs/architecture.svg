@@ -153,10 +153,10 @@
 <line x1="1620.0" y1="2170.0" x2="1660.0" y2="2170.0" stroke="#6741d9" stroke-width="2.5"/>
 <polygon points="1660.0,2170.0 1647.0,2176.0 1647.0,2164.0" fill="#6741d9"/>
 <text x="60.0" y="64.0" font-size="30" font-family="Helvetica, Arial, sans-serif" font-weight="700" fill="#1e1e1e" text-anchor="start" xml:space="preserve">
-<tspan x="60.0" dy="0.0">BNB Momentum Trading Agent — full execution flow</tspan>
+<tspan x="60.0" dy="0.0">AVAX Agentic Payments — Momentum Agent · full execution flow</tspan>
 </text>
 <text x="60.0" y="93.0" font-size="15" font-family="Helvetica, Arial, sans-serif" font-weight="600" fill="#1971c2" text-anchor="start" xml:space="preserve">
-<tspan x="60.0" dy="0.0">One allocator tick(), end to end   ·   pillars:  CMC (data)  ·  TWAK (execution)  ·  BNB AI Agent SDK (identity)</tspan>
+<tspan x="60.0" dy="0.0">One allocator tick(), end to end   ·   pillars:  CMC (data)  ·  x402 USDC (payments)  ·  ERC-8004 (on-chain identity)</tspan>
 </text>
 <text x="60.0" y="116.0" font-size="12" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#495057" text-anchor="start" xml:space="preserve">
 <tspan x="60.0" dy="0.0">Read DOWN the left column (entry → guards → risk), jump at Ⓐ, then DOWN the right column (decide → execute → persist).  Every guard fails safe — skip or halt, never crash.</tspan>
@@ -174,7 +174,7 @@
 <tspan x="336.5" dy="0.0">strategy</tspan>
 </text>
 <text x="419.3" y="144.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#343a40" text-anchor="start" xml:space="preserve">
-<tspan x="419.3" dy="0.0">TWAK exec</tspan>
+<tspan x="419.3" dy="0.0">swap exec</tspan>
 </text>
 <text x="509.2" y="144.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#343a40" text-anchor="start" xml:space="preserve">
 <tspan x="509.2" dy="0.0">identity</tspan>
@@ -243,10 +243,10 @@
 <tspan x="336.0" dy="0.0">③  fetch 4h candles ×8 → align_close_matrix</tspan>
 </text>
 <text x="336.0" y="964.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#1971c2" text-anchor="start" xml:space="preserve">
-<tspan x="336.0" dy="0.0">BNB ETH CAKE LINK UNI AVAX DOT (DOGE dropped: campaign)</tspan>
+<tspan x="336.0" dy="0.0">8 momentum majors · regime-adaptive universe</tspan>
 </text>
 <text x="336.0" y="980.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#1971c2" text-anchor="start" xml:space="preserve">
-<tspan x="336.0" dy="0.0">Binance live → disk-cache fallback</tspan>
+<tspan x="336.0" dy="0.0">CMC 4h candles → disk-cache fallback</tspan>
 </text>
 <text x="540.0" y="1116.2" font-size="14" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1e1e1e" text-anchor="middle" xml:space="preserve">
 <tspan x="540.0" dy="0.0">data sufficient?</tspan>
@@ -450,7 +450,7 @@
 <tspan x="1196.0" dy="0.0">⑪  rebalance diff</tspan>
 </text>
 <text x="1196.0" y="1114.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#3b5bdb" text-anchor="start" xml:space="preserve">
-<tspan x="1196.0" dy="0.0">TwakSpotBroker.rebalance(target, prices)</tspan>
+<tspan x="1196.0" dy="0.0">spot_broker.rebalance(target, prices)</tspan>
 </text>
 <text x="1196.0" y="1130.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#3b5bdb" text-anchor="start" xml:space="preserve">
 <tspan x="1196.0" dy="0.0">skip moves &lt; 2% of NAV (min-rebal threshold)</tspan>
@@ -468,13 +468,13 @@
 <tspan x="1196.0" dy="0.0">spend = min(Δ, USDT bal) · min-notional $1</tspan>
 </text>
 <text x="1196.0" y="1544.0" font-size="15" font-family="Helvetica, Arial, sans-serif" font-weight="600" fill="#1e1e1e" text-anchor="start" xml:space="preserve">
-<tspan x="1196.0" dy="0.0">⑭  twak swap  (CLI)</tspan>
+<tspan x="1196.0" dy="0.0">⑭  spot swap  (self-custody)</tspan>
 </text>
 <text x="1196.0" y="1564.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#3b5bdb" text-anchor="start" xml:space="preserve">
-<tspan x="1196.0" dy="0.0">--chain bsc · slippage cap · retry/backoff</tspan>
+<tspan x="1196.0" dy="0.0">Avalanche C-Chain · slippage cap · retry/backoff</tspan>
 </text>
 <text x="1196.0" y="1580.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#3b5bdb" text-anchor="start" xml:space="preserve">
-<tspan x="1196.0" dy="0.0">GASLESS sponsorship · TWAK = sole signer</tspan>
+<tspan x="1196.0" dy="0.0">self-custody signer (eth-account) · native AVAX gas</tspan>
 </text>
 <text x="1400.0" y="1716.2" font-size="14" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1e1e1e" text-anchor="middle" xml:space="preserve">
 <tspan x="1400.0" dy="0.0">swap ok?</tspan>
@@ -504,7 +504,7 @@
 <tspan x="1196.0" dy="0.0">write_heartbeat · set_metadata{ts,nav,rationale}</tspan>
 </text>
 <text x="1196.0" y="2180.5" font-size="11.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#6741d9" text-anchor="start" xml:space="preserve">
-<tspan x="1196.0" dy="0.0">gasless via NodeReal MegaFuel · best-effort</tspan>
+<tspan x="1196.0" dy="0.0">web3 eth-account · native AVAX gas · best-effort</tspan>
 </text>
 <text x="1400.0" y="2308.0" font-size="16" font-family="Helvetica, Arial, sans-serif" font-weight="600" fill="#1e1e1e" text-anchor="middle" xml:space="preserve">
 <tspan x="1400.0" dy="0.0">return 0   ✓</tspan>
@@ -571,14 +571,14 @@
 <tspan x="814.0" dy="13.8">surfaced live → Mission Control CMC Agent Hub panel</tspan>
 </text>
 <text x="814.0" y="1393.5" font-size="13.5" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1971c2" text-anchor="start" xml:space="preserve">
-<tspan x="814.0" dy="0.0">CMC · x402 paid data</tspan>
+<tspan x="814.0" dy="0.0">x402 · USDC micropayments</tspan>
 </text>
 <text x="814.0" y="1409.5" font-size="9.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#1971c2" text-anchor="start" xml:space="preserve">
-<tspan x="814.0" dy="0.0">pillar-1 on-chain micropayment</tspan>
+<tspan x="814.0" dy="0.0">the agent PAYS for data &amp; GETS PAID (Avalanche Fuji)</tspan>
 </text>
 <text x="814.0" y="1431.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1e1e1e" text-anchor="start" xml:space="preserve">
-<tspan x="814.0" dy="0.0">402 → sign EIP-3009 (USDC@Base) → resend</tspan>
-<tspan x="814.0" dy="13.8">dex/search · quotes · 14 settled receipts</tspan>
+<tspan x="814.0" dy="0.0">402 → sign EIP-3009 (USDC@Avalanche) → resend</tspan>
+<tspan x="814.0" dy="13.8">consumer + provider · settle on Snowtrace · served-jobs ledger</tspan>
 </text>
 <text x="780.0" y="1413.1" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1971c2" text-anchor="middle" xml:space="preserve">
 <tspan x="780.0" dy="0.0">market data</tspan>
@@ -613,9 +613,9 @@
 <tspan x="1674.0" dy="0.0">regime_score.py · pluggable strategy registry</tspan>
 </text>
 <text x="1674.0" y="351.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1e1e1e" text-anchor="start" xml:space="preserve">
-<tspan x="1674.0" dy="0.0">7 BSC majors (DOGE dropped) · regime-adaptive cap 0.40–0.90</tspan>
+<tspan x="1674.0" dy="0.0">8 momentum majors · regime-adaptive cap 0.40–0.90</tspan>
 <tspan x="1674.0" dy="13.8">pluggable registry: momentum_adaptive (default) + 9 sibling strategies + 9 aliases</tspan>
-<tspan x="1674.0" dy="13.8">+ de-risk overlays · spot via TWAK · NO leverage</tspan>
+<tspan x="1674.0" dy="13.8">+ de-risk overlays · spot via self-custody signer · NO leverage</tspan>
 <tspan x="1674.0" dy="13.8">campaign: 10% halt + profit-lock (lock the good path)</tspan>
 <tspan x="1674.0" dy="13.8">HONEST EDGE: no fixed 7d alpha → built to SURVIVE the</tspan>
 <tspan x="1674.0" dy="13.8">30% DQ + PARTICIPATE risk-on. 2,338 windows · 1175 tests.</tspan>
@@ -633,7 +633,7 @@
 <tspan x="1674.0" dy="13.8">  breakout · mean_reversion · grid</tspan>
 <tspan x="1674.0" dy="13.8">overlay-composed: momentum_voltarget · momentum_mafilter</tspan>
 <tspan x="1674.0" dy="13.8">overlays (de-risk only, never lever): vol_target · ma_filter</tspan>
-<tspan x="1674.0" dy="13.8">aliases: BNB_STRATEGY_01–09 (delegate bit-for-bit)</tspan>
+<tspan x="1674.0" dy="13.8">aliases: AVAX_STRATEGY_01–09 (delegate bit-for-bit)</tspan>
 <tspan x="1674.0" dy="13.8">LIVE pins the default · SIM picks via dashboard</tspan>
 </text>
 <text x="1647.0" y="705.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#2b8a3e" text-anchor="start" xml:space="preserve">
@@ -677,15 +677,15 @@
 <tspan x="1640.0" dy="0.0">observes</tspan>
 </text>
 <text x="1674.0" y="2139.5" font-size="13.5" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#6741d9" text-anchor="start" xml:space="preserve">
-<tspan x="1674.0" dy="0.0">BNB AI Agent SDK · identity</tspan>
+<tspan x="1674.0" dy="0.0">ERC-8004 · on-chain identity</tspan>
 </text>
 <text x="1674.0" y="2155.5" font-size="9.5" font-family="ui-monospace, Menlo, monospace" font-weight="400" fill="#6741d9" text-anchor="start" xml:space="preserve">
-<tspan x="1674.0" dy="0.0">agent/identity.py (ERC8004Agent) · NodeReal</tspan>
+<tspan x="1674.0" dy="0.0">agent/identity.py · erc8004_client (web3)</tspan>
 </text>
 <text x="1674.0" y="2177.0" font-size="11" font-family="Helvetica, Arial, sans-serif" font-weight="400" fill="#1e1e1e" text-anchor="start" xml:space="preserve">
-<tspan x="1674.0" dy="0.0">ERC-8004 on-chain identity NFT</tspan>
-<tspan x="1674.0" dy="13.8">gasless heartbeat via MegaFuel paymaster</tspan>
-<tspan x="1674.0" dy="13.8">one wallet signs TWAK swaps + owns the identity</tspan>
+<tspan x="1674.0" dy="0.0">ERC-8004 on-chain identity NFT (#218 on Fuji)</tspan>
+<tspan x="1674.0" dy="13.8">heartbeat via web3 eth-account · native AVAX gas</tspan>
+<tspan x="1674.0" dy="13.8">one self-custody wallet signs swaps + x402 + owns identity</tspan>
 <tspan x="1674.0" dy="13.8">(sole signer · non-custodial keeper)</tspan>
 </text>
 </svg>

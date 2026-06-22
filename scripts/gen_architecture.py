@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate docs/architecture.excalidraw — the DETAILED, UNIFORM full-flow execution diagram
-of the BNB MOMENTUM trading agent.
+of the AVALANCHE momentum agent (AVAX Agentic Payments).
 
 Layout = a strict grid: two balanced top→down stage-banded columns (LEFT: entry → guards → risk
 gate · RIGHT: decide → execute → persist), joined by an off-page connector Ⓐ. Every card shares
@@ -182,13 +182,13 @@ def ctx(x, y, w, h, title, sub, body, role, dashed=False):
 
 
 # ============================================================ HEADER
-text(60, 34, "BNB Momentum Trading Agent — full execution flow", 30)
-text(60, 78, "One allocator tick(), end to end   ·   pillars:  CMC (data)  ·  TWAK (execution)  ·  BNB AI Agent SDK (identity)", 15, "#1971c2")
+text(60, 34, "AVAX Agentic Payments — Momentum Agent · full execution flow", 30)
+text(60, 78, "One allocator tick(), end to end   ·   pillars:  CMC (data)  ·  x402 USDC (payments)  ·  ERC-8004 (on-chain identity)", 15, "#1971c2")
 text(60, 104, "Read DOWN the left column (entry → guards → risk), jump at Ⓐ, then DOWN the right column (decide → execute → persist).  Every guard fails safe — skip or halt, never crash.", 12, "#495057")
 # legend + return-code key
 ly = 134
 leg = [("process", PROC), ("◆ decision", SAFE), ("CMC data", DATA), ("strategy", STRAT),
-       ("TWAK exec", EXEC), ("identity", IDENT), ("observability", OBS), ("skip/halt", SKIPC)]
+       ("swap exec", EXEC), ("identity", IDENT), ("observability", OBS), ("skip/halt", SKIPC)]
 lx = 60
 for lab, role in leg:
     rect(lx, ly, 15, 15, role[0], role[1], sw=2)
@@ -214,7 +214,7 @@ text(COL1_X + 16, ry(0) + 66, "12h forward tick (campaign)  ·  + dd-watch every
 card(COL1_X, 1, "run_allocator.py  tick(--mode)", ["sim ↔ live · flags: --dd-watch · --resume · --dd-cap", "--anchor-nav · --ensure-daily-floor · --unlock-profit"], PROC, num=1)
 g_lock = gate(C1, 2, "lock acquired?", "fcntl flock · per-mode")
 card(COL1_X, 3, "load_state", ["HWM · cumulative_swaps · halted · balances", "atomic .tmp+os.replace  ·  corrupt → safe defaults"], PROC, num=2)
-card(COL1_X, 4, "fetch 4h candles ×8 → align_close_matrix", ["BNB ETH CAKE LINK UNI AVAX DOT (DOGE dropped: campaign)", "Binance live → disk-cache fallback"], DATA, num=3)
+card(COL1_X, 4, "fetch 4h candles ×8 → align_close_matrix", ["8 momentum majors · regime-adaptive universe", "CMC 4h candles → disk-cache fallback"], DATA, num=3)
 g_bars = gate(C1, 5, "data sufficient?", "≥ 200 bars · ≥ 3 tokens")
 g_age = gate(C1, 6, "candles fresh?", "latest bar age ≤ 12h")
 card(COL1_X, 7, "CMC reads", ["price_fn · fear_greed", "(flag) build_regime_intel: dominance · mktcap · F&G 7d"], DATA, num=4)
@@ -272,14 +272,14 @@ card(COL2_X, 1, "assemble StratContext", ["regime score (breadth+trend+vol+F&G+C
 card(COL2_X, 2, "strat.target_weights_now(ctx)", ["→ WeightDecision{ weights, score, cap }", "momentum_adaptive (default) · arms · overlay-composed"], STRAT, num=9)
 card(COL2_X, 3, "target = weights × cap", ["(flag) momentum_tilt by CMC 7-day rel-strength", "deployment preserved · remainder = USDT"], STRAT, num=10)
 g_floor = gate(C2, 4, "trade-floor short?", "≥7/wk + ≥1/day · window 06-22→28", role=STRAT)
-card(COL2_X, 5, "rebalance diff", ["TwakSpotBroker.rebalance(target, prices)", "skip moves < 2% of NAV (min-rebal threshold)"], EXEC, num=11)
+card(COL2_X, 5, "rebalance diff", ["spot_broker.rebalance(target, prices)", "skip moves < 2% of NAV (min-rebal threshold)"], EXEC, num=11)
 card(COL2_X, 6, "SELL overweight → USDT", ["frees quote first · qty = min(bal, −Δ/px)"], EXEC, num=12)
 card(COL2_X, 7, "BUY underweight ← USDT", ["spend = min(Δ, USDT bal) · min-notional $1"], EXEC, num=13)
-card(COL2_X, 8, "twak swap  (CLI)", ["--chain bsc · slippage cap · retry/backoff", "GASLESS sponsorship · TWAK = sole signer"], EXEC, num=14)
+card(COL2_X, 8, "spot swap  (self-custody)", ["Avalanche C-Chain · slippage cap · retry/backoff", "self-custody signer (eth-account) · native AVAX gas"], EXEC, num=14)
 g_swap = gate(C2, 9, "swap ok?", "amount_out > 0 AND tx", role=EXEC)
 card(COL2_X, 10, "journal  REBALANCE", ["strategy · nav b/a · dd · regime · cap · target · weights", "n_swaps/total/failed · fees · tx[] · rationale"], IDENT, num=15)
 card(COL2_X, 11, "save_state  (atomic)", [".tmp + os.replace · HWM · cum_swaps · halted"], IDENT, num=16)
-card(COL2_X, 12, "heartbeat → ERC-8004", ["write_heartbeat · set_metadata{ts,nav,rationale}", "gasless via NodeReal MegaFuel · best-effort"], IDENT, num=17)
+card(COL2_X, 12, "heartbeat → ERC-8004", ["write_heartbeat · set_metadata{ts,nav,rationale}", "web3 eth-account · native AVAX gas · best-effort"], IDENT, num=17)
 # r13 end pill
 rect(COL2_X + 60, ry(13), CARD_W - 120, 64, "#1e1e1e", "#e9ecef", sw=2.5)
 tcenter(C2, ry(13) + 32, "return 0   ✓", 16, "#1e1e1e")
@@ -311,8 +311,8 @@ arrow(GUT_X, ry(2) + 60, COL1_X + CARD_W, ry(1) + CARD_H / 2, STRAT[0], sw=2, da
 # CMC Agent Hub MCP (pillar 1) — 8 hosted tools composed into a market-overview skill.
 ctx(GUT_X, ry(4), GUT_W, 290, "CMC Agent Hub · MCP", "8 tools → market-overview skill (skill_source=composed)",
     "per-token TA  ·  basket TA-health\nglobal metrics: F&G · BTC-dom · mktcap\nmktcap-TA  ·  derivatives leverage-BRAKE\nmacro-event de-risk GUARD · quotes x-check\nnews brake   →   risk budget ∈ [0,1]\n(local technicals fallback if MCP misses)\nsurfaced live → Mission Control CMC Agent Hub panel", DATA)
-ctx(GUT_X, ry(7), GUT_W, 100, "CMC · x402 paid data", "pillar-1 on-chain micropayment",
-    "402 → sign EIP-3009 (USDC@Base) → resend\ndex/search · quotes · 14 settled receipts", DATA)
+ctx(GUT_X, ry(7), GUT_W, 100, "x402 · USDC micropayments", "the agent PAYS for data & GETS PAID (Avalanche Fuji)",
+    "402 → sign EIP-3009 (USDC@Avalanche) → resend\nconsumer + provider · settle on Snowtrace · served-jobs ledger", DATA)
 # feed ④ CMC reads (left guards) + the regime/cap term (right StratContext)
 arrow(GUT_X, ry(7) + CARD_H / 2, COL1_X + CARD_W, ry(7) + CARD_H / 2, DATA[0], sw=2, label="market data")
 arrow(GUT_X + GUT_W, ry(4) + 30, COL2_X, ry(1) + CARD_H / 2, DATA[0], sw=1.8, dashed=True, label="risk budget → ctx")
@@ -327,11 +327,11 @@ arrow(GUT_X, ry(12) + DIA_H / 2, C1 + DIA_W / 2, ry(12) + DIA_H / 2, SAFE[0], sw
 
 # ============================================================ FAR-RIGHT LANE — core · identity · observability
 ctx(TERM_R_X, ry(0) - 30, TERM_R_W, 162, "THE CORE — what it optimises", "regime_score.py · pluggable strategy registry",
-    "7 BSC majors (DOGE dropped) · regime-adaptive cap 0.40–0.90\npluggable registry: momentum_adaptive (default) + 9 sibling strategies + 9 aliases\n+ de-risk overlays · spot via TWAK · NO leverage\ncampaign: 10% halt + profit-lock (lock the good path)\nHONEST EDGE: no fixed 7d alpha → built to SURVIVE the\n30% DQ + PARTICIPATE risk-on. 2,338 windows · 1175 tests.", STRAT)
+    "8 momentum majors · regime-adaptive cap 0.40–0.90\npluggable registry: momentum_adaptive (default) + 9 sibling strategies + 9 aliases\n+ de-risk overlays · spot via self-custody signer · NO leverage\ncampaign: 10% halt + profit-lock (lock the good path)\nHONEST EDGE: no fixed 7d alpha → built to SURVIVE the\n30% DQ + PARTICIPATE risk-on. 2,338 windows · 1175 tests.", STRAT)
 
 # Strategy registry + overlays — the pluggable pool the DECIDE stage selects from.
 ctx(TERM_R_X, ry(2) - 10, TERM_R_W, 260, "STRATEGY REGISTRY  +  OVERLAYS", "strategy/registry.py · adapters/ · overlays/",
-    "19 registered = 10 strategies + 9 aliases\ndefault (locked): momentum_adaptive\nbase: momentum · momentum_fast · dual_momentum · rotation\n  breakout · mean_reversion · grid\noverlay-composed: momentum_voltarget · momentum_mafilter\noverlays (de-risk only, never lever): vol_target · ma_filter\naliases: BNB_STRATEGY_01–09 (delegate bit-for-bit)\nLIVE pins the default · SIM picks via dashboard", STRAT)
+    "19 registered = 10 strategies + 9 aliases\ndefault (locked): momentum_adaptive\nbase: momentum · momentum_fast · dual_momentum · rotation\n  breakout · mean_reversion · grid\noverlay-composed: momentum_voltarget · momentum_mafilter\noverlays (de-risk only, never lever): vol_target · ma_filter\naliases: AVAX_STRATEGY_01–09 (delegate bit-for-bit)\nLIVE pins the default · SIM picks via dashboard", STRAT)
 arrow(TERM_R_X, ry(2) + 116, COL2_X + CARD_W, ry(2) + CARD_H / 2, STRAT[0], sw=2, label="registry.get(name)")
 
 # Multi-strategy validation campaign — `make campaign` wires EVERY arm through the 5-stage gate.
@@ -342,8 +342,8 @@ arrow(TERM_R_X + TERM_R_W / 2, ry(4) + 100, TERM_R_X + TERM_R_W / 2, ry(2) + 240
 ctx(TERM_R_X, ry(10) - 6, TERM_R_W, 176, "MISSION CONTROL · observability", "api/ (Render) + web/ (Vercel)",
     "journal JSONL → FastAPI /api/snapshot · /api/agent-hub\n  state · nav · regime · rebalances · pillars\n  strategy selector + survival/forward verdicts\n  guardian leaderboard · wallet · cmc-api\nReact: EquityCurve · RegimeDial · WeightsDonut\n  RebalanceTable · RationaleTicker · StrategyPanel\n  CmcAgentHubPanel — MCP tools · Skills · x402 exhibit", OBS)
 arrow(COL2_X + CARD_W, ry(10) + CARD_H / 2, TERM_R_X, ry(10) + CARD_H / 2, OBS[0], sw=2.5, label="observes")
-ctx(TERM_R_X, ry(12) - 4, TERM_R_W, 118, "BNB AI Agent SDK · identity", "agent/identity.py (ERC8004Agent) · NodeReal",
-    "ERC-8004 on-chain identity NFT\ngasless heartbeat via MegaFuel paymaster\none wallet signs TWAK swaps + owns the identity\n(sole signer · non-custodial keeper)", IDENT)
+ctx(TERM_R_X, ry(12) - 4, TERM_R_W, 118, "ERC-8004 · on-chain identity", "agent/identity.py · erc8004_client (web3)",
+    "ERC-8004 on-chain identity NFT (#218 on Fuji)\nheartbeat via web3 eth-account · native AVAX gas\none self-custody wallet signs swaps + x402 + owns identity\n(sole signer · non-custodial keeper)", IDENT)
 arrow(COL2_X + CARD_W, ry(12) + CARD_H / 2, TERM_R_X, ry(12) + CARD_H / 2, IDENT[0], sw=2.5)
 
 
